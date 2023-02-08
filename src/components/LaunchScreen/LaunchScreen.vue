@@ -8,7 +8,7 @@ const props = defineProps({
 
 <template>
   <div class="launch-screen">
-    Launch Screen
+    <h1>Launch Screen</h1>
     <button v-if="activeSession" @click="$emit('continueSession')">
       Continue Session
     </button>

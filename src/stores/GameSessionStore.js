@@ -6,13 +6,21 @@ export const GameSessionStore = reactive({
   betweenRounds: false,
   moderationSpeed: 5,
   moderationQuality: 5,
-  publicPerceptions: 5,
+  publicPerception: 5,
+  showGameOver: false,
   timesUp: function (timesUpBoolean) {
     this.timeRemaining = 0;
   },
   triggerPostRound() {
     // TODO
-    this.timeRemaining = 0;
-    this.betweenRounds = true;
+    if (
+      this.moderationQuality * this.moderationSpeed * this.publicPerception ==
+      0 // TODO update formula
+    ) {
+      this.showGameOver = true;
+    } else {
+      this.timeRemaining = 0;
+      this.betweenRounds = true;
+    }
   },
 });
