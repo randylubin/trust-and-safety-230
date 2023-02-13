@@ -4,7 +4,7 @@ import { IssueQueueStore } from "../stores/IssueQueueStore";
 
 const startNewRound = function () {
   GameSessionStore.currentRound++;
-  GameSessionStore.timeRemaining = 10; // TODO
+  GameSessionStore.timeRemaining = 100; // TODO
   IssueQueueStore.startNewRound();
 };
 </script>

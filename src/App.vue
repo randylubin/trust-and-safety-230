@@ -1,19 +1,36 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
+
+import { MetaGameStore } from "./stores/MetaGameStore";
+
 import MainGame from "./components/MainGame.vue";
 import LaunchScreen from "./components/LaunchScreen/LaunchScreen.vue";
 
 const showLaunchScreen = ref(true);
-const activeSession = ref(false);
+
+function shortcutKeys(e) {
+  if (e.key == "D") MetaGameStore.showDevTools = !MetaGameStore.showDevTools;
+}
+
+onMounted(() => {
+  MetaGameStore.activeSession = localStorage.activeSession ? true : false;
+  //TODO sync other local store values
+
+  window.addEventListener("keydown", shortcutKeys);
+});
+
+watch(MetaGameStore, (newValue, oldValue) => {
+  localStorage.activeSession = newValue.activeSession;
+});
 
 function newSession() {
   console.log("starting session");
-  activeSession.value = true;
+  MetaGameStore.activeSession = true;
   showLaunchScreen.value = false;
 }
 
 function continueSession() {
-  activeSession.value = true;
+  MetaGameStore.activeSession = true;
   showLaunchScreen.value = false;
 }
 </script>
@@ -21,7 +38,6 @@ function continueSession() {
 <template>
   <LaunchScreen
     v-if="showLaunchScreen"
-    :active-session="activeSession"
     @new-session="newSession()"
     @continue-session="continueSession()"
   />

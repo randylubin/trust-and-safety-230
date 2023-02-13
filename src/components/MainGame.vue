@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from "vue";
+
 import { GameSessionStore } from "../stores/GameSessionStore";
+import { MetaGameStore } from "../stores/MetaGameStore";
 
 import PauseMenu from "./PauseMenu.vue";
 import GameStateBar from "./GameStateBar.vue";
@@ -9,27 +11,30 @@ import InterRoundScreens from "./InterRoundScreens.vue";
 import GameOver from "./GameOver/GameOver.vue";
 import DevTools from "./DevTools.vue";
 
-const gameIsPaused = ref(false);
-const betweenRounds = ref(false);
+const playerPausedGame = ref(false);
+
+function showPauseScreen() {
+  playerPausedGame.value = true;
+  GameSessionStore.gameIsPaused = true;
+}
 
 function unpauseGame() {
-  gameIsPaused.value = false;
+  playerPausedGame.value = false;
+  GameSessionStore.gameIsPaused = false;
 }
 </script>
 
 <template>
-  <PauseMenu v-if="gameIsPaused" @unpause-game="unpauseGame()"></PauseMenu>
-  <div class="game-area" v-if="!gameIsPaused">
+  <PauseMenu v-if="playerPausedGame" @unpause-game="unpauseGame()"></PauseMenu>
+  <div class="game-area">
     <h1>Main Game Area</h1>
-    <button @click="gameIsPaused = true">Pause</button>
+    <button @click="showPauseScreen()">Pause</button>
     <GameStateBar></GameStateBar>
   </div>
-  <IssueQueue
-    v-if="!gameIsPaused && !GameSessionStore.betweenRounds"
-  ></IssueQueue>
+  <IssueQueue v-if="!GameSessionStore.betweenRounds"></IssueQueue>
   <InterRoundScreens v-if="GameSessionStore.betweenRounds"></InterRoundScreens>
   <GameOver v-if="GameSessionStore.showGameOver"></GameOver>
-  <DevTools></DevTools>
+  <DevTools v-if="MetaGameStore.showDevTools"></DevTools>
 </template>
 
 <style scoped></style>

@@ -5,18 +5,9 @@ import IssueCard from "./IssueCard.vue";
 
 import InterstitialScreen from "./InterstitialScreen.vue";
 
-function filterInterstitials() {
-  let filteredArray = [];
-  for (let i = 0; i < IssueQueueStore.currentIssueQueue.length; i++) {
-    let issue = JSON.parse(JSON.stringify(IssueQueueStore.currentIssueQueue[i]));
-    if (!issue.interstitialOnly) {
-      filteredArray.push(issue);
-    }
-  }
-  return filteredArray;
-}
-
-const cardQueue = computed(() => filterInterstitials());
+const cardQueue = computed(() =>
+  IssueQueueStore.currentIssueQueue.filter((issue) => !issue.interstitialOnly)
+);
 </script>
 
 <template>
