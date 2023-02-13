@@ -13,7 +13,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 
     // TODO add cards over time
 
-    // Add follow up cards
+    // Add follow up cards to current queue
     if (IssueQueueStore.unprocessedFollowUps) {
       for (let i = 0; i < IssueQueueStore.unprocessedFollowUps.length; i++) {
         let issue = IssueQueueStore.unprocessedFollowUps[i];
@@ -27,6 +27,11 @@ const { pause, resume, isActive } = useIntervalFn(() => {
           // TODO pay attention to insert order, right now it adds to end
         }
       }
+    }
+
+    // ADD GENERICS OVER TIME
+    if (Math.random() < 0.33){
+      IssueQueueStore.addRandomIssue();
     }
   }
 }, 1000);

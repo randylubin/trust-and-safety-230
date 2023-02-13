@@ -130,4 +130,12 @@ export const IssueQueueStore = reactive({
     GameSessionStore.betweenRounds = false;
     this.startNextCard();
   },
+  addRandomIssue() {
+    // TODO check for repeats
+    let newIssueIndex = Math.floor(Math.random() * GenericIssues.length);
+
+    this.currentIssueQueue.push(
+      JSON.parse(JSON.stringify(GenericIssues[newIssueIndex]))
+    );
+  },
 });
