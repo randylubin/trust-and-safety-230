@@ -30,7 +30,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     }
 
     // ADD GENERICS OVER TIME
-    if (Math.random() < 0.33) {
+    if (Math.random() < 0.33)  {
       IssueQueueStore.addRandomIssue()
     }
   }
