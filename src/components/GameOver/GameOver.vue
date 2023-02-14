@@ -1,9 +1,9 @@
 <script setup>
 // import { GameSessionStore } from "../../stores/GameSessionStore";
-import { MetaGameStore } from "../../stores/MetaGameStore";
+import { MetaGameStore } from '../../stores/MetaGameStore'
 
 function startNewGame() {
-  MetaGameStore.numberOfSessions.value++;
+  MetaGameStore.numberOfSessions.value++
 }
 </script>
 

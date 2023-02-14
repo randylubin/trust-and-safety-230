@@ -1,40 +1,40 @@
-import { reactive } from "vue";
-import { ref } from "vue";
-import { useIntervalFn } from "@vueuse/core";
+import { reactive } from 'vue'
+import { ref } from 'vue'
+import { useIntervalFn } from '@vueuse/core'
 
-import { IssueQueueStore } from "./IssueQueueStore";
+import { IssueQueueStore } from './IssueQueueStore'
 
-const timeRemaining = ref(100);
-const gameIsPaused = ref(false);
+const timeRemaining = ref(100)
+const gameIsPaused = ref(false)
 
 const { pause, resume, isActive } = useIntervalFn(() => {
   if (!gameIsPaused.value && timeRemaining.value > 0) {
-    timeRemaining.value--;
+    timeRemaining.value--
 
     // TODO add cards over time
 
     // Add follow up cards to current queue
     if (IssueQueueStore.unprocessedFollowUps) {
       for (let i = 0; i < IssueQueueStore.unprocessedFollowUps.length; i++) {
-        let issue = IssueQueueStore.unprocessedFollowUps[i];
+        let issue = IssueQueueStore.unprocessedFollowUps[i]
 
         if (issue.insertTime >= timeRemaining.value && !issue.processed) {
           IssueQueueStore.currentIssueQueue.push(
             JSON.parse(JSON.stringify(issue.issueObject))
-          );
+          )
 
-          IssueQueueStore.unprocessedFollowUps[i].processed = true;
+          IssueQueueStore.unprocessedFollowUps[i].processed = true
           // TODO pay attention to insert order, right now it adds to end
         }
       }
     }
 
     // ADD GENERICS OVER TIME
-    if (Math.random() < 0.33){
-      IssueQueueStore.addRandomIssue();
+    if (Math.random() < 0.33) {
+      IssueQueueStore.addRandomIssue()
     }
   }
-}, 1000);
+}, 1000)
 
 export const GameSessionStore = reactive({
   currentRound: 0,
@@ -46,13 +46,13 @@ export const GameSessionStore = reactive({
   publicPerception: 5,
   showGameOver: false,
   pauseTimer: function () {
-    pause;
+    pause
   },
   resumeTimer: function () {
-    resume;
+    resume
   },
   timesUp: function (timesUpBoolean) {
-    this.timeRemaining = 0;
+    this.timeRemaining = 0
   },
   triggerPostRound() {
     // TODO
@@ -60,10 +60,10 @@ export const GameSessionStore = reactive({
       this.moderationQuality * this.moderationSpeed * this.publicPerception ==
       0 // TODO update formula
     ) {
-      this.showGameOver = true;
+      this.showGameOver = true
     } else {
-      this.timeRemaining = 0;
-      this.betweenRounds = true;
+      this.timeRemaining = 0
+      this.betweenRounds = true
     }
   },
-});
+})

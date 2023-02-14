@@ -1,5 +1,5 @@
 <script setup>
-const emits = defineEmits(["unpauseGame"]);
+const emits = defineEmits(['unpauseGame'])
 </script>
 
 <template>

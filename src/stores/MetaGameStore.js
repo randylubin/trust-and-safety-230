@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { reactive } from 'vue'
 
 export const MetaGameStore = reactive({
   acheivements: [],
@@ -8,4 +8,4 @@ export const MetaGameStore = reactive({
   arcsSeenButNotCompleted: [],
   arcsCompleted: [],
   showDevTools: false,
-});
+})

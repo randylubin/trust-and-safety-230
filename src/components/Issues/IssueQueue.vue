@@ -1,13 +1,13 @@
 <script setup>
-import { computed } from "vue";
-import { IssueQueueStore } from "./../../stores/IssueQueueStore.js";
-import IssueCard from "./IssueCard.vue";
+import { computed } from 'vue'
+import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
+import IssueCard from './IssueCard.vue'
 
-import InterstitialScreen from "./InterstitialScreen.vue";
+import InterstitialScreen from './InterstitialScreen.vue'
 
 const cardQueue = computed(() =>
   IssueQueueStore.currentIssueQueue.filter((issue) => !issue.interstitialOnly)
-);
+)
 </script>
 
 <template>

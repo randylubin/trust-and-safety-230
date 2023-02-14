@@ -1,16 +1,16 @@
 <script setup>
-import { ref } from "vue";
-import { IssueQueueStore } from "./../../stores/IssueQueueStore.js";
+import { ref } from 'vue'
+import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
 
 const props = defineProps({
   issueData: Object,
   queueIndex: Number,
-});
+})
 
-const learnMoreVisible = ref(false);
+const learnMoreVisible = ref(false)
 
 function learnMore() {
-  learnMoreVisible.value = true;
+  learnMoreVisible.value = true
 }
 </script>
 

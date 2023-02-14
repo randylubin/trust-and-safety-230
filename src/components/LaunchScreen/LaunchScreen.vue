@@ -1,7 +1,7 @@
 <script setup>
-import { MetaGameStore } from "../../stores/MetaGameStore";
+import { MetaGameStore } from '../../stores/MetaGameStore'
 
-import AchievementsList from "../Misc/AchievementsList.vue";
+import AchievementsList from '../Misc/AchievementsList.vue'
 </script>
 
 <template>

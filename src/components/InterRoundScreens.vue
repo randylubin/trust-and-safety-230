@@ -1,12 +1,12 @@
 <script setup>
-import { GameSessionStore } from "../stores/GameSessionStore";
-import { IssueQueueStore } from "../stores/IssueQueueStore";
+import { GameSessionStore } from '../stores/GameSessionStore'
+import { IssueQueueStore } from '../stores/IssueQueueStore'
 
 const startNewRound = function () {
-  GameSessionStore.currentRound++;
-  GameSessionStore.timeRemaining = 100; // TODO
-  IssueQueueStore.startNewRound();
-};
+  GameSessionStore.currentRound++
+  GameSessionStore.timeRemaining = 100 // TODO
+  IssueQueueStore.startNewRound()
+}
 </script>
 
 <template>

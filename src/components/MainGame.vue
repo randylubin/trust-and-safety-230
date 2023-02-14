@@ -1,26 +1,26 @@
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue'
 
-import { GameSessionStore } from "../stores/GameSessionStore";
-import { MetaGameStore } from "../stores/MetaGameStore";
+import { GameSessionStore } from '../stores/GameSessionStore'
+import { MetaGameStore } from '../stores/MetaGameStore'
 
-import PauseMenu from "./PauseMenu.vue";
-import GameStateBar from "./GameStateBar.vue";
-import IssueQueue from "./Issues/IssueQueue.vue";
-import InterRoundScreens from "./InterRoundScreens.vue";
-import GameOver from "./GameOver/GameOver.vue";
-import DevTools from "./DevTools.vue";
+import PauseMenu from './PauseMenu.vue'
+import GameStateBar from './GameStateBar.vue'
+import IssueQueue from './Issues/IssueQueue.vue'
+import InterRoundScreens from './InterRoundScreens.vue'
+import GameOver from './GameOver/GameOver.vue'
+import DevTools from './DevTools.vue'
 
-const playerPausedGame = ref(false);
+const playerPausedGame = ref(false)
 
 function showPauseScreen() {
-  playerPausedGame.value = true;
-  GameSessionStore.gameIsPaused = true;
+  playerPausedGame.value = true
+  GameSessionStore.gameIsPaused = true
 }
 
 function unpauseGame() {
-  playerPausedGame.value = false;
-  GameSessionStore.gameIsPaused = false;
+  playerPausedGame.value = false
+  GameSessionStore.gameIsPaused = false
 }
 </script>
 
