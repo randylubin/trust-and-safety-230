@@ -1,7 +1,7 @@
 export const GenericIssues = [
   {
     issueText: 'example issue text 1',
-    learnMoreText: "learn more text",
+    learnMoreText: 'learn more text',
     issueID: '1',
     correctResponse: 'keepUp',
     postIssueInterstitial: "here's a post-interstitial",
@@ -14,7 +14,7 @@ export const GenericIssues = [
   },
   {
     issueText: 'example issue text 2',
-    learnMoreText: "learn more text",
+    learnMoreText: 'learn more text',
     issueID: '2',
     correctResponse: 'keepUp',
     issueType: 'generic',
@@ -25,7 +25,7 @@ export const GenericIssues = [
   },
   {
     issueText: 'example issue text 3',
-    learnMoreText: "learn more text",
+    learnMoreText: 'learn more text',
     issueID: '3',
     correctResponse: 'keepUp',
     preIssueInterstitial: "here's a pre-interstitial",
