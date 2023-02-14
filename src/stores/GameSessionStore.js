@@ -30,7 +30,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     }
 
     // ADD GENERICS OVER TIME
-    if (Math.random() < 0.33)  {
+    if (Math.random() < 0.33) {
       IssueQueueStore.addRandomIssue()
     }
   }
@@ -52,7 +52,9 @@ export const GameSessionStore = reactive({
     resume
   },
   timesUp: function (timesUpBoolean) {
-    this.timeRemaining = 0
+    if (timesUpBoolean) {
+      this.timeRemaining = 0
+    }
   },
   triggerPostRound() {
     // TODO
