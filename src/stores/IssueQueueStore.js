@@ -14,12 +14,22 @@ export const IssueQueueStore = reactive({
   arcsCompleted: [],
   interstitialShown: false,
   loadSessionFromLocal() {
-    this.currentIssueQueue = JSON.parse(localStorage.IssueQueueStore).currentIssueQueue
-    this.unprocessedFollowUps = JSON.parse(localStorage.IssueQueueStore).unprocessedFollowUps
-    this.genericIssuesSeen = JSON.parse(localStorage.IssueQueueStore).genericIssuesSeen
-    this.arcsInProgress = JSON.parse(localStorage.IssueQueueStore).arcsInProgress
+    this.currentIssueQueue = JSON.parse(
+      localStorage.IssueQueueStore
+    ).currentIssueQueue
+    this.unprocessedFollowUps = JSON.parse(
+      localStorage.IssueQueueStore
+    ).unprocessedFollowUps
+    this.genericIssuesSeen = JSON.parse(
+      localStorage.IssueQueueStore
+    ).genericIssuesSeen
+    this.arcsInProgress = JSON.parse(
+      localStorage.IssueQueueStore
+    ).arcsInProgress
     this.arcsCompleted = JSON.parse(localStorage.IssueQueueStore).arcsCompleted
-    this.interstitialShown = JSON.parse(localStorage.IssueQueueStore).interstitialShown
+    this.interstitialShown = JSON.parse(
+      localStorage.IssueQueueStore
+    ).interstitialShown
   },
   saveSessionToLocal() {
     localStorage.IssueQueueStore = JSON.stringify({
