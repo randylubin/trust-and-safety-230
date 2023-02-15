@@ -5,6 +5,14 @@ import { MetaGameStore } from './stores/MetaGameStore'
 
 import MainGame from './components/MainGame.vue'
 import LaunchScreen from './components/LaunchScreen/LaunchScreen.vue'
+import { GameSessionStore } from './stores/GameSessionStore'
+import { IssueQueueStore } from './stores/IssueQueueStore'
+
+if (localStorage.MetaGameStore) {
+  MetaGameStore.loadSessionFromLocal()
+} else {
+  MetaGameStore.loaded = true
+}
 
 const showLaunchScreen = ref(true)
 
@@ -13,25 +21,54 @@ function shortcutKeys(e) {
 }
 
 onMounted(() => {
-  MetaGameStore.activeSession = localStorage.activeSession ? true : false
+  MetaGameStore.activeSession = JSON.parse(localStorage.MetaGameStore)
+    .activeSession
+    ? true
+    : false
   //TODO sync other local store values
 
   window.addEventListener('keydown', shortcutKeys)
 })
 
-watch(MetaGameStore, (newValue, oldValue) => {
-  localStorage.activeSession = newValue.activeSession
-})
+watch(
+  MetaGameStore,
+  () => {
+    if (MetaGameStore.loaded) {
+      MetaGameStore.saveSessionToLocal()
+    }
+  },
+  { deep: true }
+)
+
+watch(
+  GameSessionStore,
+  () => {
+    GameSessionStore.saveSessionToLocal()
+  },
+  { deep: true }
+)
+
+watch(
+  IssueQueueStore,
+  () => {
+    IssueQueueStore.saveSessionToLocal()
+  },
+  { deep: true }
+)
 
 function newSession() {
   console.log('starting session')
   MetaGameStore.activeSession = true
   showLaunchScreen.value = false
+  GameSessionStore.startNewSession()
 }
 
 function continueSession() {
-  MetaGameStore.activeSession = true
   showLaunchScreen.value = false
+
+  if (localStorage.MetaGameStore) MetaGameStore.loadSessionFromLocal()
+  if (localStorage.GameSessionStore) GameSessionStore.loadSessionFromLocal()
+  if (localStorage.IssueQueueStore) IssueQueueStore.loadSessionFromLocal()
 }
 </script>
 

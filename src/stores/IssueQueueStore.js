@@ -1,15 +1,36 @@
 import { reactive } from 'vue'
-import { GenericIssues } from '../issueData/GenericIssues.js'
+import {
+  GenericIssues,
+  GenericIssuesIDArray,
+} from '../issueData/GenericIssues.js'
 import { GenericFollowUps } from '../issueData/GenericFollowUps.js'
 import { GameSessionStore } from './GameSessionStore'
 
 export const IssueQueueStore = reactive({
-  currentIssueQueue: JSON.parse(JSON.stringify(GenericIssues)),
+  currentIssueQueue: [],
   unprocessedFollowUps: [],
   genericIssuesSeen: [],
   arcsInProgress: [],
   arcsCompleted: [],
   interstitialShown: false,
+  loadSessionFromLocal() {
+    this.currentIssueQueue = JSON.parse(localStorage.IssueQueueStore).currentIssueQueue
+    this.unprocessedFollowUps = JSON.parse(localStorage.IssueQueueStore).unprocessedFollowUps
+    this.genericIssuesSeen = JSON.parse(localStorage.IssueQueueStore).genericIssuesSeen
+    this.arcsInProgress = JSON.parse(localStorage.IssueQueueStore).arcsInProgress
+    this.arcsCompleted = JSON.parse(localStorage.IssueQueueStore).arcsCompleted
+    this.interstitialShown = JSON.parse(localStorage.IssueQueueStore).interstitialShown
+  },
+  saveSessionToLocal() {
+    localStorage.IssueQueueStore = JSON.stringify({
+      currentIssueQueue: this.currentIssueQueue,
+      unprocessedFollowUps: this.unprocessedFollowUps,
+      genericIssuesSeen: this.genericIssuesSeen,
+      arcsInProgress: this.arcsInProgress,
+      arcsCompleted: this.arcsCompleted,
+      interstitialShown: this.interstitialShown,
+    })
+  },
   startNextCard() {
     if (
       GameSessionStore.timeRemaining != 0 &&
@@ -123,19 +144,24 @@ export const IssueQueueStore = reactive({
     this.unprocessedFollowUps = []
 
     // TODO: PAD WITH GENERIC ISSUES
-    this.currentIssueQueue = newQueue.concat(
-      JSON.parse(JSON.stringify(GenericIssues))
-    )
+    for (let i = 0; i < GenericIssuesIDArray.length; i++) {
+      newQueue.push(GenericIssues[GenericIssuesIDArray[i]])
+    }
+
+    this.currentIssueQueue = newQueue
 
     GameSessionStore.betweenRounds = false
     this.startNextCard()
   },
   addRandomIssue() {
     // TODO check for repeats
-    let newIssueIndex = Math.floor(Math.random() * GenericIssues.length)
+    let newIssueID =
+      GenericIssuesIDArray[
+        Math.floor(Math.random() * GenericIssuesIDArray.length)
+      ]
 
     this.currentIssueQueue.push(
-      JSON.parse(JSON.stringify(GenericIssues[newIssueIndex]))
+      JSON.parse(JSON.stringify(GenericIssues[newIssueID]))
     )
   },
 })

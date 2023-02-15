@@ -5,7 +5,7 @@ import { useIntervalFn } from '@vueuse/core'
 import { IssueQueueStore } from './IssueQueueStore'
 
 const timeRemaining = ref(100)
-const gameIsPaused = ref(false)
+const gameIsPaused = ref(true)
 
 const { pause, resume, isActive } = useIntervalFn(() => {
   if (!gameIsPaused.value && timeRemaining.value > 0) {
@@ -55,6 +55,37 @@ export const GameSessionStore = reactive({
     if (timesUpBoolean) {
       this.timeRemaining = 0
     }
+  },
+  startNewSession() {
+    // TODO
+    IssueQueueStore.startNewRound()
+    gameIsPaused.value = false
+  },
+  loadSessionFromLocal() {
+    this.currentRound = JSON.parse(localStorage.GameSessionStore).currentRound
+    this.timeRemaining = JSON.parse(localStorage.GameSessionStore).timeRemaining
+    this.gameIsPaused = JSON.parse(localStorage.GameSessionStore).gameIsPaused
+    this.betweenRounds = JSON.parse(localStorage.GameSessionStore).betweenRounds
+    this.moderationSpeed = JSON.parse(
+      localStorage.GameSessionStore
+    ).moderationSpeed
+    this.moderationQuality = JSON.parse(
+      localStorage.GameSessionStore
+    ).moderationQuality
+    this.publicPerception = JSON.parse(
+      localStorage.GameSessionStore
+    ).publicPerception
+  },
+  saveSessionToLocal() {
+    localStorage.GameSessionStore = JSON.stringify({
+      currentRound: this.currentRound,
+      timeRemaining: this.timeRemaining,
+      gameIsPaused: this.gameIsPaused,
+      betweenRounds: this.betweenRounds,
+      moderationSpeed: this.moderationSpeed,
+      moderationQuality: this.moderationQuality,
+      publicPerception: this.publicPerception,
+    })
   },
   triggerPostRound() {
     // TODO
