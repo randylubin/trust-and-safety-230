@@ -61,6 +61,10 @@ export const IssueQueueStore = reactive({
       this.endRound()
     }
   },
+  addIssueToCurrentQueue(issue) {
+    issue.uniqueKey = Math.floor(Math.random() * 10000)
+    this.currentIssueQueue.push(issue)
+  },
   takeAction(action, issueData) {
     if (action == issueData.correctResponse) {
       console.log('right answer')
@@ -155,7 +159,9 @@ export const IssueQueueStore = reactive({
 
     // TODO: PAD WITH GENERIC ISSUES
     for (let i = 0; i < GenericIssuesIDArray.length; i++) {
-      newQueue.push(GenericIssues[GenericIssuesIDArray[i]])
+      let newIssue = GenericIssues[GenericIssuesIDArray[i]]
+      newIssue.uniqueKey = Math.floor(Math.random() * 10000)
+      newQueue.push(newIssue)
     }
 
     this.currentIssueQueue = newQueue
@@ -165,13 +171,18 @@ export const IssueQueueStore = reactive({
   },
   addRandomIssue() {
     // TODO check for repeats
-    let newIssueID =
-      GenericIssuesIDArray[
-        Math.floor(Math.random() * GenericIssuesIDArray.length)
-      ]
-
-    this.currentIssueQueue.push(
-      JSON.parse(JSON.stringify(GenericIssues[newIssueID]))
+    let newIssue = JSON.parse(
+      JSON.stringify(
+        GenericIssues[
+          GenericIssuesIDArray[
+            Math.floor(Math.random() * GenericIssuesIDArray.length)
+          ]
+        ]
+      )
     )
+
+    newIssue.uniqueKey = Math.floor(Math.random() * 10000)
+
+    this.currentIssueQueue.push(newIssue)
   },
 })

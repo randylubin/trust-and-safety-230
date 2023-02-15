@@ -21,11 +21,10 @@ function shortcutKeys(e) {
 }
 
 onMounted(() => {
-  MetaGameStore.activeSession = JSON.parse(localStorage.MetaGameStore)
-    .activeSession
-    ? true
-    : false
-  //TODO sync other local store values
+  const localData = localStorage.MetaGameStore
+    ? JSON.parse(localStorage.MetaGameStore)
+    : { activeSession: false }
+  MetaGameStore.activeSession = localData.activeSession ? true : false
 
   window.addEventListener('keydown', shortcutKeys)
 })

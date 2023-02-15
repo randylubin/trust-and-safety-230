@@ -10,17 +10,10 @@ export const MetaGameStore = reactive({
   arcsCompleted: [],
   showDevTools: false,
   loadSessionFromLocal() {
-    this.achievements = JSON.parse(localStorage.MetaGameStore).achievements
-    this.activeSession = JSON.parse(localStorage.MetaGameStore).activeSession
-    this.numberOfSessions = JSON.parse(
-      localStorage.MetaGameStore
-    ).numberOfSessions
-    this.numberOfWins = JSON.parse(localStorage.MetaGameStore).numberOfWins
-    this.arcsSeenButNotCompleted = JSON.parse(
-      localStorage.MetaGameStore
-    ).arcsSeenButNotCompleted
-    this.arcsCompleted = JSON.parse(localStorage.MetaGameStore).arcsCompleted
-    this.showDevTools = JSON.parse(localStorage.MetaGameStore).showDevTools
+    const saveData = JSON.parse(localStorage.GameSessionStore)
+    for (const [key, value] of Object.entries(saveData)) {
+      this[key] = value
+    }
     this.loaded = true
   },
   saveSessionToLocal() {

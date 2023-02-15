@@ -19,7 +19,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
         let issue = IssueQueueStore.unprocessedFollowUps[i]
 
         if (issue.insertTime >= timeRemaining.value && !issue.processed) {
-          IssueQueueStore.currentIssueQueue.push(
+          IssueQueueStore.addIssueToCurrentQueue(
             JSON.parse(JSON.stringify(issue.issueObject))
           )
 
@@ -62,19 +62,10 @@ export const GameSessionStore = reactive({
     gameIsPaused.value = false
   },
   loadSessionFromLocal() {
-    this.currentRound = JSON.parse(localStorage.GameSessionStore).currentRound
-    this.timeRemaining = JSON.parse(localStorage.GameSessionStore).timeRemaining
-    this.gameIsPaused = JSON.parse(localStorage.GameSessionStore).gameIsPaused
-    this.betweenRounds = JSON.parse(localStorage.GameSessionStore).betweenRounds
-    this.moderationSpeed = JSON.parse(
-      localStorage.GameSessionStore
-    ).moderationSpeed
-    this.moderationQuality = JSON.parse(
-      localStorage.GameSessionStore
-    ).moderationQuality
-    this.publicPerception = JSON.parse(
-      localStorage.GameSessionStore
-    ).publicPerception
+    const saveData = JSON.parse(localStorage.GameSessionStore)
+    for (const [key, value] of Object.entries(saveData)) {
+      this[key] = value
+    }
   },
   saveSessionToLocal() {
     localStorage.GameSessionStore = JSON.stringify({
