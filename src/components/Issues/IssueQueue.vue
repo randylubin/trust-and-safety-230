@@ -146,7 +146,10 @@ watch(ActiveCard, () => {
 
 watchEffect(() => {
   // manage draggable functionality
-  if (
+  if (!isActive.value && ActiveCard.value) {
+    console.log(isActive.value)
+    interact('.top-card').unset()
+  } else if (
     !interact.isSet('top-card') &&
     !isLeaving.value &&
     isActive.value &&
@@ -256,9 +259,13 @@ watchEffect(() => {
         class="button-takedown"
         :class="{
           'show-disabled':
-            (isDragging && DragOffset.x > 0) || CardQueue.length === 0,
+            (isDragging && DragOffset.x > 0) ||
+            CardQueue.length === 0 ||
+            !isActive,
         }"
-        :disabled="isDragging || isLeaving || CardQueue.length === 0"
+        :disabled="
+          isDragging || isLeaving || CardQueue.length === 0 || !isActive
+        "
         @click="swipeCard('left')"
       ></button>
     </div>
@@ -269,9 +276,11 @@ watchEffect(() => {
           type="button"
           class="button-examine"
           :class="{
-            'show-disabled': isDragging || CardQueue.length === 0,
+            'show-disabled': isDragging || CardQueue.length === 0 || !isActive,
           }"
-          :disabled="isDragging || isLeaving || CardQueue.length === 0"
+          :disabled="
+            isDragging || isLeaving || CardQueue.length === 0 || !isActive
+          "
           @pointerdown="startExamine"
           @pointerup="stopExamine"
           @pointerout="stopExamine"
@@ -284,9 +293,13 @@ watchEffect(() => {
         class="button-leaveup"
         :class="{
           'show-disabled':
-            (isDragging && DragOffset.x < 0) || CardQueue.length === 0,
+            (isDragging && DragOffset.x < 0) ||
+            CardQueue.length === 0 ||
+            !isActive,
         }"
-        :disabled="isDragging || isLeaving || CardQueue.length === 0"
+        :disabled="
+          isDragging || isLeaving || CardQueue.length === 0 || !isActive
+        "
         @click="swipeCard('right')"
       ></button>
     </div>
