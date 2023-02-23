@@ -303,8 +303,8 @@ watchEffect(() => {
   min-height: 95px;
   background-image: linear-gradient(
     to bottom,
-    rgba(201, 194, 184, 0) 40%,
-    rgba(201, 194, 184, 1) 40%
+    transparent 40%,
+    var(--controls-bg-color) 40%
   );
 }
 
@@ -324,10 +324,10 @@ watchEffect(() => {
   position: absolute;
   bottom: 110%;
 
-  background-color: rgb(215, 215, 215);
+  background-color: var(--examine-popup-incomplete-bg-color);
   background-image: linear-gradient(
     to top,
-    rgb(230, 230, 230) 50%,
+    var(--examine-popup-complete-bg-color) 50%,
     transparent 50%
   );
   background-size: 100% 200%;
@@ -349,7 +349,7 @@ watchEffect(() => {
   width: 0;
   height: 0;
   border: solid transparent;
-  border-top-color: rgb(230, 230, 230);
+  border-top-color: var(--examine-popup-complete-bg-color);
   border-bottom: 0;
   border-width: 1.5rem;
   margin-left: -1.5rem;
@@ -402,7 +402,7 @@ watchEffect(() => {
   margin-left: -1%;
   padding: 3%;
 
-  background-color: rgba(201, 194, 184, 1);
+  background-color: var(--controls-bg-color);
   border-radius: 100%;
 }
 
@@ -433,7 +433,7 @@ watchEffect(() => {
 }
 
 .button-frame > button.show-disabled {
-  background-color: #999;
+  background-color: var(--button-disabled-bg-color);
   cursor: default;
 }
 

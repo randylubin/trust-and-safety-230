@@ -96,6 +96,7 @@ function continueSession() {
 
 .game-layout {
   --stack-bg-color: rgb(226, 219, 208);
+  --controls-bg-color: rgb(201, 194, 184);
   --card-bg-color: white;
   --card-innershadow-color: rgb(185, 225, 234);
   --card-outershadow-color: rgb(141, 173, 178);
@@ -103,6 +104,10 @@ function continueSession() {
   --takedown-bg-color: rgb(224, 133, 133);
   --leaveup-bg-color: rgb(186, 219, 134);
   --examine-bg-color: rgb(178, 222, 237);
+  --button-disabled-bg-color: #999;
+
+  --examine-popup-incomplete-bg-color: rgb(215, 215, 215);
+  --examine-popup-complete-bg-color: rgb(230, 230, 230);
 }
 
 body {
