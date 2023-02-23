@@ -109,10 +109,10 @@ const swipeCard = function (dir) {
   examineDone.value = false
   if (dir === 'left') {
     isLeaving.value = 'left'
-    IssueQueueStore.takeAction('keepUp', ActiveCard.value)
+    IssueQueueStore.takeAction('takeDown', ActiveCard.value)
   } else if (dir === 'right') {
     isLeaving.value = 'right'
-    IssueQueueStore.takeAction('takeDown', ActiveCard.value)
+    IssueQueueStore.takeAction('keepUp', ActiveCard.value)
   }
 }
 
