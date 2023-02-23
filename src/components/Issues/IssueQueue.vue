@@ -13,7 +13,7 @@ import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
 import IssueCard from './IssueCard.vue'
 import InterstitialScreen from './InterstitialScreen.vue'
 
-const props =  defineProps({
+const props = defineProps({
   isActive: Boolean,
 })
 const { isActive } = toRefs(props)
@@ -122,7 +122,7 @@ const examineDone = ref(false)
 
 const cardTime = ref(0)
 setInterval(() => {
-  cardTime.value++
+  if (isActive.value) cardTime.value++
 }, 200)
 
 const startExamine = function () {
@@ -189,8 +189,8 @@ watchEffect(() => {
         <div
           v-for="(issue, index) in CardQueue"
           class="card-container"
-          :key="'container-' + issue.issueID"
-          :id="'container-' + issue.key"
+          :key="'container-' + issue.uniqueKey"
+          :id="'container-' + issue.uniqueKey"
           :class="{
             'bottom-card': index === CardQueue.length - 1,
             'top-card': index === 0,
