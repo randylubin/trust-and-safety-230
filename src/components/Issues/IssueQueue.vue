@@ -147,7 +147,6 @@ watch(ActiveCard, () => {
 watchEffect(() => {
   // manage draggable functionality
   if (!isActive.value && ActiveCard.value) {
-    console.log(isActive.value)
     interact('.top-card').unset()
   } else if (
     !interact.isSet('top-card') &&
