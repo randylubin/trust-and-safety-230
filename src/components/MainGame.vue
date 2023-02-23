@@ -60,8 +60,7 @@ function unpauseGame() {
 
 .top-bar {
   height: 12%;
-  flex-grow: 1;
-  padding-top: 10%;
+  min-height: 75px;
   box-sizing: border-box;
 }
 
@@ -69,8 +68,6 @@ function unpauseGame() {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-
-  height: 88%;
   flex-grow: 1;
   position: relative;
   background-color: var(--stack-bg-color);

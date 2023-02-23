@@ -300,6 +300,7 @@ watchEffect(() => {
   position: relative;
   z-index: 1000;
   height: 15%;
+  min-height: 95px;
   background-image: linear-gradient(
     to bottom,
     rgba(201, 194, 184, 0) 40%,
@@ -460,7 +461,7 @@ button:hover {
 
 .stack-area {
   position: relative;
-  height: 85%;
+  flex-grow: 1;
 }
 
 .stack-top {
