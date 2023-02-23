@@ -8,6 +8,7 @@ import {
   watch,
   watchEffect,
 } from 'vue'
+import { useArrayFilter } from '@vueuse/core'
 import interact from 'interactjs'
 import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
 import IssueCard from './IssueCard.vue'
@@ -18,8 +19,9 @@ const props = defineProps({
 })
 const { isActive } = toRefs(props)
 
-const CardQueue = computed(() =>
-  IssueQueueStore.currentIssueQueue.filter((issue) => !issue.interstitialOnly)
+const CardQueue = useArrayFilter(
+  IssueQueueStore.currentIssueQueue,
+  (issue) => !issue.interstitialOnly
 )
 
 const StackAreaElement = ref(null)
