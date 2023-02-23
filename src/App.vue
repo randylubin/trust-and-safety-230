@@ -72,13 +72,71 @@ function continueSession() {
 </script>
 
 <template>
-  <LaunchScreen
-    v-if="showLaunchScreen"
-    @new-session="newSession()"
-    @continue-session="continueSession()"
-  />
+  <div id="screen-container">
+    <LaunchScreen
+      v-if="showLaunchScreen"
+      @new-session="newSession()"
+      @continue-session="continueSession()"
+    />
 
-  <MainGame v-if="!showLaunchScreen" />
+    <MainGame v-if="!showLaunchScreen" />
+  </div>
 </template>
 
-<style scoped></style>
+<style>
+:root {
+  font-size: 2.5vw;
+}
+
+@media (min-width: 400px) {
+  :root {
+    font-size: 10px;
+  }
+}
+
+.game-layout {
+  --stack-bg-color: rgb(226, 219, 208);
+  --card-bg-color: white;
+  --card-innershadow-color: rgb(185, 225, 234);
+  --card-outershadow-color: rgb(141, 173, 178);
+
+  --takedown-bg-color: rgb(224, 133, 133);
+  --leaveup-bg-color: rgb(186, 219, 134);
+  --examine-bg-color: rgb(178, 222, 237);
+}
+
+body {
+  font-size: 1.4rem;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: #2c3e50;
+
+  background: #333;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#screen-container {
+  background: white;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 400px;
+  max-height: 860px;
+  min-width: 320px;
+  overflow: hidden;
+}
+</style>

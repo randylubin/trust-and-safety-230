@@ -25,16 +25,54 @@ function unpauseGame() {
 </script>
 
 <template>
-  <PauseMenu v-if="playerPausedGame" @unpause-game="unpauseGame()"></PauseMenu>
-  <div class="game-area">
-    <h1>Main Game Area</h1>
-    <button @click="showPauseScreen()">Pause</button>
-    <GameStateBar></GameStateBar>
+  <div class="game-layout">
+    <PauseMenu
+      v-if="playerPausedGame"
+      @unpause-game="unpauseGame()"
+    ></PauseMenu>
+    <div class="top-bar">
+      <GameStateBar />
+      <button @click="showPauseScreen()">Pause</button>
+    </div>
+    <div class="play-area">
+      <InterRoundScreens v-if="GameSessionStore.betweenRounds" />
+      <GameOver v-else-if="GameSessionStore.showGameOver" />
+      <IssueQueue v-else :isActive="!GameSessionStore.gameIsPaused" />
+      <DevTools v-if="MetaGameStore.showDevTools" />
+    </div>
   </div>
-  <IssueQueue v-if="!GameSessionStore.betweenRounds"></IssueQueue>
-  <InterRoundScreens v-if="GameSessionStore.betweenRounds"></InterRoundScreens>
-  <GameOver v-if="GameSessionStore.showGameOver"></GameOver>
-  <DevTools v-if="MetaGameStore.showDevTools"></DevTools>
 </template>
 
-<style scoped></style>
+<style scoped>
+.game-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  user-select: none;
+}
+
+.top-bar {
+  height: 12%;
+  flex-grow: 1;
+  padding-top: 10%;
+  box-sizing: border-box;
+}
+
+.play-area {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  height: 88%;
+  flex-grow: 1;
+  position: relative;
+  background-color: var(--stack-bg-color);
+}
+</style>

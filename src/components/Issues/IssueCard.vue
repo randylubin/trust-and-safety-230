@@ -1,40 +1,30 @@
 <script setup>
-import { ref } from 'vue'
-import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
-
-const props = defineProps({
-  issueData: Object,
-  queueIndex: Number,
+defineProps({
+  IssueData: Object,
 })
-
-const learnMoreVisible = ref(false)
-
-function learnMore() {
-  learnMoreVisible.value = true
-}
 </script>
 
 <template>
-  <div class="issue-card" :class="{ 'active-issue': queueIndex === 0 }">
-    <p>{{ issueData.issueText }}</p>
-    <p v-if="learnMoreVisible">{{ issueData.learnMoreText }}</p>
-    <button @click="IssueQueueStore.takeAction('keepUp', issueData)">
-      Keep Up
-    </button>
-    <button @click="IssueQueueStore.takeAction('takeDown', issueData)">
-      Take Down
-    </button>
-    <button @click="learnMore()">Learn More</button>
+  <div class="issue-card">
+    <p>{{ IssueData.issueText }}</p>
   </div>
 </template>
 
 <style scoped>
 .issue-card {
-  border: 1px solid;
-  border-color: grey;
-}
-
-.active-issue {
-  background-color: darkblue;
+  background-color: var(--card-bg-color);
+  box-shadow: 0 -2px 0 var(--card-outershadow-color),
+    1px 0 0 var(--card-outershadow-color),
+    -1px 0 0 var(--card-outershadow-color),
+    0 1px 0 var(--card-outershadow-color);
+  border: 1.6rem solid var(--card-innershadow-color);
+  border-radius: 3.6rem;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  touch-action: none;
 }
 </style>
