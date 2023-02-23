@@ -104,7 +104,7 @@ const getStackOffsetZ = function (index) {
 }
 
 const swipeCard = function (dir) {
-  // process card as swiped left or right and inform parent
+  // process card as swiped left or right
   interact('.top-card').unset()
   examineDone.value = false
   if (dir === 'left') {
