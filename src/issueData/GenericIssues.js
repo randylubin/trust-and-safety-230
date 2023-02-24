@@ -1,3 +1,56 @@
+import axios from 'axios'
+
+let issueSheet =
+  'https://sheets.googleapis.com/v4/spreadsheets/' +
+  '1AfJezLhw9YMFTXbqdlmT_edHpxYo6Z4k2-13UCW4fzA' +
+  '/?includeGridData=true&ranges=a1:aa400&key=' +
+  import.meta.env.VITE_APP_FIREBASE_API_KEY
+
+let genericsFromGoogleSheet = {}
+
+axios
+  .get(issueSheet)
+  .then((response) => {
+    // CLEAN UP DATA
+    let rawSheetData = response.data.sheets[0].data[0].rowData
+    let cleanData = []
+    rawSheetData.forEach((item, i) => {
+      cleanData.push([])
+      if (item.values && item.values[0]) {
+        for (let v = 0; v < item.values.length; v++) {
+          if (item.values[v] && item.values[v].formattedValue) {
+            cleanData[i].push(item.values[v].formattedValue)
+          } else {
+            cleanData[i].push(null)
+          }
+        }
+      }
+    })
+
+    // REMOVE HEADER ROW
+    cleanData.shift()
+
+    // GENERATE ISSUES FROM CLEAN DATA
+    cleanData.forEach((issue) => {
+      genericsFromGoogleSheet[issue[0]] = {
+        issueID: issue[0],
+        reportedFor: issue[1],
+        issueText: issue[2],
+        issueIncludesTags: issue[3],
+        learnMoreText: issue[4],
+        correctResponse: 'keepUp',
+        issueType: 'generic',
+      }
+    })
+
+    console.log(genericsFromGoogleSheet)
+  })
+  .catch((error) => {
+    console.log(error.message, error)
+  })
+
+export const GenericsFromGoogleSheet = genericsFromGoogleSheet
+
 export const GenericIssues = {
   G101: {
     issueText: 'issue text and then some more issue text',
