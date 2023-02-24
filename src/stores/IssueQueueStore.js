@@ -1,8 +1,5 @@
 import { reactive } from 'vue'
-import {
-  GenericIssues,
-  GenericIssuesIDArray,
-} from '../issueData/GenericIssues.js'
+import { GenericIssues } from '../issueData/GenericIssues.js'
 import { GenericFollowUps } from '../issueData/GenericFollowUps.js'
 import { GameSessionStore } from './GameSessionStore'
 
@@ -158,8 +155,8 @@ export const IssueQueueStore = reactive({
     this.unprocessedFollowUps = []
 
     // TODO: PAD WITH GENERIC ISSUES
-    for (let i = 0; i < GenericIssuesIDArray.length; i++) {
-      let newIssue = GenericIssues[GenericIssuesIDArray[i]]
+    for (let i = 0; i < Object.keys(GenericIssues).length; i++) {
+      let newIssue = GenericIssues[Object.keys(GenericIssues)[i]]
       newIssue.uniqueKey = Math.floor(Math.random() * 10000)
       newQueue.push(newIssue)
     }
@@ -174,8 +171,8 @@ export const IssueQueueStore = reactive({
     let newIssue = JSON.parse(
       JSON.stringify(
         GenericIssues[
-          GenericIssuesIDArray[
-            Math.floor(Math.random() * GenericIssuesIDArray.length)
+          Object.keys(GenericIssues)[
+            Math.floor(Math.random() * Object.keys(GenericIssues).length)
           ]
         ]
       )

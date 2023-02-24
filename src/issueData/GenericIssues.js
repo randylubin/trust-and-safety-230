@@ -1,4 +1,46 @@
 export const GenericIssues = {
+  G101: {
+    issueText: 'issue text and then some more issue text',
+    learnMoreText: 'here is some learn more text',
+    issueID: '101',
+    correctResponse: 'keepUp',
+    issueType: 'generic',
+  },
+  G102: {
+    issueText: 'issue text and then some more issue text',
+    learnMoreText: 'here is some learn more text',
+    issueID: '102',
+    correctResponse: 'keepUp',
+    issueType: 'generic',
+  },
+  G103: {
+    issueText: 'issue text and then some more issue text',
+    learnMoreText: 'here is some learn more text',
+    issueID: '103',
+    correctResponse: 'keepUp',
+    issueType: 'generic',
+  },
+  G104: {
+    issueText: 'issue text and then some more issue text',
+    learnMoreText: 'here is some learn more text',
+    issueID: '104',
+    correctResponse: 'keepUp',
+    issueType: 'generic',
+  },
+  G105: {
+    issueText: 'issue text and then some more issue text',
+    learnMoreText: 'here is some learn more text',
+    issueID: '105',
+    correctResponse: 'keepUp',
+    issueType: 'generic',
+  },
+  G106: {
+    issueText: 'issue text and then some more issue text',
+    learnMoreText: 'here is some learn more text',
+    issueID: '106',
+    correctResponse: 'keepUp',
+    issueType: 'generic',
+  },
   G1000: {
     issueText: 'example issue text 1',
     learnMoreText: 'learn more text',
@@ -32,5 +74,3 @@ export const GenericIssues = {
     issueType: 'generic',
   },
 }
-
-export const GenericIssuesIDArray = ['G1000', 'G1001', 'G1002', 'G1003']
