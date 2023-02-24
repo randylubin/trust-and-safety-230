@@ -40,14 +40,6 @@ watch(
 )
 
 watch(
-  GameSessionStore,
-  () => {
-    GameSessionStore.saveSessionToLocal()
-  },
-  { deep: true }
-)
-
-watch(
   IssueQueueStore,
   () => {
     IssueQueueStore.saveSessionToLocal()
