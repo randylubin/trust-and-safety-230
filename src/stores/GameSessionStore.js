@@ -38,6 +38,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 
 export const GameSessionStore = reactive({
   currentRound: 0,
+  initialTimeInRound: 100,
   timeRemaining: timeRemaining,
   gameIsPaused: gameIsPaused,
   betweenRounds: false,
