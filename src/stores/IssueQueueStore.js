@@ -37,8 +37,6 @@ export const IssueQueueStore = reactive({
       arcsCompleted: this.arcsCompleted,
       interstitialShown: this.interstitialShown,
     })
-
-    GameSessionStore.saveSessionToLocal()
   },
   startNextCard() {
     if (

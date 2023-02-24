@@ -43,6 +43,7 @@ watch(
   IssueQueueStore,
   () => {
     IssueQueueStore.saveSessionToLocal()
+    GameSessionStore.saveSessionToLocal()
   },
   { deep: true }
 )
