@@ -1,3 +1,49 @@
+/* ISSUE DATABASE CLASS
+
+Populate by passing an array of issues (not a keyed object)
+when creating a new database:
+
+    const myDatabase = new IssueDatabase([ 
+      {
+        issueID = 'G1',
+        ...
+      },
+      {
+        issueID = 'G2',
+        ...
+      }
+    ])
+
+Or by using the importIssues method:
+
+    const myDatabase = new IssueDatabase()
+    myDatabase.importIssues([ 
+      {
+        issueID = 'G1',
+        ...
+      },
+      {
+        issueID = 'G2',
+        ...
+      }
+    ]))
+
+Databases provide the following retrieval methods:
+
+    getAllIssues(exclude) - returns an array of all issues, optionally filtered against 'exclude' array
+
+    getIssueByID(id) - returns a specific issue based on its ID, logs an error and returns undefined if not found
+
+    getRandomIssue(exclude) - returns a random issue, optionally filtered against 'exclude' array
+
+    getRandomIssues(limit, exclude) - returns an array of random issues with max 'limit' items,
+      optionally filtered against 'exclude' array
+
+All JSON-based object copying and the assignment of unique keys is handled by the database.
+Returned objects are ready to use in the main game engine.
+
+*/
+
 let nextUniqueKey = 1000
 
 export default class IssueDatabase {
