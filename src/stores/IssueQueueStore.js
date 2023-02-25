@@ -168,13 +168,18 @@ export const IssueQueueStore = reactive({
     //   newQueue.push(newIssue)
     // }
 
+    /*
     for (let i = 0; i < Object.keys(GenericIssues).length; i++) {
       let newIssue = JSON.parse(
         JSON.stringify(GenericIssues[Object.keys(GenericIssues)[i]])
       )
       newIssue.uniqueKey = Math.floor(Math.random() * 10000)
       newQueue.push(newIssue)
-    }
+    }*/
+
+    // TEMP: Add 5 random generics, excluding those already seen
+
+    newQueue.push(...GenericIssues.getRandomIssues(5, this.genericIssuesSeen))
 
     this.currentIssueQueue = newQueue
 
@@ -182,19 +187,7 @@ export const IssueQueueStore = reactive({
     this.startNextCard()
   },
   addRandomIssue() {
-    // TODO check for repeats
-    let newIssue = JSON.parse(
-      JSON.stringify(
-        GenericIssues[
-          Object.keys(GenericIssues)[
-            Math.floor(Math.random() * Object.keys(GenericIssues).length)
-          ]
-        ]
-      )
-    )
-
-    newIssue.uniqueKey = Math.floor(Math.random() * 10000)
-
-    this.currentIssueQueue.push(newIssue)
+    // pass genericIssuesSeen as argument to exclude them
+    this.currentIssueQueue.push(GenericIssues.getRandomIssue())
   },
 })

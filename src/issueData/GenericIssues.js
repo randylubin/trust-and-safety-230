@@ -1,4 +1,5 @@
 import axios from 'axios'
+import IssueDatabase from './_IssueDatabase.js'
 
 let issueSheet =
   'https://sheets.googleapis.com/v4/spreadsheets/' +
@@ -6,7 +7,9 @@ let issueSheet =
   '/?includeGridData=true&ranges=a1:aa400&key=' +
   import.meta.env.VITE_APP_FIREBASE_API_KEY
 
-let genericsFromGoogleSheet = {}
+let genericsFromGoogleSheet = []
+
+const GenericIssues = new IssueDatabase()
 
 axios
   .get(issueSheet)
@@ -53,7 +56,7 @@ axios
         ? JSON.parse(issue[takeDownConsequencesColumnIndex])
         : null
 
-      genericsFromGoogleSheet[newIssue.issueID] = newIssue
+      genericsFromGoogleSheet.push(newIssue)
 
       // genericsFromGoogleSheet[issue[0]] = {
       //   issueID: issue[0],
@@ -73,12 +76,13 @@ axios
     })
 
     console.log(genericsFromGoogleSheet)
+    GenericIssues.importIssues(genericsFromGoogleSheet)
   })
   .catch((error) => {
     console.log(error.message, error)
   })
 
-export const GenericIssues = genericsFromGoogleSheet
+export { GenericIssues as GenericIssues }
 
 // export const oldGenericIssues = {
 //   G101: {
