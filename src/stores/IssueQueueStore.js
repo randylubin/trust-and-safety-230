@@ -62,7 +62,6 @@ export const IssueQueueStore = reactive({
     }
   },
   addIssueToCurrentQueue(issue) {
-    issue.uniqueKey = Math.floor(Math.random() * 10000)
     this.currentIssueQueue.push(issue)
   },
   takeAction(action, issueData) {
@@ -81,7 +80,9 @@ export const IssueQueueStore = reactive({
     if (action == 'keepUp' && issueData.keepUpConsequences) {
       if (issueData.keepUpConsequences.followUpID) {
         this.insertIssueInQueue(
-          GenericFollowUps[issueData.keepUpConsequences.followUpID],
+          GenericFollowUps.getIssueByID(
+            issueData.keepUpConsequences.followUpID
+          ),
           issueData.keepUpConsequences.followUpTimeDelay,
           issueData.keepUpConsequences.followUpPosition
         )
@@ -91,7 +92,9 @@ export const IssueQueueStore = reactive({
     if (action == 'takeDown' && issueData.takeDownConsequences) {
       if (issueData.takeDownConsequences.followUpID) {
         this.insertIssueInQueue(
-          GenericFollowUps[issueData.takeDownConsequences.followUpID],
+          GenericFollowUps.getIssueByID(
+            issueData.takeDownConsequences.followUpID
+          ),
           issueData.takeDownConsequences.followUpTimeDelay,
           issueData.takeDownConsequences.followUpPosition
         )
@@ -123,7 +126,7 @@ export const IssueQueueStore = reactive({
   insertIssueInQueue(issueObject, insertDelay = 1, insertPosition = null) {
     console.log(issueObject, insertDelay, insertPosition)
     this.unprocessedFollowUps.push({
-      issueObject: JSON.parse(JSON.stringify(issueObject)),
+      issueObject: issueObject,
       insertTime: GameSessionStore.timeRemaining - insertDelay,
       insertPosition: insertPosition,
     })
