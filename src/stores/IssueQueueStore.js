@@ -1,5 +1,8 @@
 import { reactive } from 'vue'
-import { GenericIssues } from '../issueData/GenericIssues.js'
+import {
+  GenericIssues,
+  // GenericsFromGoogleSheet,
+} from '../issueData/GenericIssues.js'
 import { GenericFollowUps } from '../issueData/GenericFollowUps.js'
 import { GameSessionStore } from './GameSessionStore'
 
@@ -59,7 +62,6 @@ export const IssueQueueStore = reactive({
     }
   },
   addIssueToCurrentQueue(issue) {
-    issue.uniqueKey = Math.floor(Math.random() * 10000)
     this.currentIssueQueue.push(issue)
   },
   takeAction(action, issueData) {
@@ -78,7 +80,9 @@ export const IssueQueueStore = reactive({
     if (action == 'keepUp' && issueData.keepUpConsequences) {
       if (issueData.keepUpConsequences.followUpID) {
         this.insertIssueInQueue(
-          GenericFollowUps[issueData.keepUpConsequences.followUpID],
+          GenericFollowUps.getIssueByID(
+            issueData.keepUpConsequences.followUpID
+          ),
           issueData.keepUpConsequences.followUpTimeDelay,
           issueData.keepUpConsequences.followUpPosition
         )
@@ -88,7 +92,9 @@ export const IssueQueueStore = reactive({
     if (action == 'takeDown' && issueData.takeDownConsequences) {
       if (issueData.takeDownConsequences.followUpID) {
         this.insertIssueInQueue(
-          GenericFollowUps[issueData.takeDownConsequences.followUpID],
+          GenericFollowUps.getIssueByID(
+            issueData.takeDownConsequences.followUpID
+          ),
           issueData.takeDownConsequences.followUpTimeDelay,
           issueData.takeDownConsequences.followUpPosition
         )
@@ -120,7 +126,7 @@ export const IssueQueueStore = reactive({
   insertIssueInQueue(issueObject, insertDelay = 1, insertPosition = null) {
     console.log(issueObject, insertDelay, insertPosition)
     this.unprocessedFollowUps.push({
-      issueObject: JSON.parse(JSON.stringify(issueObject)),
+      issueObject: issueObject,
       insertTime: GameSessionStore.timeRemaining - insertDelay,
       insertPosition: insertPosition,
     })
@@ -155,11 +161,28 @@ export const IssueQueueStore = reactive({
     this.unprocessedFollowUps = []
 
     // TODO: PAD WITH GENERIC ISSUES
+    // for (let i = 0; i < Object.keys(GenericsFromGoogleSheet).length; i++) {
+    //   let newIssue = JSON.parse(
+    //     JSON.stringify(
+    //       GenericsFromGoogleSheet[Object.keys(GenericsFromGoogleSheet)[i]]
+    //     )
+    //   )
+    //   newIssue.uniqueKey = Math.floor(Math.random() * 10000)
+    //   newQueue.push(newIssue)
+    // }
+
+    /*
     for (let i = 0; i < Object.keys(GenericIssues).length; i++) {
-      let newIssue = GenericIssues[Object.keys(GenericIssues)[i]]
+      let newIssue = JSON.parse(
+        JSON.stringify(GenericIssues[Object.keys(GenericIssues)[i]])
+      )
       newIssue.uniqueKey = Math.floor(Math.random() * 10000)
       newQueue.push(newIssue)
-    }
+    }*/
+
+    // TEMP: Add 5 random generics, excluding those already seen
+
+    newQueue.push(...GenericIssues.getRandomIssues(5, this.genericIssuesSeen))
 
     this.currentIssueQueue = newQueue
 
@@ -167,19 +190,7 @@ export const IssueQueueStore = reactive({
     this.startNextCard()
   },
   addRandomIssue() {
-    // TODO check for repeats
-    let newIssue = JSON.parse(
-      JSON.stringify(
-        GenericIssues[
-          Object.keys(GenericIssues)[
-            Math.floor(Math.random() * Object.keys(GenericIssues).length)
-          ]
-        ]
-      )
-    )
-
-    newIssue.uniqueKey = Math.floor(Math.random() * 10000)
-
-    this.currentIssueQueue.push(newIssue)
+    // pass genericIssuesSeen as argument to exclude them
+    this.currentIssueQueue.push(GenericIssues.getRandomIssue())
   },
 })
