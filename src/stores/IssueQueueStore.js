@@ -3,8 +3,10 @@ import {
   GenericIssues,
   // GenericsFromGoogleSheet,
 } from '../issueData/GenericIssues.js'
+// import { MetaGameStore } from '../stores/MetaGameStore'
 import { GenericFollowUps } from '../issueData/GenericFollowUps.js'
 import { GameSessionStore } from './GameSessionStore'
+// import { ArcIssues } from '../issueData/ArcIssues.js'
 
 export const IssueQueueStore = reactive({
   currentIssueQueue: [],
@@ -77,27 +79,23 @@ export const IssueQueueStore = reactive({
     this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
 
     // Handle consequences
-    if (action == 'keepUp' && issueData.keepUpConsequences) {
-      if (issueData.keepUpConsequences.followUpID) {
+    let actionConsequences =
+      action === 'keepUp'
+        ? issueData.keepUpConsequences
+        : issueData.takeDownConsequences
+
+    if (actionConsequences) {
+      if (actionConsequences.followUpID) {
         this.insertIssueInQueue(
-          GenericFollowUps.getIssueByID(
-            issueData.keepUpConsequences.followUpID
-          ),
-          issueData.keepUpConsequences.followUpTimeDelay,
-          issueData.keepUpConsequences.followUpPosition
+          GenericFollowUps.getIssueByID(actionConsequences.followUpID),
+          actionConsequences.followUpTimeDelay,
+          actionConsequences.followUpPosition
         )
       }
-    }
 
-    if (action == 'takeDown' && issueData.takeDownConsequences) {
-      if (issueData.takeDownConsequences.followUpID) {
-        this.insertIssueInQueue(
-          GenericFollowUps.getIssueByID(
-            issueData.takeDownConsequences.followUpID
-          ),
-          issueData.takeDownConsequences.followUpTimeDelay,
-          issueData.takeDownConsequences.followUpPosition
-        )
+      if (actionConsequences.postIssueInterstitial) {
+        issueData.postIssueInterstitial =
+          actionConsequences.postIssueInterstitial
       }
     }
 
@@ -180,8 +178,10 @@ export const IssueQueueStore = reactive({
       newQueue.push(newIssue)
     }*/
 
-    // TEMP: Add 5 random generics, excluding those already seen
+    // SELECT ARC
+    // TODO newQueue.push(ArcIssues.startNewArc)
 
+    // TEMP: Add 5 random generics, excluding those already seen
     newQueue.push(...GenericIssues.getRandomIssues(5, this.genericIssuesSeen))
 
     this.currentIssueQueue = newQueue
