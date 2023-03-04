@@ -5,6 +5,7 @@ import {
 } from '../issueData/GenericIssues.js'
 // import { MetaGameStore } from '../stores/MetaGameStore'
 import { GenericFollowUps } from '../issueData/GenericFollowUps.js'
+import { TutorialIssues } from '../issueData/TutorialIssues.js'
 import { GameSessionStore } from './GameSessionStore'
 // import { ArcIssues } from '../issueData/ArcIssues.js'
 
@@ -139,6 +140,13 @@ export const IssueQueueStore = reactive({
       }
       this.startNextCard()
     }
+  },
+  startTutorial() {
+    let newQueue = TutorialIssues.getAllIssues()
+
+    this.currentIssueQueue = newQueue
+    GameSessionStore.betweenRounds = false
+    this.startNextCard()
   },
   startNewRound() {
     // TODO
