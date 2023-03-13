@@ -83,6 +83,21 @@ export default class IssueDatabase {
       return undefined
     }
   }
+  getIssuesByID(idArray, assignUniqueKey = true) {
+    let issueArray = []
+    for (let i = 0; i < idArray.length; i++) {
+      let id = idArray[i]
+      if (typeof this.#Issues[id] === 'object') {
+        const outputObject = IssueDatabase.copyObject(this.#Issues[id])
+        if (assignUniqueKey)
+          outputObject.uniqueKey = IssueDatabase.getUniqueKey()
+        issueArray.push(outputObject)
+      } else {
+        console.error('Issue does not exist: ' + id)
+      }
+    }
+    return issueArray
+  }
   getRandomIssue(exclude = [], assignUniqueKey = true) {
     const filteredIssues = this.IssueIndex.filter((id) => !exclude.includes(id))
     const outputObject = IssueDatabase.copyObject(

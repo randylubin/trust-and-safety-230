@@ -187,13 +187,16 @@ export const IssueQueueStore = reactive({
       console.log('in progress', this.arcsInProgress)
       MetaGameStore.arcsSeenButNotCompleted.push(selectedArcName) // TODO set logic for arc completion
 
-      let initialArcCards = ArcIssues.getIssueByID(selectedArc.initialIssues[0]) // TODO: get multiple issues by ID
+      let initialArcCards = ArcIssues.getIssuesByID(selectedArc.initialIssues)
 
-      newQueue.push(initialArcCards)
+      // TODO: add logic for having only a subset of initial cards and placing the rest in a queue
+      newQueue.push(...initialArcCards)
     }
 
     // TEMP: Add 5 random generics, excluding those already seen
     newQueue.push(...GenericIssues.getRandomIssues(5, this.genericIssuesSeen))
+
+    // TODO: Add logic for shuffling arcs and generics
 
     this.currentIssueQueue = newQueue
 
