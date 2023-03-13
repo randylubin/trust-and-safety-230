@@ -11,6 +11,8 @@ const { pause, resume, isActive } = useIntervalFn(() => {
   if (!gameIsPaused.value && timeRemaining.value > 0) {
     timeRemaining.value--
 
+    // TODO add cards over time
+
     // Add follow up cards to current queue
     if (IssueQueueStore.unprocessedFollowUps) {
       for (let i = 0; i < IssueQueueStore.unprocessedFollowUps.length; i++) {
@@ -28,7 +30,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     }
 
     // ADD GENERICS OVER TIME
-    if (Math.random() < 0.33 && GameSessionStore.currentRound != 0) {
+    if (Math.random() < 0.33) {
       IssueQueueStore.addRandomIssue()
     }
   }
@@ -36,7 +38,6 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 
 export const GameSessionStore = reactive({
   currentRound: 0,
-  showTutorial: true,
   initialTimeInRound: 100,
   timeRemaining: timeRemaining,
   gameIsPaused: gameIsPaused,
@@ -58,12 +59,7 @@ export const GameSessionStore = reactive({
   },
   startNewSession() {
     // TODO
-    if (this.showTutorial) {
-      IssueQueueStore.startTutorial()
-    } else {
-      this.currentRound = 1
-      IssueQueueStore.startNewRound()
-    }
+    IssueQueueStore.startNewRound()
     gameIsPaused.value = false
   },
   loadSessionFromLocal() {

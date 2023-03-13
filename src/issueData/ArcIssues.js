@@ -11,6 +11,12 @@ let arcsFromGoogleSheet = []
 
 const ArcIssues = new IssueDatabase()
 
+let ArcLookup = {
+  NUDITY: { earliestRound: 1 },
+  HEALTHCARE: { earliestRound: 2 },
+  ELECTION: { earliestRound: 3 },
+}
+
 axios
   .get(issueSheet)
   .then((response) => {
@@ -58,36 +64,26 @@ axios
         : null
 
       arcsFromGoogleSheet.push(newIssue)
+
+      // Process arcs for ArcLookup
+      if (newIssue.initialIssue === 'TRUE') {
+        let arcName = newIssue.issueID.slice(0, newIssue.issueID.indexOf('-'))
+
+        if (ArcLookup[arcName].initialIssues) {
+          ArcLookup[arcName].initialIssues.push(newIssue.issueID)
+        } else {
+          ArcLookup[arcName].initialIssues = [newIssue.issueID]
+        }
+      }
     })
 
     console.log(arcsFromGoogleSheet)
+
+    // Add arcs to Issue Database
     ArcIssues.importIssues(arcsFromGoogleSheet)
   })
   .catch((error) => {
     console.log(error.message, error)
   })
 
-export { ArcIssues as ArcIssues }
-
-// export const ArcIssues = [
-//   {
-//     issueText: 'example issue text 1',
-//     issueID: '1',
-//     correctResponse: 'keepUp',
-//     postIssueInterstitial: "here's a post-interstitial",
-//   },
-//   {
-//     issueText: 'example issue text 2',
-//     issueID: '2',
-//     correctResponse: 'keepUp',
-//   },
-//   {
-//     interstitialOnly: "this is an interstitial that isn't attached to a card",
-//   },
-//   {
-//     issueText: 'example issue text 3',
-//     issueID: '3',
-//     correctResponse: 'keepUp',
-//     preIssueInterstitial: "here's a pre-interstitial",
-//   },
-// ]
+export { ArcIssues as ArcIssues, ArcLookup as ArcLookup }

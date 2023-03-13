@@ -1,12 +1,11 @@
 import { reactive } from 'vue'
-import {
-  GenericIssues,
-  // GenericsFromGoogleSheet,
-} from '../issueData/GenericIssues.js'
+import { GenericIssues } from '../issueData/GenericIssues.js'
 // import { MetaGameStore } from '../stores/MetaGameStore'
 import { GenericFollowUps } from '../issueData/GenericFollowUps.js'
 import { TutorialIssues } from '../issueData/TutorialIssues.js'
+import { ArcIssues, ArcLookup } from '../issueData/ArcIssues.js'
 import { GameSessionStore } from './GameSessionStore'
+import { MetaGameStore } from './MetaGameStore.js'
 // import { ArcIssues } from '../issueData/ArcIssues.js'
 
 export const IssueQueueStore = reactive({
@@ -166,28 +165,32 @@ export const IssueQueueStore = reactive({
     }
     this.unprocessedFollowUps = []
 
-    // TODO: PAD WITH GENERIC ISSUES
-    // for (let i = 0; i < Object.keys(GenericsFromGoogleSheet).length; i++) {
-    //   let newIssue = JSON.parse(
-    //     JSON.stringify(
-    //       GenericsFromGoogleSheet[Object.keys(GenericsFromGoogleSheet)[i]]
-    //     )
-    //   )
-    //   newIssue.uniqueKey = Math.floor(Math.random() * 10000)
-    //   newQueue.push(newIssue)
-    // }
-
-    /*
-    for (let i = 0; i < Object.keys(GenericIssues).length; i++) {
-      let newIssue = JSON.parse(
-        JSON.stringify(GenericIssues[Object.keys(GenericIssues)[i]])
-      )
-      newIssue.uniqueKey = Math.floor(Math.random() * 10000)
-      newQueue.push(newIssue)
-    }*/
-
     // SELECT ARC
-    // TODO newQueue.push(ArcIssues.startNewArc)
+    let filteredArcOptions = Object.keys(ArcLookup).filter(
+      (arc) =>
+        ArcLookup[arc].earliestRound <= GameSessionStore.currentRound &&
+        !this.arcsInProgress.includes(arc) &&
+        !this.arcsCompleted.includes(arc)
+    )
+
+    console.log('filtered arcs: ', filteredArcOptions)
+
+    if (filteredArcOptions.length) {
+      let selectedArcName =
+        filteredArcOptions[
+          Math.floor(Math.random() * filteredArcOptions.length)
+        ]
+
+      let selectedArc = ArcLookup[selectedArcName]
+
+      this.arcsInProgress.push(selectedArcName)
+      console.log('in progress', this.arcsInProgress)
+      MetaGameStore.arcsSeenButNotCompleted.push(selectedArcName) // TODO set logic for arc completion
+
+      let initialArcCards = ArcIssues.getIssueByID(selectedArc.initialIssues[0]) // TODO: get multiple issues by ID
+
+      newQueue.push(initialArcCards)
+    }
 
     // TEMP: Add 5 random generics, excluding those already seen
     newQueue.push(...GenericIssues.getRandomIssues(5, this.genericIssuesSeen))
