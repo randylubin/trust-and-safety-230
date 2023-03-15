@@ -1,11 +1,19 @@
 <script setup>
-defineProps({
+import { ContentRules } from '../../issueData/ContentRules.js'
+
+const Props = defineProps({
   IssueData: Object,
 })
+
+console.log(ContentRules[Props.IssueData.reportedFor])
+const ContentRule = ContentRules[Props.IssueData.reportedFor]
 </script>
 
 <template>
   <div class="issue-card">
+    <div v-if="ContentRule" class="reported-for">
+      {{ ContentRule.ruleName }}
+    </div>
     <p>{{ IssueData.issueText }}</p>
   </div>
 </template>

@@ -57,7 +57,7 @@ axios
         ? JSON.parse(issue[takeDownConsequencesColumnIndex])
         : null
 
-        followupsFromGoogleSheet.push(newIssue)
+      followupsFromGoogleSheet.push(newIssue)
     })
 
     console.log(followupsFromGoogleSheet)
