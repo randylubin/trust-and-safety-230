@@ -71,7 +71,7 @@ const ContentRule = ContentRules[Props.IssueData.reportedFor]
   color: white;
   padding: .4rem .6rem;
   font-size: 1rem;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   line-height: 1;
 }

@@ -79,6 +79,8 @@ function continueSession() {
 <style>
 :root {
   font-size: 2.5vw;
+  --font-1: 'jaf-bernina-sans';
+  --font-2: 'azo-sans-web';
 }
 
 @media (min-width: 400px) {
@@ -110,7 +112,7 @@ body {
 }
 
 #app {
-  font-family: 'jaf-bernina-sans', Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-1), Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;
 

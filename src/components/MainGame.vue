@@ -31,8 +31,7 @@ function unpauseGame() {
       @unpause-game="unpauseGame()"
     ></PauseMenu>
     <div class="top-bar">
-      <GameStateBar />
-      <button @click="showPauseScreen()">Pause</button>
+      <GameStateBar @pause-game="showPauseScreen()" />
     </div>
     <div class="play-area">
       <InterRoundScreens v-if="GameSessionStore.betweenRounds" />
@@ -59,9 +58,11 @@ function unpauseGame() {
 }
 
 .top-bar {
+  position: relative;
   height: 12%;
   min-height: 75px;
   box-sizing: border-box;
+  background-color: var(--stack-bg-color);
 }
 
 .play-area {
