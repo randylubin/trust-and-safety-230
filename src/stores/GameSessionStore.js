@@ -30,7 +30,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     }
 
     // ADD GENERICS OVER TIME
-    if (Math.random() < 0.33) {
+    if (Math.random() < 0.33 && GameSessionStore.currentRound != 0) {
       IssueQueueStore.addRandomIssue()
     }
   }
@@ -63,7 +63,12 @@ export const GameSessionStore = reactive({
   },
   startNewSession() {
     // TODO
-    IssueQueueStore.startNewRound()
+    if (this.showTutorial) {
+      IssueQueueStore.startTutorial()
+    } else {
+      this.currentRound = 1
+      IssueQueueStore.startNewRound()
+    }
     gameIsPaused.value = false
   },
   loadSessionFromLocal() {

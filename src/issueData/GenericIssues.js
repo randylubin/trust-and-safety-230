@@ -31,6 +31,8 @@ axios
       }
     })
 
+    cleanData = cleanData.filter((issue) => issue[0])
+
     // REMOVE HEADER ROW
     let sheetHeaders = cleanData.shift()
     let keepUpConsequencesColumnIndex =

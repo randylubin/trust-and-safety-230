@@ -60,7 +60,7 @@ axios
       tutorialFromGoogleSheet.push(newIssue)
     })
 
-    console.log(tutorialFromGoogleSheet)
+    console.log('tutorial issues:', tutorialFromGoogleSheet)
     TutorialIssues.importIssues(tutorialFromGoogleSheet)
   })
   .catch((error) => {
