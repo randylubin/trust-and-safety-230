@@ -109,6 +109,19 @@ export const IssueQueueStore = reactive({
     }
     this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
 
+    // Appeals
+    if (action === 'takeDown' && issueData.appealIfTakeDown) {
+      let appealData = JSON.parse(JSON.stringify(issueData))
+      appealData.issueType = 'appealTakeDown'
+
+      this.insertIssueInQueue(appealData, 2, 3)
+    } else if (action === 'keepUp' && issueData.appealIfKeepUp) {
+      let appealData = JSON.parse(JSON.stringify(issueData))
+      appealData.issueType = 'appealKeepUp'
+
+      this.insertIssueInQueue(appealData, 2, 3)
+    }
+
     // Handle consequences
     let actionConsequences =
       action === 'keepUp'
@@ -116,6 +129,7 @@ export const IssueQueueStore = reactive({
         : issueData.takeDownConsequences
 
     if (actionConsequences) {
+      // Follow up
       if (actionConsequences.followUpID) {
         this.insertIssueInQueue(
           GenericFollowUps.getIssueByID(actionConsequences.followUpID),
@@ -124,6 +138,7 @@ export const IssueQueueStore = reactive({
         )
       }
 
+      // Post Interstitial
       if (actionConsequences.postIssueInterstitial) {
         issueData.postIssueInterstitial =
           actionConsequences.postIssueInterstitial
