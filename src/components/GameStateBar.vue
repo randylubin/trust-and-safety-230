@@ -35,7 +35,7 @@ const clockGradientAngle = computed(() => {
   top: 0;
   right: 0;
   bottom: 0;
-  padding: 1rem;
+  padding: 1rem 1rem .2rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
