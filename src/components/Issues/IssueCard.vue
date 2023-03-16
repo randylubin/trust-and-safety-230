@@ -5,16 +5,35 @@ const Props = defineProps({
   IssueData: Object,
 })
 
-console.log(ContentRules[Props.IssueData.reportedFor])
 const ContentRule = ContentRules[Props.IssueData.reportedFor]
 </script>
 
 <template>
   <div class="issue-card">
-    <div v-if="ContentRule" class="reported-for">
-      {{ ContentRule.ruleName }}
+    <div v-if="ContentRule" class="card-section section-rule">
+      <div class="section-label">
+        <span>Reported For:</span>
+      </div>
+      <div class="rule-text" :class="'rule-' + ContentRule.ruleID">
+        {{ ContentRule.ruleName }}
+      </div>
     </div>
-    <p>{{ IssueData.issueText }}</p>
+    <div class="card-section section-issue">
+      <div class="section-label">
+        <span>Description:</span>
+      </div>
+      <div class="issue-text">
+        {{ IssueData.issueText }}
+      </div>
+    </div>
+    <div v-if="IssueData.issueIncludesTags" class="card-section section-includes">
+      <div class="section-label">
+        <span>Content Includes:</span>
+      </div>
+      <div class="includes-text">
+        {{ IssueData.issueIncludesTags }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -27,6 +46,7 @@ const ContentRule = ContentRules[Props.IssueData.reportedFor]
     0 1px 0 var(--card-outershadow-color);
   border: 1.6rem solid var(--card-innershadow-color);
   border-radius: 3.6rem;
+  padding: 3rem 2rem;
   box-sizing: border-box;
   position: absolute;
   left: 0;
@@ -34,5 +54,39 @@ const ContentRule = ContentRules[Props.IssueData.reportedFor]
   top: 0;
   bottom: 0;
   touch-action: none;
+  text-align: left;
+}
+
+.card-section {
+  margin-bottom: 2rem;
+}
+
+.section-label {
+  height: 1.8rem;
+  margin-bottom: .8rem;
+}
+
+.section-label > span {
+  background-color: #333;
+  color: white;
+  padding: .4rem .6rem;
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.section-rule .section-label > span {
+  background-color: #791414;
+}
+
+.rule-text {
+  font-weight: 300;
+  font-size: 3.5rem;
+}
+
+.issue-text, .includes-text {
+  font-weight: 300;
+  font-size: 2.5rem;
 }
 </style>

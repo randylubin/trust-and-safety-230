@@ -110,7 +110,7 @@ body {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'jaf-bernina-sans', Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;
 
