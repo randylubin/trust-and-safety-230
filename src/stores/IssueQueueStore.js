@@ -67,13 +67,44 @@ export const IssueQueueStore = reactive({
     this.currentIssueQueue.push(issue)
   },
   takeAction(action, issueData) {
-    if (action == issueData.correctResponse) {
-      console.log('right answer')
+    if (action === 'takeDown') {
+      if (issueData.managerRespose) {
+        if (issueData.managerRespose === 'takeDown') {
+          GameSessionStore.agreeWithManager += 1
+        } else {
+          GameSessionStore.disagreeWithManager += 1
+        }
+      }
+
+      if (issueData.publicResponse) {
+        if (issueData.publicResponse === 'takeDown') {
+          GameSessionStore.publicSafety += 1
+        } else if (issueData.publicResponse === 'both') {
+          GameSessionStore.publicSafety += 1
+          GameSessionStore.publicFreeSpeech -= 1
+        } else {
+          GameSessionStore.publicFreeSpeech -= 1
+        }
+      }
     } else {
-      if (action == 'takeDown') {
-        console.log('wrong answer: false positive')
-      } else if (action == 'keepUp') {
-        console.log('wrong answer: false negative')
+      // Keep Up
+      if (issueData.managerRespose) {
+        if (issueData.managerRespose === 'keepUp') {
+          GameSessionStore.agreeWithManager += 1
+        } else {
+          GameSessionStore.disagreeWithManager += 1
+        }
+      }
+
+      if (issueData.publicResponse) {
+        if (issueData.publicResponse === 'keepUp') {
+          GameSessionStore.publicFreeSpeech += 1
+        } else if (issueData.publicResponse === 'both') {
+          GameSessionStore.publicFreeSpeech += 1
+          GameSessionStore.publicSafety -= 1
+        } else {
+          GameSessionStore.publicSafety -= 1
+        }
       }
     }
     this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)

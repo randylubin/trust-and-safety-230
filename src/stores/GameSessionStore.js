@@ -45,7 +45,11 @@ export const GameSessionStore = reactive({
   moderationSpeed: 5,
   moderationQuality: 5,
   publicPerception: 5,
+  agreeWithManager: 0,
+  disagreeWithManager: 0,
   showGameOver: false,
+  publicSafety: 5,
+  publicFreeSpeech: 5,
   pauseTimer: function () {
     pause
   },
@@ -76,7 +80,11 @@ export const GameSessionStore = reactive({
       betweenRounds: this.betweenRounds,
       moderationSpeed: this.moderationSpeed,
       moderationQuality: this.moderationQuality,
+      agreeWithManager: this.agreeWithManager,
+      disagreeWithManager: this.disagreeWithManager,
       publicPerception: this.publicPerception,
+      publicSafety: this.publicSafety,
+      publicFreeSpeech: this.publicFreeSpeech,
     })
   },
   triggerPostRound() {
