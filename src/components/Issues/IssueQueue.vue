@@ -247,7 +247,11 @@ watchEffect(() => {
             Let's give this a closer look...
           </div>
           <div v-else-if="examineTime" class="examine-done">
-            {{ ActiveCard.learnMoreText }}
+            {{
+              ActiveCard.learnMoreText
+                ? ActiveCard.learnMoreText
+                : 'Nothing else to see.'
+            }}
           </div>
         </transition>
       </div>
