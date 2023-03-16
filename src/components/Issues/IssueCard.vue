@@ -26,7 +26,10 @@ const ContentRule = ContentRules[Props.IssueData.reportedFor]
         {{ IssueData.issueText }}
       </div>
     </div>
-    <div v-if="IssueData.issueIncludesTags" class="card-section section-includes">
+    <div
+      v-if="IssueData.issueIncludesTags"
+      class="card-section section-includes"
+    >
       <div class="section-label">
         <span>Content Includes:</span>
       </div>
@@ -63,13 +66,13 @@ const ContentRule = ContentRules[Props.IssueData.reportedFor]
 
 .section-label {
   height: 1.8rem;
-  margin-bottom: .8rem;
+  margin-bottom: 0.8rem;
 }
 
 .section-label > span {
   background-color: #333;
   color: white;
-  padding: .4rem .6rem;
+  padding: 0.4rem 0.6rem;
   font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -85,7 +88,8 @@ const ContentRule = ContentRules[Props.IssueData.reportedFor]
   font-size: 3.5rem;
 }
 
-.issue-text, .includes-text {
+.issue-text,
+.includes-text {
   font-weight: 300;
   font-size: 2.5rem;
 }

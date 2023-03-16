@@ -9,7 +9,6 @@ const clockGradientAngle = computed(() => {
     360 * (GameSessionStore.timeRemaining / GameSessionStore.initialTimeInRound)
   }deg`
 })
-
 </script>
 
 <template>
@@ -22,8 +21,7 @@ const clockGradientAngle = computed(() => {
       <button @click="$emit('pauseGame')">Pause</button>
     </div>
     <div class="clock-area">
-      <div class="round-clock">
-      </div>
+      <div class="round-clock"></div>
     </div>
   </div>
 </template>
@@ -35,7 +33,7 @@ const clockGradientAngle = computed(() => {
   top: 0;
   right: 0;
   bottom: 0;
-  padding: 1rem 1rem .2rem;
+  padding: 1rem 1rem 0.2rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -58,12 +56,11 @@ const clockGradientAngle = computed(() => {
   border: 0.8rem solid var(--controls-bg-color);
   background-color: rgb(119, 112, 103);
   background-image: conic-gradient(
-    rgba(255,255,255,.25) var(--gradient-angle),
+    rgba(255, 255, 255, 0.25) var(--gradient-angle),
     transparent var(--gradient-angle)
   );
   background-size: cover;
   background-repeat: no-repeat;
   background-blend-mode: soft-light;
 }
-
 </style>
