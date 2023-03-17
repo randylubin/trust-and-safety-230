@@ -12,7 +12,6 @@ import { useArrayFilter } from '@vueuse/core'
 import interact from 'interactjs'
 import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
 import IssueCard from './IssueCard.vue'
-import InterstitialScreen from './InterstitialScreen.vue'
 
 const props = defineProps({
   isActive: Boolean,
@@ -185,9 +184,6 @@ watchEffect(() => {
 
 <template>
   <div class="stack-area" ref="StackAreaElement">
-    <InterstitialScreen
-      v-if="IssueQueueStore.interstitialShown && !isLeaving"
-    />
     <div class="stack-top">
       <transition-group name="cards" @after-leave="isLeaving = false">
         <div
@@ -247,7 +243,11 @@ watchEffect(() => {
             Let's give this a closer look...
           </div>
           <div v-else-if="examineTime" class="examine-done">
-            {{ ActiveCard.learnMoreText }}
+            {{
+              ActiveCard.learnMoreText
+                ? ActiveCard.learnMoreText
+                : 'Nothing else to see.'
+            }}
           </div>
         </transition>
       </div>
@@ -312,7 +312,7 @@ watchEffect(() => {
   justify-content: center;
 
   position: relative;
-  z-index: 1000;
+  z-index: 900;
   height: 15%;
   min-height: 95px;
   background-image: linear-gradient(

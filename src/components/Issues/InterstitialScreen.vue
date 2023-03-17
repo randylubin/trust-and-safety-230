@@ -5,9 +5,10 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
 
 <template>
   <div class="interstitial-screen">
-    <h1>Interstitial Screen</h1>
-    <div>{{ IssueQueueStore.interstitialShown }}</div>
-    <button @click="IssueQueueStore.closeInterstitial()">Close</button>
+    <div class="interstitial-text">{{ IssueQueueStore.interstitialShown }}</div>
+    <button class="btn-basic" @click="IssueQueueStore.closeInterstitial()">
+      Continue
+    </button>
   </div>
 </template>
 
@@ -20,6 +21,18 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
   bottom: 0;
   z-index: 1000;
 
-  background: #999;
+  box-sizing: border-box;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: var(--controls-bg-color);
+}
+
+.interstitial-text {
+  font-size: 2.8rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
 }
 </style>
