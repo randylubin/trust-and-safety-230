@@ -3,10 +3,12 @@ import { ref } from 'vue'
 
 import { GameSessionStore } from '../stores/GameSessionStore'
 import { MetaGameStore } from '../stores/MetaGameStore'
+import { IssueQueueStore } from '../stores/IssueQueueStore'
 
 import PauseMenu from './PauseMenu.vue'
 import GameStateBar from './GameStateBar.vue'
 import IssueQueue from './Issues/IssueQueue.vue'
+import InterstitialScreen from './Issues/InterstitialScreen.vue'
 import InterRoundScreens from './InterRoundScreens.vue'
 import GameOver from './GameOver/GameOver.vue'
 import DevTools from './DevTools.vue'
@@ -26,17 +28,23 @@ function unpauseGame() {
 
 <template>
   <div class="game-layout">
-    <PauseMenu
-      v-if="playerPausedGame"
-      @unpause-game="unpauseGame()"
-    ></PauseMenu>
+    <Transition name="overlay" mode="out-in">
+      <PauseMenu
+        v-if="playerPausedGame"
+        @unpause-game="unpauseGame()"
+      ></PauseMenu>
+      <InterstitialScreen v-else-if="IssueQueueStore.interstitialShown" />
+      <InterRoundScreens v-else-if="GameSessionStore.betweenRounds" />
+    </Transition>
     <div class="top-bar">
       <GameStateBar @pause-game="showPauseScreen()" />
     </div>
     <div class="play-area">
-      <InterRoundScreens v-if="GameSessionStore.betweenRounds" />
-      <GameOver v-else-if="GameSessionStore.showGameOver" />
-      <IssueQueue v-else :isActive="!GameSessionStore.gameIsPaused" />
+      <GameOver v-if="GameSessionStore.showGameOver" />
+      <IssueQueue
+        v-else-if="!GameSessionStore.betweenRounds"
+        :isActive="!GameSessionStore.gameIsPaused"
+      />
       <DevTools v-if="MetaGameStore.showDevTools" />
     </div>
   </div>

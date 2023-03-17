@@ -12,7 +12,6 @@ import { useArrayFilter } from '@vueuse/core'
 import interact from 'interactjs'
 import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
 import IssueCard from './IssueCard.vue'
-import InterstitialScreen from './InterstitialScreen.vue'
 
 const props = defineProps({
   isActive: Boolean,
@@ -184,7 +183,6 @@ watchEffect(() => {
 </script>
 
 <template>
-  <InterstitialScreen v-if="IssueQueueStore.interstitialShown && !isLeaving" />
   <div class="stack-area" ref="StackAreaElement">
     <div class="stack-top">
       <transition-group name="cards" @after-leave="isLeaving = false">

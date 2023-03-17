@@ -89,7 +89,7 @@ function continueSession() {
   }
 }
 
-.game-layout {
+#app {
   --stack-bg-color: rgb(226, 219, 208);
   --controls-bg-color: rgb(201, 194, 184);
   --card-bg-color: white;
@@ -99,10 +99,25 @@ function continueSession() {
   --takedown-bg-color: rgb(224, 133, 133);
   --leaveup-bg-color: rgb(186, 219, 134);
   --examine-bg-color: rgb(178, 222, 237);
+
+  --button-basic-bg-color: rgb(178, 222, 237);
   --button-disabled-bg-color: #999;
 
   --examine-popup-incomplete-bg-color: rgb(215, 215, 215);
   --examine-popup-complete-bg-color: rgb(230, 230, 230);
+}
+
+.btn-basic {
+  background-color: var(--button-basic-bg-color);
+  border: none;
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+  font-family: var(--font-2), Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 800;
+  color: rgba(0,0,0,.5);
+  cursor: pointer;
 }
 
 body {
@@ -138,5 +153,15 @@ body {
   max-height: 860px;
   min-width: 320px;
   overflow: hidden;
+}
+
+/* Reusable Vue Transitions */
+
+.overlay-enter-from, .overlay-leave-to {
+  opacity: 0;
+  filter: blur(100%)
+}
+.overlay-enter-active, .overlay-leave-active {
+  transition: opacity .2s linear, filter .2s linear;
 }
 </style>

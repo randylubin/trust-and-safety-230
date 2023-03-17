@@ -17,8 +17,8 @@ const clockGradientAngle = computed(() => {
   <span>Perception: {{ GameSessionStore.publicPerception }}</span>-->
   <div class="game-state-bar">
     <div class="state-area">
-      Game State
-      <button @click="$emit('pauseGame')">Pause</button>
+      <!--Game State-->
+      <button class="btn-basic" @click="$emit('pauseGame')">Pause</button>
     </div>
     <div class="clock-area">
       <div class="round-clock"></div>
@@ -42,6 +42,9 @@ const clockGradientAngle = computed(() => {
 
 .state-area {
   flex-grow: 1;
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
 }
 
 .clock-area {
