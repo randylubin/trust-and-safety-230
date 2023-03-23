@@ -40,6 +40,7 @@ export const GameSessionStore = reactive({
   currentRound: 0,
   initialTimeInRound: 100,
   timeRemaining: timeRemaining,
+  issuesSeenThisRound: 0,
   gameIsPaused: gameIsPaused,
   betweenRounds: false,
   moderationSpeed: 5,
@@ -81,6 +82,7 @@ export const GameSessionStore = reactive({
     localStorage.GameSessionStore = JSON.stringify({
       currentRound: this.currentRound,
       timeRemaining: this.timeRemaining,
+      issuesSeenThisRound: this.issuesSeenThisRound,
       gameIsPaused: this.gameIsPaused,
       betweenRounds: this.betweenRounds,
       moderationSpeed: this.moderationSpeed,
