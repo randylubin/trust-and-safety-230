@@ -41,7 +41,8 @@ contentsArray.push(managerComments)
 let publicComments = ''
 
 if (GameSessionStore.publicFreeSpeech <= 3) {
-  publicComments += 'People are angry about the platform "censoring" their views'
+  publicComments +=
+    'People are angry about the platform "censoring" their views'
 } else {
   publicComments += 'TODO no censorship'
 }
