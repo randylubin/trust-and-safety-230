@@ -68,7 +68,7 @@ export const IssueQueueStore = reactive({
   },
   takeAction(action, issueData) {
     GameSessionStore.issuesCompletedThisRound += 1
-    console.log('completeing action', GameSessionStore.issuesCompletedThisRound)
+    GameSessionStore.issuesCompletedThisGame += 1
 
     if (action === 'takeDown') {
       if (issueData.managerRespose) {
