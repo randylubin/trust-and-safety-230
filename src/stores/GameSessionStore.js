@@ -40,7 +40,7 @@ export const GameSessionStore = reactive({
   currentRound: 0,
   initialTimeInRound: 100,
   timeRemaining: timeRemaining,
-  issuesSeenThisRound: 0,
+  issuesCompletedThisRound: 0,
   gameIsPaused: gameIsPaused,
   betweenRounds: false,
   moderationSpeed: 5,
@@ -72,6 +72,16 @@ export const GameSessionStore = reactive({
     }
     gameIsPaused.value = false
   },
+  startNewRound() {
+    GameSessionStore.currentRound++
+    GameSessionStore.timeRemaining = GameSessionStore.initialTimeInRound // TODO
+
+    // RESET PER-ROUND STATS
+    GameSessionStore.issuesCompletedThisRound = 0
+
+    // Construct Card Queue
+    IssueQueueStore.startNewRound()
+  },
   loadSessionFromLocal() {
     const saveData = JSON.parse(localStorage.GameSessionStore)
     for (const [key, value] of Object.entries(saveData)) {
@@ -82,7 +92,7 @@ export const GameSessionStore = reactive({
     localStorage.GameSessionStore = JSON.stringify({
       currentRound: this.currentRound,
       timeRemaining: this.timeRemaining,
-      issuesSeenThisRound: this.issuesSeenThisRound,
+      issuesCompletedThisRound: this.issuesCompletedThisRound,
       gameIsPaused: this.gameIsPaused,
       betweenRounds: this.betweenRounds,
       moderationSpeed: this.moderationSpeed,

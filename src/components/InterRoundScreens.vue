@@ -1,17 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { GameSessionStore } from '../stores/GameSessionStore'
-import { IssueQueueStore } from '../stores/IssueQueueStore'
 
 let interScreenIndex = ref(0)
 let contentsArray = []
-
-const startNewRound = function () {
-  console.log('new round')
-  GameSessionStore.currentRound++
-  GameSessionStore.timeRemaining = 100 // TODO
-  IssueQueueStore.startNewRound()
-}
 
 // ADD CONTENT
 // Manager Check-in
@@ -26,7 +18,7 @@ if (GameSessionStore.disagreeWithManager > GameSessionStore.agreeWithManager) {
     "You're doing a great job of making sure content adhears to our policies."
 }
 
-if (GameSessionStore.issuesSeenThisRound < 10) {
+if (GameSessionStore.issuesCompletedThisRound < 10) {
   // TODO: fix logic
   managerComments +=
     "<br><br>You're making decisions too slowly... move faster."
@@ -82,7 +74,7 @@ contentsArray.push(publicComments)
     <button
       v-if="contentsArray.length == interScreenIndex"
       class="btn-basic"
-      @click="startNewRound()"
+      @click="GameSessionStore.startNewRound()"
     >
       Next Round
     </button>
