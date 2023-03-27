@@ -5,6 +5,7 @@ import { MetaGameStore } from './stores/MetaGameStore'
 
 import MainGame from './components/MainGame.vue'
 import LaunchScreen from './components/LaunchScreen/LaunchScreen.vue'
+import AboutScreen from './components/Misc/AboutPage.vue'
 import { GameSessionStore } from './stores/GameSessionStore'
 import { IssueQueueStore } from './stores/IssueQueueStore'
 
@@ -71,6 +72,8 @@ function continueSession() {
       @new-session="newSession()"
       @continue-session="continueSession()"
     />
+
+    <AboutScreen v-if="GameSessionStore.showAbout"></AboutScreen>
 
     <MainGame v-if="!showLaunchScreen" />
   </div>

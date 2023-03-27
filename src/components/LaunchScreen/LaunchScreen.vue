@@ -19,9 +19,11 @@ function startSession(showTutorial = true) {
 </script>
 
 <template>
-  <div class="launch-screen">
+  <div class="launch-screen" v-if="!showAboutPage">
     <!--<h1>Launch Screen</h1>-->
     <div v-if="!showTutorialButton">
+      <h1>GAME LOGO</h1>
+      <h2>One line pitch</h2>
       <button
         v-if="MetaGameStore.activeSession"
         class="btn-basic"
@@ -44,6 +46,9 @@ function startSession(showTutorial = true) {
         Start Game
       </button>
       <!--<AchievementsList></AchievementsList>-->
+      <button class="btn-basic" @click="GameSessionStore.showAbout = true">
+        About
+      </button>
     </div>
     <div v-if="showTutorialButton">
       <button class="btn-basic" @click="startSession(false)">

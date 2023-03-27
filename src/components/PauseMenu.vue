@@ -1,4 +1,6 @@
 <script setup>
+import { GameSessionStore } from '../stores/GameSessionStore'
+
 const emits = defineEmits(['unpauseGame'])
 </script>
 
@@ -6,6 +8,9 @@ const emits = defineEmits(['unpauseGame'])
   <div class="pause-screen">
     <div class="pause-text">The Pause Menu</div>
     <button class="btn-basic" @click="$emit('unpauseGame')">Resume</button>
+    <button class="btn-basic" @click="GameSessionStore.showAbout = true">
+      About
+    </button>
   </div>
 </template>
 
@@ -30,6 +35,10 @@ const emits = defineEmits(['unpauseGame'])
 .pause-text {
   font-size: 2.8rem;
   font-weight: 400;
+  margin-bottom: 2rem;
+}
+
+button {
   margin-bottom: 2rem;
 }
 </style>

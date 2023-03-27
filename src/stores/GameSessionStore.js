@@ -50,6 +50,7 @@ export const GameSessionStore = reactive({
   agreeWithManager: 0,
   disagreeWithManager: 0,
   showGameOver: false,
+  showAbout: false,
   publicSafety: 5,
   publicFreeSpeech: 5,
   pauseTimer: function () {
