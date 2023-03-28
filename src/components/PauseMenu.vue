@@ -1,5 +1,7 @@
 <script setup>
 import { GameSessionStore } from '../stores/GameSessionStore'
+import { MetaGameStore } from '../stores/MetaGameStore'
+import AchievementsList from './Misc/AchievementsList.vue'
 
 const emits = defineEmits(['unpauseGame'])
 </script>
@@ -11,6 +13,9 @@ const emits = defineEmits(['unpauseGame'])
     <button class="btn-basic" @click="GameSessionStore.showAbout = true">
       About
     </button>
+    <AchievementsList
+      v-if="MetaGameStore.achievements.length"
+    ></AchievementsList>
   </div>
 </template>
 

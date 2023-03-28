@@ -53,6 +53,7 @@ export const GameSessionStore = reactive({
   showAbout: false,
   publicSafety: 5,
   publicFreeSpeech: 5,
+  achievementsUnlockedThisSession: [],
   pauseTimer: function () {
     pause
   },
@@ -105,6 +106,7 @@ export const GameSessionStore = reactive({
       publicPerception: this.publicPerception,
       publicSafety: this.publicSafety,
       publicFreeSpeech: this.publicFreeSpeech,
+      achievementsUnlockedThisSession: this.achievementsUnlockedThisSession,
     })
   },
   triggerPostRound() {
