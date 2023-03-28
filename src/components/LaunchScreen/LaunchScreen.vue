@@ -4,7 +4,7 @@ import { GameSessionStore } from '../../stores/GameSessionStore'
 import AchievementsList from '../Misc/AchievementsList.vue'
 import { ref } from 'vue'
 
-const emit = defineEmits(['newSession'])
+const emit = defineEmits(['newSession', 'continueSession'])
 
 const showTutorialButton = ref(false)
 
