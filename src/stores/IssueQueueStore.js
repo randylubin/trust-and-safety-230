@@ -152,6 +152,36 @@ export const IssueQueueStore = reactive({
 
     // TODO Arcs
 
+    // check for arc ending
+    if (actionConsequences.endArc) {
+      let arcName = issueData.issueID.slice(0, issueData.issueID.indexOf('-'))
+      MetaGameStore.arcsCompleted.push(arcName)
+
+      GameSessionStore.arcsInProgress.splice(
+        GameSessionStore.arcsInProgress.indexOf(arcName),
+        1
+      )
+
+      // TODO arc acheivement
+
+      // remove any remaining arc cards from current queue
+      let currentCard = this.currentIssueQueue.shift()
+      this.currentIssueQueue = this.currentIssueQueue.filter(
+        (issue) => arcName != issue.issueID.slice(0, issue.issueID.indexOf('-'))
+      )
+      this.currentIssueQueue.unshift(currentCard)
+
+      // remove any remaining arc cards from unprocessed queue
+      this.unprocessedFollowUps = this.unprocessedFollowUps.filter(
+        (issueInsert) =>
+          arcName !=
+          issueInsert.issueObject.issueID.slice(
+            0,
+            issueInsert.issueObject.issueID.indexOf('-')
+          )
+      )
+    }
+
     // CHECK FOR INTERSTITIAL AND REMOVE CARD FROM QUEUE
     if (issueData.postIssueInterstitial) {
       GameSessionStore.gameIsPaused = true
