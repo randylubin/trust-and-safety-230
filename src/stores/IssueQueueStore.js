@@ -8,6 +8,8 @@ import { GameSessionStore } from './GameSessionStore'
 import { MetaGameStore } from './MetaGameStore.js'
 // import { ArcIssues } from '../issueData/ArcIssues.js'
 
+let minimumStartingQueueLength = 5
+
 export const IssueQueueStore = reactive({
   currentIssueQueue: [],
   unprocessedFollowUps: [],
@@ -171,7 +173,7 @@ export const IssueQueueStore = reactive({
     GameSessionStore.triggerPostRound()
   },
   insertIssueInQueue(issueObject, insertDelay = 1, insertPosition = null) {
-    console.log(issueObject, insertDelay, insertPosition)
+    // console.log(issueObject, insertDelay, insertPosition)
     this.unprocessedFollowUps.push({
       issueObject: issueObject,
       insertTime: GameSessionStore.timeRemaining - insertDelay,
@@ -238,12 +240,45 @@ export const IssueQueueStore = reactive({
 
       let initialArcCards = ArcIssues.getIssuesByID(selectedArc.initialIssues)
 
+      // Check for initial interstitial for grab bag arcs
+      if (initialArcCards.length > 1) {
+        let arcIntroInterstitial = initialArcCards.shift()
+        newQueue.unshift(arcIntroInterstitial)
+      }
+
       // TODO: add logic for having only a subset of initial cards and placing the rest in a queue
-      newQueue.push(...initialArcCards)
+      if (initialArcCards.length > 3) {
+        // Grab three random cards
+        let firstCards = []
+        for (let i = 0; i < 3; i++) {
+          let randomIndex = Math.floor(Math.random() * initialArcCards.length)
+          firstCards.push(...initialArcCards.splice(randomIndex, 1))
+        }
+        newQueue.push(...firstCards)
+
+        // add other cards to queue
+        console.log('cards remaining', initialArcCards)
+        let cardsRemaining = initialArcCards.length
+        for (let i = 0; i < cardsRemaining; i++) {
+          let randomIndex = Math.floor(Math.random() * initialArcCards.length)
+          let issue = initialArcCards.splice(randomIndex, 1)
+
+          // space issues out by 3 seconds
+          this.insertIssueInQueue(issue[0], 3 * (i + 1))
+        }
+        console.log('followup queue', this.unprocessedFollowUps)
+      } else {
+        newQueue.push(...initialArcCards)
+      }
     }
 
-    // TEMP: Add 5 random generics, excluding those already seen
-    newQueue.push(...GenericIssues.getRandomIssues(5, this.genericIssuesSeen))
+    // TEMP: Add random generics to bring up to min queue size, excluding those already seen
+    if (newQueue.length < minimumStartingQueueLength) {
+      let genericsToAdd = minimumStartingQueueLength - newQueue.length
+      newQueue.push(
+        ...GenericIssues.getRandomIssues(genericsToAdd, this.genericIssuesSeen)
+      )
+    }
 
     // TODO: Add logic for shuffling arcs and generics
 
