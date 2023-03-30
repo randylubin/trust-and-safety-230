@@ -257,7 +257,6 @@ export const IssueQueueStore = reactive({
         newQueue.push(...firstCards)
 
         // add other cards to queue
-        console.log('cards remaining', initialArcCards)
         let cardsRemaining = initialArcCards.length
         for (let i = 0; i < cardsRemaining; i++) {
           let randomIndex = Math.floor(Math.random() * initialArcCards.length)
@@ -266,7 +265,6 @@ export const IssueQueueStore = reactive({
           // space issues out by 3 seconds
           this.insertIssueInQueue(issue[0], 3 * (i + 1))
         }
-        console.log('followup queue', this.unprocessedFollowUps)
       } else {
         newQueue.push(...initialArcCards)
       }
