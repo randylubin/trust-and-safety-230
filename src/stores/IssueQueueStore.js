@@ -45,6 +45,25 @@ export const IssueQueueStore = reactive({
       interstitialShown: this.interstitialShown,
     })
   },
+  updatedArcMetadataForCompletedArc(arcName) {
+    MetaGameStore.arcsCompleted.push(arcName)
+    
+    MetaGameStore.arcsSeenButNotCompleted.splice(
+      MetaGameStore.arcsSeenButNotCompleted.indexOf(arcName),
+      1
+    )
+
+    IssueQueueStore.arcsCompleted.push(arcName)
+
+    IssueQueueStore.arcsInProgress.splice(
+      IssueQueueStore.arcsInProgress.indexOf(arcName),
+      1
+    )
+
+
+    // TODO arc acheivement
+    console.log('arc over')
+  },
   startNextCard() {
     if (
       GameSessionStore.timeRemaining != 0 &&
@@ -115,16 +134,18 @@ export const IssueQueueStore = reactive({
     this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
 
     // Appeals
-    if (action === 'takeDown' && issueData.appealIfTakeDown) {
-      let appealData = JSON.parse(JSON.stringify(issueData))
-      appealData.issueType = 'appealTakeDown'
+    if (issueData.issueType.slice(0, 6) !== 'appeal') {
+      if (action === 'takeDown' && issueData.appealIfTakeDown) {
+        let appealData = JSON.parse(JSON.stringify(issueData))
+        appealData.issueType = 'appealTakeDown'
 
-      this.insertIssueInQueue(appealData, 2, 3)
-    } else if (action === 'keepUp' && issueData.appealIfKeepUp) {
-      let appealData = JSON.parse(JSON.stringify(issueData))
-      appealData.issueType = 'appealKeepUp'
+        this.insertIssueInQueue(appealData, 2, 3)
+      } else if (action === 'keepUp' && issueData.appealIfKeepUp) {
+        let appealData = JSON.parse(JSON.stringify(issueData))
+        appealData.issueType = 'appealKeepUp'
 
-      this.insertIssueInQueue(appealData, 2, 3)
+        this.insertIssueInQueue(appealData, 2, 3)
+      }
     }
 
     // Handle consequences
@@ -151,18 +172,16 @@ export const IssueQueueStore = reactive({
     }
 
     // TODO Arcs
+    let arcName =
+      issueData.issueType === 'arc'
+        ? issueData.issueID.slice(0, issueData.issueID.indexOf('-'))
+        : null
 
     // check for arc ending
-    if (actionConsequences.endArc) {
-      let arcName = issueData.issueID.slice(0, issueData.issueID.indexOf('-'))
-      MetaGameStore.arcsCompleted.push(arcName)
 
-      GameSessionStore.arcsInProgress.splice(
-        GameSessionStore.arcsInProgress.indexOf(arcName),
-        1
-      )
-
-      // TODO arc acheivement
+    // check for arc ending from consequence
+    if (actionConsequences && actionConsequences.endArc) {
+      this.updatedArcMetadataForCompletedArc(arcName)
 
       // remove any remaining arc cards from current queue
       let currentCard = this.currentIssueQueue.shift()
@@ -180,6 +199,30 @@ export const IssueQueueStore = reactive({
             issueInsert.issueObject.issueID.indexOf('-')
           )
       )
+    }
+
+    // check for arc ending from no more arc cards remaining
+    if (arcName) {
+      let arcCardsRemaining = 0
+      // check current queue
+      arcCardsRemaining += this.currentIssueQueue.filter(
+        (issue) =>
+          arcName === issue.issueID.slice(0, issue.issueID.indexOf('-'))
+      ).length
+      // check unprocessed followups
+      arcCardsRemaining += this.unprocessedFollowUps.filter(
+        (issueInsert) =>
+          arcName ===
+          issueInsert.issueObject.issueID.slice(
+            0,
+            issueInsert.issueObject.issueID.indexOf('-')
+          )
+      ).length
+
+      // update metadata
+      if (arcCardsRemaining <= 1) {
+        this.updatedArcMetadataForCompletedArc(arcName)
+      }
     }
 
     // CHECK FOR INTERSTITIAL AND REMOVE CARD FROM QUEUE
