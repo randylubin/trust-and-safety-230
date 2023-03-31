@@ -359,6 +359,8 @@ export const IssueQueueStore = reactive({
   },
   addRandomIssue() {
     // pass genericIssuesSeen as argument to exclude them
-    this.currentIssueQueue.push(GenericIssues.getRandomIssue())
+    this.currentIssueQueue.push(
+      GenericIssues.getRandomIssue(this.genericIssuesSeen)
+    )
   },
 })
