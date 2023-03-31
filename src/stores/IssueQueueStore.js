@@ -47,7 +47,7 @@ export const IssueQueueStore = reactive({
   },
   updatedArcMetadataForCompletedArc(arcName) {
     MetaGameStore.arcsCompleted.push(arcName)
-    
+
     MetaGameStore.arcsSeenButNotCompleted.splice(
       MetaGameStore.arcsSeenButNotCompleted.indexOf(arcName),
       1
@@ -59,7 +59,6 @@ export const IssueQueueStore = reactive({
       IssueQueueStore.arcsInProgress.indexOf(arcName),
       1
     )
-
 
     // TODO arc acheivement
     console.log('arc over')
