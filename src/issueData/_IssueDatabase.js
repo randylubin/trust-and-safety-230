@@ -60,9 +60,6 @@ export default class IssueDatabase {
   get IssueIndex() {
     return Object.keys(this.#Issues)
   }
-  excludeGroup(exclusionGroup) {
-    this.#ExcludedGroups.push(exclusionGroup)
-  }
   importIssues(IssueArray) {
     IssueArray.forEach((issue) => {
       this.#Issues[issue.issueID] = issue
@@ -114,6 +111,12 @@ export default class IssueDatabase {
     this.#ExcludedGroupIDs = this.#ExcludedGroupIDs.concat(
       this.#ExclusionGroupLookup[exclusionGroup]
     )
+  }
+  getExclusionIDList(){
+    return this.#ExcludedGroupIDs
+  }
+  setExcludionIDs(excludeArray) {
+    this.#ExcludedGroupIDs = excludeArray
   }
   getRandomIssue(exclude = [], assignUniqueKey = true) {
     exclude.concat(this.#ExcludedGroupIDs)

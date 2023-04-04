@@ -35,12 +35,16 @@ export const IssueQueueStore = reactive({
     this.interstitialShown = JSON.parse(
       localStorage.IssueQueueStore
     ).interstitialShown
+    GenericIssues.setExcludionIDs(localStorage.exclusionGroupIDList)
   },
   saveSessionToLocal() {
+    let exclusionGroupIDList = GenericIssues.getExclusionIDList()
+
     localStorage.IssueQueueStore = JSON.stringify({
       currentIssueQueue: this.currentIssueQueue,
       unprocessedFollowUps: this.unprocessedFollowUps,
       genericIssuesSeen: this.genericIssuesSeen,
+      exclusionGroupIDList: exclusionGroupIDList,
       arcsInProgress: this.arcsInProgress,
       arcsCompleted: this.arcsCompleted,
       interstitialShown: this.interstitialShown,
