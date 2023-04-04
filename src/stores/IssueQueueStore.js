@@ -8,6 +8,9 @@ import { GameSessionStore } from './GameSessionStore'
 import { MetaGameStore } from './MetaGameStore.js'
 // import { ArcIssues } from '../issueData/ArcIssues.js'
 
+const minimumStartingQueueLength = 5
+const appealLikelihood = 0.5
+
 export const IssueQueueStore = reactive({
   currentIssueQueue: [],
   unprocessedFollowUps: [],
@@ -32,16 +35,38 @@ export const IssueQueueStore = reactive({
     this.interstitialShown = JSON.parse(
       localStorage.IssueQueueStore
     ).interstitialShown
+    GenericIssues.setExcludionIDs(localStorage.exclusionGroupIDList)
   },
   saveSessionToLocal() {
+    let exclusionGroupIDList = GenericIssues.getExclusionIDList()
+
     localStorage.IssueQueueStore = JSON.stringify({
       currentIssueQueue: this.currentIssueQueue,
       unprocessedFollowUps: this.unprocessedFollowUps,
       genericIssuesSeen: this.genericIssuesSeen,
+      exclusionGroupIDList: exclusionGroupIDList,
       arcsInProgress: this.arcsInProgress,
       arcsCompleted: this.arcsCompleted,
       interstitialShown: this.interstitialShown,
     })
+  },
+  updatedArcMetadataForCompletedArc(arcName) {
+    MetaGameStore.arcsCompleted.push(arcName)
+
+    MetaGameStore.arcsSeenButNotCompleted.splice(
+      MetaGameStore.arcsSeenButNotCompleted.indexOf(arcName),
+      1
+    )
+
+    IssueQueueStore.arcsCompleted.push(arcName)
+
+    IssueQueueStore.arcsInProgress.splice(
+      IssueQueueStore.arcsInProgress.indexOf(arcName),
+      1
+    )
+
+    // TODO arc acheivement
+    console.log('arc over')
   },
   startNextCard() {
     if (
@@ -67,62 +92,123 @@ export const IssueQueueStore = reactive({
     this.currentIssueQueue.push(issue)
   },
   takeAction(action, issueData) {
-    GameSessionStore.issuesCompletedThisRound += 1
+    GameSessionStore.issuesCompletedThisRound += 1 // TODO - do appeals count toward this?
     GameSessionStore.issuesCompletedThisGame += 1
+
+    // Manager and Public Response
+    let responseObject = {
+      takeDown: {
+        agreeWithManager: 0,
+        disagreeWithManager: 0,
+        publicSafety: 0,
+        publicFreeSpeech: 0,
+      },
+      keepUp: {
+        agreeWithManager: 0,
+        disagreeWithManager: 0,
+        publicSafety: 0,
+        publicFreeSpeech: 0,
+      },
+    }
 
     if (action === 'takeDown') {
       if (issueData.managerRespose) {
         if (issueData.managerRespose === 'takeDown') {
-          GameSessionStore.agreeWithManager += 1
+          responseObject.takeDown.agreeWithManager += 1
         } else {
-          GameSessionStore.disagreeWithManager += 1
+          responseObject.takeDown.disagreeWithManager += 1
         }
       }
 
       if (issueData.publicResponse) {
         if (issueData.publicResponse === 'takeDown') {
-          GameSessionStore.publicSafety += 1
+          responseObject.takeDown.publicSafety += 1
         } else if (issueData.publicResponse === 'both') {
-          GameSessionStore.publicSafety += 1
-          GameSessionStore.publicFreeSpeech -= 1
+          responseObject.takeDown.publicSafety += 1
+          responseObject.takeDown.publicFreeSpeech -= 1
         } else {
-          GameSessionStore.publicFreeSpeech -= 1
+          responseObject.takeDown.publicFreeSpeech -= 1
         }
       }
     } else {
       // Keep Up
       if (issueData.managerRespose) {
         if (issueData.managerRespose === 'keepUp') {
-          GameSessionStore.agreeWithManager += 1
+          responseObject.keepUp.agreeWithManager += 1
         } else {
-          GameSessionStore.disagreeWithManager += 1
+          responseObject.keepUp.disagreeWithManager += 1
         }
       }
 
       if (issueData.publicResponse) {
         if (issueData.publicResponse === 'keepUp') {
-          GameSessionStore.publicFreeSpeech += 1
+          responseObject.keepUp.publicFreeSpeech += 1
         } else if (issueData.publicResponse === 'both') {
-          GameSessionStore.publicFreeSpeech += 1
-          GameSessionStore.publicSafety -= 1
+          responseObject.keepUp.publicFreeSpeech += 1
+          responseObject.keepUp.publicSafety -= 1
         } else {
-          GameSessionStore.publicSafety -= 1
+          responseObject.keepUp.publicSafety -= 1
         }
       }
     }
     this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
 
-    // Appeals
-    if (action === 'takeDown' && issueData.appealIfTakeDown) {
-      let appealData = JSON.parse(JSON.stringify(issueData))
-      appealData.issueType = 'appealTakeDown'
+    if (issueData.issueType.slice(0, 6) !== 'appeal') {
+      // if not an appeal
+      Object.keys(responseObject[action]).forEach((key) => {
+        GameSessionStore[key] += responseObject[action][key]
+      })
+    } else {
+      // if appeal, unwind previous game state change
+      if (issueData.issueType == 'appealTakeDown') {
+        if (action == 'takeDown') {
+          // TODO - maybe something around tracking conviction?
+          // do nothing
+        } else if (action == 'keepUp') {
+          // TODO - maybe something around tracking change on appeal?
+          // revert prior state change
+          Object.keys(responseObject['takeDown']).forEach((key) => {
+            GameSessionStore[key] -= responseObject['takeDown'][key]
+          })
+          // apply new change
+          Object.keys(responseObject['keepUp']).forEach((key) => {
+            GameSessionStore[key] += responseObject['keepUp'][key]
+          })
+        }
+      } else if (issueData.issueType == 'appealKeepUp') {
+        if (action == 'keepUp') {
+          // TODO - maybe something around tracking conviction?
+          // do nothing
+        } else if (action == 'takeDown') {
+          // TODO - maybe something around tracking change on appeal?
+          // revert prior state change
+          Object.keys(responseObject['keepUp']).forEach((key) => {
+            GameSessionStore[key] -= responseObject['keepUp'][key]
+          })
+          // apply new change
+          Object.keys(responseObject['takeDown']).forEach((key) => {
+            GameSessionStore[key] += responseObject['takeDown'][key]
+          })
+        }
+      }
+    }
 
-      this.insertIssueInQueue(appealData, 2, 3)
-    } else if (action === 'keepUp' && issueData.appealIfKeepUp) {
-      let appealData = JSON.parse(JSON.stringify(issueData))
-      appealData.issueType = 'appealKeepUp'
+    // Check for appeal
+    if (
+      issueData.issueType.slice(0, 6) !== 'appeal' && // not already an appeal
+      Math.random() <= appealLikelihood // chance of appeal
+    ) {
+      if (action === 'takeDown' && issueData.appealIfTakeDown) {
+        let appealData = JSON.parse(JSON.stringify(issueData))
+        appealData.issueType = 'appealTakeDown'
 
-      this.insertIssueInQueue(appealData, 2, 3)
+        this.insertIssueInQueue(appealData, 2, 3)
+      } else if (action === 'keepUp' && issueData.appealIfKeepUp) {
+        let appealData = JSON.parse(JSON.stringify(issueData))
+        appealData.issueType = 'appealKeepUp'
+
+        this.insertIssueInQueue(appealData, 2, 3)
+      }
     }
 
     // Handle consequences
@@ -149,6 +235,58 @@ export const IssueQueueStore = reactive({
     }
 
     // TODO Arcs
+    let arcName =
+      issueData.issueType === 'arc'
+        ? issueData.issueID.slice(0, issueData.issueID.indexOf('-'))
+        : null
+
+    // check for arc ending
+
+    // check for arc ending from consequence
+    if (actionConsequences && actionConsequences.endArc) {
+      this.updatedArcMetadataForCompletedArc(arcName)
+
+      // remove any remaining arc cards from current queue
+      let currentCard = this.currentIssueQueue.shift()
+      this.currentIssueQueue = this.currentIssueQueue.filter(
+        (issue) => arcName != issue.issueID.slice(0, issue.issueID.indexOf('-'))
+      )
+      this.currentIssueQueue.unshift(currentCard)
+
+      // remove any remaining arc cards from unprocessed queue
+      this.unprocessedFollowUps = this.unprocessedFollowUps.filter(
+        (issueInsert) =>
+          arcName !=
+          issueInsert.issueObject.issueID.slice(
+            0,
+            issueInsert.issueObject.issueID.indexOf('-')
+          )
+      )
+    }
+
+    // check for arc ending from no more arc cards remaining
+    if (arcName) {
+      let arcCardsRemaining = 0
+      // check current queue
+      arcCardsRemaining += this.currentIssueQueue.filter(
+        (issue) =>
+          arcName === issue.issueID.slice(0, issue.issueID.indexOf('-'))
+      ).length
+      // check unprocessed followups
+      arcCardsRemaining += this.unprocessedFollowUps.filter(
+        (issueInsert) =>
+          arcName ===
+          issueInsert.issueObject.issueID.slice(
+            0,
+            issueInsert.issueObject.issueID.indexOf('-')
+          )
+      ).length
+
+      // update metadata
+      if (arcCardsRemaining <= 1) {
+        this.updatedArcMetadataForCompletedArc(arcName)
+      }
+    }
 
     // CHECK FOR INTERSTITIAL AND REMOVE CARD FROM QUEUE
     if (issueData.postIssueInterstitial) {
@@ -171,7 +309,7 @@ export const IssueQueueStore = reactive({
     GameSessionStore.triggerPostRound()
   },
   insertIssueInQueue(issueObject, insertDelay = 1, insertPosition = null) {
-    console.log(issueObject, insertDelay, insertPosition)
+    // console.log(issueObject, insertDelay, insertPosition)
     this.unprocessedFollowUps.push({
       issueObject: issueObject,
       insertTime: GameSessionStore.timeRemaining - insertDelay,
@@ -238,12 +376,43 @@ export const IssueQueueStore = reactive({
 
       let initialArcCards = ArcIssues.getIssuesByID(selectedArc.initialIssues)
 
+      // Check for initial interstitial for grab bag arcs
+      if (initialArcCards.length > 1) {
+        let arcIntroInterstitial = initialArcCards.shift()
+        newQueue.unshift(arcIntroInterstitial)
+      }
+
       // TODO: add logic for having only a subset of initial cards and placing the rest in a queue
-      newQueue.push(...initialArcCards)
+      if (initialArcCards.length > 3) {
+        // Grab three random cards
+        let firstCards = []
+        for (let i = 0; i < 3; i++) {
+          let randomIndex = Math.floor(Math.random() * initialArcCards.length)
+          firstCards.push(...initialArcCards.splice(randomIndex, 1))
+        }
+        newQueue.push(...firstCards)
+
+        // add other cards to queue
+        let cardsRemaining = initialArcCards.length
+        for (let i = 0; i < cardsRemaining; i++) {
+          let randomIndex = Math.floor(Math.random() * initialArcCards.length)
+          let issue = initialArcCards.splice(randomIndex, 1)
+
+          // space issues out by 3 seconds
+          this.insertIssueInQueue(issue[0], 3 * (i + 1))
+        }
+      } else {
+        newQueue.push(...initialArcCards)
+      }
     }
 
-    // TEMP: Add 5 random generics, excluding those already seen
-    newQueue.push(...GenericIssues.getRandomIssues(5, this.genericIssuesSeen))
+    // TEMP: Add random generics to bring up to min queue size, excluding those already seen
+    if (newQueue.length < minimumStartingQueueLength) {
+      let genericsToAdd = minimumStartingQueueLength - newQueue.length
+      newQueue.push(
+        ...GenericIssues.getRandomIssues(genericsToAdd, this.genericIssuesSeen)
+      )
+    }
 
     // TODO: Add logic for shuffling arcs and generics
 
@@ -253,7 +422,8 @@ export const IssueQueueStore = reactive({
     this.startNextCard()
   },
   addRandomIssue() {
-    // pass genericIssuesSeen as argument to exclude them
-    this.currentIssueQueue.push(GenericIssues.getRandomIssue())
+    let excludeArray = this.genericIssuesSeen.concat(this.currentIssueQueue)
+
+    this.currentIssueQueue.push(GenericIssues.getRandomIssue(excludeArray))
   },
 })

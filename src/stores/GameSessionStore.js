@@ -14,6 +14,8 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     // TODO add cards over time
 
     // Add follow up cards to current queue
+    let followupsAdded = false
+
     if (IssueQueueStore.unprocessedFollowUps) {
       for (let i = 0; i < IssueQueueStore.unprocessedFollowUps.length; i++) {
         let issue = IssueQueueStore.unprocessedFollowUps[i]
@@ -24,13 +26,19 @@ const { pause, resume, isActive } = useIntervalFn(() => {
           )
 
           IssueQueueStore.unprocessedFollowUps[i].processed = true
+
+          followupsAdded = true
           // TODO pay attention to insert order, right now it adds to end
         }
       }
     }
 
     // ADD GENERICS OVER TIME
-    if (Math.random() < 0.33 && GameSessionStore.currentRound != 0) {
+    if (
+      Math.random() < 0.33 &&
+      GameSessionStore.currentRound != 0 &&
+      !followupsAdded
+    ) {
       IssueQueueStore.addRandomIssue()
     }
   }

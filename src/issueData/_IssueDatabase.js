@@ -48,6 +48,9 @@ let nextUniqueKey = 1000
 
 export default class IssueDatabase {
   #Issues = {}
+  #ExcludedGroups = []
+  #ExcludedGroupIDs = []
+  #ExclusionGroupLookup = {}
   static copyObject(obj) {
     return JSON.parse(JSON.stringify(obj))
   }
@@ -60,6 +63,12 @@ export default class IssueDatabase {
   importIssues(IssueArray) {
     IssueArray.forEach((issue) => {
       this.#Issues[issue.issueID] = issue
+      if (issue.exclusionGroup) {
+        if (!this.#ExclusionGroupLookup[issue.exclusionGroup]) {
+          this.#ExclusionGroupLookup[issue.exclusionGroup] = []
+        }
+        this.#ExclusionGroupLookup[issue.exclusionGroup].push(issue.issueID)
+      }
     })
   }
   getAllIssues(exclude = [], assignUniqueKeys = true) {
@@ -98,7 +107,19 @@ export default class IssueDatabase {
     }
     return issueArray
   }
+  addExclusionIDsByExclusionGroup(exclusionGroup) {
+    this.#ExcludedGroupIDs = this.#ExcludedGroupIDs.concat(
+      this.#ExclusionGroupLookup[exclusionGroup]
+    )
+  }
+  getExclusionIDList() {
+    return this.#ExcludedGroupIDs
+  }
+  setExcludionIDs(excludeArray) {
+    this.#ExcludedGroupIDs = excludeArray
+  }
   getRandomIssue(exclude = [], assignUniqueKey = true) {
+    exclude.concat(this.#ExcludedGroupIDs)
     const filteredIssues = this.IssueIndex.filter((id) => !exclude.includes(id))
     const outputObject = IssueDatabase.copyObject(
       this.#Issues[
@@ -106,9 +127,14 @@ export default class IssueDatabase {
       ]
     )
     if (assignUniqueKey) outputObject.uniqueKey = IssueDatabase.getUniqueKey()
+    if (outputObject.exclusionGroup) {
+      this.addExclusionIDsByExclusionGroup(outputObject.exclusionGroup)
+    }
+
     return outputObject
   }
   getRandomIssues(limit = Infinity, exclude = [], assignUniqueKeys = true) {
+    exclude.concat(this.#ExcludedGroupIDs)
     let filteredIssues = this.IssueIndex.filter((id) => !exclude.includes(id))
     const outputArray = []
     while (outputArray.length <= limit && filteredIssues.length > 0) {
@@ -120,8 +146,17 @@ export default class IssueDatabase {
           )[0]
         ]
       )
-      if (assignUniqueKeys) issue.uniqueKey = IssueDatabase.getUniqueKey()
-      outputArray.push(issue)
+      // check for exclusion
+      if (
+        !issue.exclusionGroup ||
+        !this.#ExcludedGroupIDs.includes(issue.issueID)
+      ) {
+        if (issue.exclusionGroup) {
+          this.addExclusionIDsByExclusionGroup(issue.exclusionGroup)
+        }
+        if (assignUniqueKeys) issue.uniqueKey = IssueDatabase.getUniqueKey()
+        outputArray.push(issue)
+      }
     }
     return outputArray
   }

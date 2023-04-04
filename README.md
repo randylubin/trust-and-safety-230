@@ -33,3 +33,8 @@ npm run build
 ```sh
 npm run lint
 ```
+
+
+### Deploy to Firebase
+
+npm run build && firebase deploy

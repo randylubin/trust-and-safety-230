@@ -19,6 +19,13 @@ const showLaunchScreen = ref(true)
 
 function shortcutKeys(e) {
   if (e.key == 'D') MetaGameStore.showDevTools = !MetaGameStore.showDevTools
+  if (e.key == 'ArrowLeft') {
+    console.log('taking down')
+    IssueQueueStore.takeAction('takeDown', IssueQueueStore.currentIssueQueue[0])
+  }
+  if (e.key == 'ArrowRight') {
+    IssueQueueStore.takeAction('keepUp', IssueQueueStore.currentIssueQueue[0])
+  }
 }
 
 onMounted(() => {
@@ -119,7 +126,7 @@ function continueSession() {
   text-transform: uppercase;
   font-size: 2rem;
   font-weight: 800;
-  color: rgba(0,0,0,.5);
+  color: rgba(0, 0, 0, 0.5);
   cursor: pointer;
 }
 
@@ -160,11 +167,13 @@ body {
 
 /* Reusable Vue Transitions */
 
-.overlay-enter-from, .overlay-leave-to {
+.overlay-enter-from,
+.overlay-leave-to {
   opacity: 0;
-  filter: blur(100%)
+  filter: blur(100%);
 }
-.overlay-enter-active, .overlay-leave-active {
-  transition: opacity .2s linear, filter .2s linear;
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.2s linear, filter 0.2s linear;
 }
 </style>
