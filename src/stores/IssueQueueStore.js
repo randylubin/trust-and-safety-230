@@ -8,7 +8,8 @@ import { GameSessionStore } from './GameSessionStore'
 import { MetaGameStore } from './MetaGameStore.js'
 // import { ArcIssues } from '../issueData/ArcIssues.js'
 
-let minimumStartingQueueLength = 5
+const minimumStartingQueueLength = 5
+const appealLikelihood = 0.5
 
 export const IssueQueueStore = reactive({
   currentIssueQueue: [],
@@ -133,7 +134,10 @@ export const IssueQueueStore = reactive({
     this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
 
     // Appeals
-    if (issueData.issueType.slice(0, 6) !== 'appeal') {
+    if (
+      issueData.issueType.slice(0, 6) !== 'appeal' &&
+      Math.random() <= appealLikelihood
+    ) {
       if (action === 'takeDown' && issueData.appealIfTakeDown) {
         let appealData = JSON.parse(JSON.stringify(issueData))
         appealData.issueType = 'appealTakeDown'
