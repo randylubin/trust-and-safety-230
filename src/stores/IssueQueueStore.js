@@ -95,56 +95,108 @@ export const IssueQueueStore = reactive({
     GameSessionStore.issuesCompletedThisRound += 1 // TODO - do appeals count toward this?
     GameSessionStore.issuesCompletedThisGame += 1
 
+    // Manager and Public Response
+    let responseObject = {
+      takeDown: {
+        agreeWithManager: 0,
+        disagreeWithManager: 0,
+        publicSafety: 0,
+        publicFreeSpeech: 0,
+      },
+      keepUp: {
+        agreeWithManager: 0,
+        disagreeWithManager: 0,
+        publicSafety: 0,
+        publicFreeSpeech: 0,
+      },
+    }
+
     if (action === 'takeDown') {
       if (issueData.managerRespose) {
         if (issueData.managerRespose === 'takeDown') {
-          GameSessionStore.agreeWithManager += 1
+          responseObject.takeDown.agreeWithManager += 1
         } else {
-          GameSessionStore.disagreeWithManager += 1
+          responseObject.takeDown.disagreeWithManager += 1
         }
       }
 
       if (issueData.publicResponse) {
         if (issueData.publicResponse === 'takeDown') {
-          GameSessionStore.publicSafety += 1
+          responseObject.takeDown.publicSafety += 1
         } else if (issueData.publicResponse === 'both') {
-          GameSessionStore.publicSafety += 1
-          GameSessionStore.publicFreeSpeech -= 1
+          responseObject.takeDown.publicSafety += 1
+          responseObject.takeDown.publicFreeSpeech -= 1
         } else {
-          GameSessionStore.publicFreeSpeech -= 1
+          responseObject.takeDown.publicFreeSpeech -= 1
         }
       }
     } else {
       // Keep Up
       if (issueData.managerRespose) {
         if (issueData.managerRespose === 'keepUp') {
-          GameSessionStore.agreeWithManager += 1
+          responseObject.keepUp.agreeWithManager += 1
         } else {
-          GameSessionStore.disagreeWithManager += 1
+          responseObject.keepUp.disagreeWithManager += 1
         }
       }
 
       if (issueData.publicResponse) {
         if (issueData.publicResponse === 'keepUp') {
-          GameSessionStore.publicFreeSpeech += 1
+          responseObject.keepUp.publicFreeSpeech += 1
         } else if (issueData.publicResponse === 'both') {
-          GameSessionStore.publicFreeSpeech += 1
-          GameSessionStore.publicSafety -= 1
+          responseObject.keepUp.publicFreeSpeech += 1
+          responseObject.keepUp.publicSafety -= 1
         } else {
-          GameSessionStore.publicSafety -= 1
+          responseObject.keepUp.publicSafety -= 1
         }
       }
     }
     this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
 
-    if (issueData.issueType.slice(0, 6) == 'appeal') {
-      // TODO if appeal, unwind previous game state change
+    if (issueData.issueType.slice(0, 6) !== 'appeal') {
+      // if not an appeal
+      Object.keys(responseObject[action]).forEach((key) => {
+        GameSessionStore[key] += responseObject[action][key]
+      })
+    } else {
+      // if appeal, unwind previous game state change
+      if (issueData.issueType == 'appealTakeDown') {
+        if (action == 'takeDown') {
+          // TODO - maybe something around tracking conviction?
+          // do nothing
+        } else if (action == 'keepUp') {
+          // TODO - maybe something around tracking change on appeal?
+          // revert prior state change
+          Object.keys(responseObject['takeDown']).forEach((key) => {
+            GameSessionStore[key] -= responseObject['takeDown'][key]
+          })
+          // apply new change
+          Object.keys(responseObject['keepUp']).forEach((key) => {
+            GameSessionStore[key] += responseObject['keepUp'][key]
+          })
+        }
+      } else if (issueData.issueType == 'appealKeepUp') {
+        if (action == 'keepUp') {
+          // TODO - maybe something around tracking conviction?
+          // do nothing
+        } else if (action == 'takeDown') {
+          // TODO - maybe something around tracking change on appeal?
+          // revert prior state change
+          Object.keys(responseObject['keepUp']).forEach((key) => {
+            GameSessionStore[key] -= responseObject['keepUp'][key]
+          })
+          // apply new change
+          Object.keys(responseObject['takeDown']).forEach((key) => {
+            GameSessionStore[key] += responseObject['takeDown'][key]
+          })
+        }
+      }
     }
 
-    // Appeals
+    // Check for appeal
     if (
-      issueData.issueType.slice(0, 6) !== 'appeal' &&
-      Math.random() <= appealLikelihood
+      issueData.issueType.slice(0, 6) !== 'appeal' && // not already an appeal
+      Math.random() <= appealLikelihood // chance of appeal
     ) {
       if (action === 'takeDown' && issueData.appealIfTakeDown) {
         let appealData = JSON.parse(JSON.stringify(issueData))
