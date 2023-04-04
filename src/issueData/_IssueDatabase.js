@@ -112,7 +112,7 @@ export default class IssueDatabase {
       this.#ExclusionGroupLookup[exclusionGroup]
     )
   }
-  getExclusionIDList(){
+  getExclusionIDList() {
     return this.#ExcludedGroupIDs
   }
   setExcludionIDs(excludeArray) {
