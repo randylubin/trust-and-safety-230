@@ -88,7 +88,7 @@ export const IssueQueueStore = reactive({
     this.currentIssueQueue.push(issue)
   },
   takeAction(action, issueData) {
-    GameSessionStore.issuesCompletedThisRound += 1
+    GameSessionStore.issuesCompletedThisRound += 1 // TODO - do appeals count toward this?
     GameSessionStore.issuesCompletedThisGame += 1
 
     if (action === 'takeDown') {
@@ -132,6 +132,10 @@ export const IssueQueueStore = reactive({
       }
     }
     this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
+
+    if (issueData.issueType.slice(0, 6) == 'appeal') {
+      // TODO if appeal, unwind previous game state change
+    }
 
     // Appeals
     if (

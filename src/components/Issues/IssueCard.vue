@@ -10,6 +10,13 @@ const ContentRule = ContentRules[Props.IssueData.reportedFor]
 
 <template>
   <div class="issue-card">
+    <!-- TODO remove appeal placeholder -->
+    <h1
+      style="color: red"
+      v-if="IssueData.issueType && IssueData.issueType.slice(0, 6) == 'appeal'"
+    >
+      APPEAL
+    </h1>
     <div v-if="ContentRule" class="card-section section-rule">
       <div class="section-label">
         <span>Reported For:</span>
