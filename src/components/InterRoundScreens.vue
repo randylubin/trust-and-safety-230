@@ -96,7 +96,7 @@ contentsArray.push(publicComments)
   flex-direction: column;
   justify-content: center;
 
-  background: var(--controls-bg-color);
+  background: var(--modal-bg-color);
 }
 
 .round-text {

@@ -100,17 +100,44 @@ function continueSession() {
 }
 
 #app {
-  --stack-bg-color: rgb(226, 219, 208);
-  --controls-bg-color: rgb(201, 194, 184);
+  /* Engine Palette: 3 colours in dark/med/light */
+
+  --en-1d: rgb(233, 29, 81);
+  --en-2d: rgb(232, 90, 66);
+  --en-3d: rgb(231, 127, 37);
+  --en-1m: rgb(236, 65, 102);
+  --en-2m: rgb(238, 117, 85);
+  --en-3m: rgb(240, 155, 41);
+  --en-1l: rgb(240, 110, 143);
+  --en-2l: rgb(244, 157, 119);
+  --en-3l: rgb(250, 201, 63);
+
+  /* Game Palette */
+
+  --stack-bg-color: white;
+  /* old: rgb(226, 219, 208); */
+  --controls-bg-color: rgb(100, 100, 100);
+  /* old: rgb(201, 194, 184); */
+  --modal-bg-color: rgb(200,200,200);
   --card-bg-color: white;
-  --card-innershadow-color: rgb(185, 225, 234);
-  --card-outershadow-color: rgb(141, 173, 178);
+  --card-innershadow-color: var(--en-2l);
+  /* old: rgb(185, 225, 234); */
+  --card-appeal-innershadow-color: var(--en-1m);
+  --card-outershadow-color: var(--en-2m);
+  /*old: rgb(141, 173, 178); */
+  --card-appeal-outershadow-color: rgb(197, 51, 83);;
 
-  --takedown-bg-color: rgb(224, 133, 133);
-  --leaveup-bg-color: rgb(186, 219, 134);
-  --examine-bg-color: rgb(178, 222, 237);
+  --takedown-bg-color: rgb(255, 112, 112);
+  /*old: rgb(224, 133, 133);*/
+  --keepup-bg-color: rgb(187, 236, 106);
+  /*old: rgb(186, 219, 134);*/
+  --examine-bg-color: rgb(124, 218, 250);
+  /*old: rgb(178, 222, 237);*/
 
-  --button-basic-bg-color: rgb(178, 222, 237);
+  --takedown-text-color: rgb(180, 80, 80);
+  --keepup-text-color: rgb(126, 160, 71);
+
+  --button-basic-bg-color: rgb(140, 226, 255);
   --button-disabled-bg-color: #999;
 
   --examine-popup-incomplete-bg-color: rgb(215, 215, 215);

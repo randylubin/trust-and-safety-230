@@ -34,7 +34,7 @@ const emits = defineEmits(['unpauseGame'])
   flex-direction: column;
   justify-content: center;
 
-  background: var(--controls-bg-color);
+  background: var(--modal-bg-color);
 }
 
 .pause-text {

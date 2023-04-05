@@ -104,6 +104,12 @@ const getStackOffsetZ = function (index) {
   return Options.stackTopZ - index * Options.stackOffsetZ
 }
 
+const isReviewing = ref(false)
+
+const flipCard = function () {
+  isReviewing.value = !isReviewing.value
+}
+
 const swipeCard = function (dir) {
   // process card as swiped left or right
   interact('.top-card').unset()
@@ -121,26 +127,50 @@ const examineTime = ref(0)
 let examineClock
 const examineDone = ref(false)
 
-const cardTime = ref(0)
+
+const cardTime = ref(
+  /* Make look closer always available when reviewing appeals */
+  ActiveCard.value?.issueType?.startsWith('appeal') ? Options.examineDelay : 0
+)
+
+const examineDisabled = computed(() =>
+    isDragging.value ||
+    isLeaving.value ||
+    CardQueue.length === 0 ||
+    !isActive.value ||
+    cardTime.value < Options.examineDelay ||
+    (ActiveCard.value?.issueType.startsWith('appeal') &&
+      !isReviewing.value &&
+      !examineDone.value)
+)
+
 setInterval(() => {
   if (isActive.value) cardTime.value++
 }, 200)
 
 const startExamine = function () {
-  console.log('examining')
-  examineClock = window.setInterval(() => {
-    if (++examineTime.value > Options.examineTime) examineDone.value = true
-  }, 200)
+  if (!examineDisabled.value) {
+    if (!isReviewing.value) isReviewing.value = true
+    examineClock = window.setInterval(() => {
+      if (++examineTime.value > Options.examineTime) examineDone.value = true
+    }, 200)
+  }
 }
 
 const stopExamine = function () {
-  console.log('done examining')
   window.clearInterval(examineClock)
   examineTime.value = 0
 }
 
+const timelockGradientAngle = computed(() => {
+  return `${360 * (cardTime.value / Options.examineDelay)}deg`
+})
+
 watch(ActiveCard, () => {
-  cardTime.value = 0
+  isReviewing.value = false
+  cardTime.value = ActiveCard.value?.issueType?.startsWith('appeal')
+    ? Options.examineDelay
+    : 0
 })
 
 watchEffect(() => {
@@ -156,8 +186,13 @@ watchEffect(() => {
     interact('.top-card').draggable({
       listeners: {
         move(e) {
-          DragOffset.x = (parseFloat(DragOffset.x) || 0) + e.dx
-          DragOffset.y = (parseFloat(DragOffset.y) || 0) + e.dy
+          if (
+            !ActiveCard.value?.issueType.startsWith('appeal') ||
+            isReviewing.value
+          ) {
+            DragOffset.x = (parseFloat(DragOffset.x) || 0) + e.dx
+            DragOffset.y = (parseFloat(DragOffset.y) || 0) + e.dy
+          }
         },
         start() {
           isDragging.value = true
@@ -196,6 +231,10 @@ watchEffect(() => {
             'top-card': index === 0,
             'middle-card': !(index === CardQueue.length - 1 || index === 0),
             dragging: index === 0 && isDragging,
+            appeal: issue.issueType.startsWith('appeal'),
+            flipped:
+              issue.issueType.startsWith('appeal') &&
+              (index != 0 || !isReviewing),
           }"
           :style="
             index === 0 || index === CardQueue.length - 1
@@ -206,7 +245,7 @@ watchEffect(() => {
                 }
           "
         >
-          <IssueCard :IssueData="issue" />
+          <IssueCard :IssueData="issue" @flipCard="flipCard"/>
           <div
             v-if="index === 0 && !isLeaving"
             class="swipe-indicator takedown"
@@ -260,10 +299,15 @@ watchEffect(() => {
           'show-disabled':
             (isDragging && DragOffset.x > 0) ||
             CardQueue.length === 0 ||
-            !isActive,
+            !isActive ||
+            (ActiveCard?.issueType.startsWith('appeal') && !isReviewing),
         }"
         :disabled="
-          isDragging || isLeaving || CardQueue.length === 0 || !isActive
+          isDragging ||
+          isLeaving ||
+          CardQueue.length === 0 ||
+          !isActive ||
+          (ActiveCard?.issueType.startsWith('appeal') && !isReviewing)
         "
         @click="swipeCard('left')"
       ></button>
@@ -271,15 +315,21 @@ watchEffect(() => {
     <div class="button-frame small">
       <transition name="button-pop">
         <button
-          v-if="cardTime >= Options.examineDelay && ActiveCard"
+          v-if="ActiveCard"
           type="button"
           class="button-examine"
           :class="{
-            'show-disabled': isDragging || CardQueue.length === 0 || !isActive,
+            'show-disabled':
+              isDragging ||
+              CardQueue.length === 0 ||
+              !isActive ||
+              cardTime < Options.examineDelay ||
+              (ActiveCard?.issueType.startsWith('appeal') &&
+                !isReviewing &&
+                !examineDone),
+            'show-timelocked': cardTime < Options.examineDelay,
           }"
-          :disabled="
-            isDragging || isLeaving || CardQueue.length === 0 || !isActive
-          "
+          :disabled="examineDisabled"
           @pointerdown="startExamine"
           @pointerup="stopExamine"
           @pointerout="stopExamine"
@@ -294,10 +344,15 @@ watchEffect(() => {
           'show-disabled':
             (isDragging && DragOffset.x < 0) ||
             CardQueue.length === 0 ||
-            !isActive,
+            !isActive ||
+            (ActiveCard?.issueType.startsWith('appeal') && !isReviewing),
         }"
         :disabled="
-          isDragging || isLeaving || CardQueue.length === 0 || !isActive
+          isDragging ||
+          isLeaving ||
+          CardQueue.length === 0 ||
+          !isActive ||
+          (ActiveCard?.issueType.startsWith('appeal') && !isReviewing)
         "
         @click="swipeCard('right')"
       ></button>
@@ -451,6 +506,16 @@ watchEffect(() => {
   cursor: default;
 }
 
+button.button-examine.show-timelocked {
+  --gradient-angle: v-bind(timelockGradientAngle);
+  background-image: conic-gradient(
+      rgba(255, 255, 255, 0.25) var(--gradient-angle),
+      transparent var(--gradient-angle)
+    ),
+    url('./../../assets/svg/icon-examine.svg');
+  background-origin: border-box, content-box;
+}
+
 .button-frame.small > button {
   padding: 17%;
 }
@@ -464,7 +529,7 @@ button:hover {
 }
 
 .button-leaveup {
-  background-color: var(--leaveup-bg-color);
+  background-color: var(--keepup-bg-color);
   background-image: url('./../../assets/svg/icon-leaveup.svg');
 }
 
@@ -494,6 +559,7 @@ button:hover {
   bottom: 0;
   transition: transform 0.25s ease-out;
   touch-action: none;
+  perspective: 200rem;
 }
 
 .card-container.dragging {
@@ -534,7 +600,7 @@ button:hover {
 }
 
 .swipe-indicator.leaveup {
-  background-color: var(--leaveup-bg-color);
+  background-color: var(--keepup-bg-color);
   background-image: url('./../../assets/svg/icon-leaveup.svg');
   left: -2rem;
 }
