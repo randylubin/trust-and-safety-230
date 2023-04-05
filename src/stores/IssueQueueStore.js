@@ -85,7 +85,13 @@ export const IssueQueueStore = reactive({
         GameSessionStore.gameIsPaused = false
       }
     } else {
-      this.endRound()
+      // Currently - do nothing
+      // Option 2: draw new card
+      // this.currentIssueQueue.push(
+      //   GenericIssues.getRandomIssue(this.genericIssuesSeen)
+      // )
+      // this.startNextCard()
+      // OLD: this.endRound()
     }
   },
   addIssueToCurrentQueue(issue) {

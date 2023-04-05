@@ -6,10 +6,12 @@ import { IssueQueueStore } from './IssueQueueStore'
 
 const timeRemaining = ref(100)
 const gameIsPaused = ref(true)
+const extraTimeForLastCard = -5
 
 const { pause, resume, isActive } = useIntervalFn(() => {
   if (!gameIsPaused.value && timeRemaining.value > 0) {
     timeRemaining.value--
+    let queueStartedEmpty = !IssueQueueStore.currentIssueQueue.length
 
     // TODO add cards over time
 
@@ -41,6 +43,19 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     ) {
       IssueQueueStore.addRandomIssue()
     }
+
+    // handle a previously empty queue
+    if (queueStartedEmpty && IssueQueueStore.currentIssueQueue.length) {
+      IssueQueueStore.startNextCard()
+    }
+  } else if (
+    !gameIsPaused.value &&
+    timeRemaining.value > extraTimeForLastCard
+  ) {
+    timeRemaining.value--
+  } else if (timeRemaining.value == extraTimeForLastCard) {
+    // TODO - handle last card
+    IssueQueueStore.endRound()
   }
 }, 1000)
 
