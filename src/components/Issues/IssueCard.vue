@@ -32,10 +32,11 @@ const appealTextSpace = computed(() => {
 })
 
 const shrinkText = function () {
+  /* Be careful around this code. Mistakes could cause infinite loop. */
   if (
     issueTextInnerElement.value?.getBoundingClientRect().height >
       issueTextSpace.value &&
-    issueTextSize.value > 1.5
+    issueTextSize.value > 1.5 // <-- necessary to prevent infinite loop
   ) {
     issueTextSize.value -= 0.1
   }
@@ -43,7 +44,7 @@ const shrinkText = function () {
   if (
     appealTextInnerElement.value?.getBoundingClientRect().height >
       appealTextSpace.value &&
-    appealTextSize.value > 1.5
+    appealTextSize.value > 1.5 // <-- necessary to prevent infinite loop
   ) {
     appealTextSize.value -= 0.1
   }
