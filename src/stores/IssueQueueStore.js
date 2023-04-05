@@ -299,7 +299,6 @@ export const IssueQueueStore = reactive({
     } else {
       this.currentIssueQueue.shift()
       if (GameSessionStore.timeRemaining != 0) {
-        GameSessionStore.timeRemaining-- // TODO remove this
         this.startNextCard()
       } else if (!issueData.postIssueInterstitial) {
         this.endRound()

@@ -121,7 +121,7 @@ export const GameSessionStore = reactive({
     // TODO
     if (
       this.moderationQuality * this.moderationSpeed * this.publicPerception ==
-      0 // TODO update formula
+      0 // TODO update formula for ending the game
     ) {
       this.showGameOver = true
     } else {

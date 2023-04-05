@@ -15,7 +15,7 @@ if (GameSessionStore.disagreeWithManager > GameSessionStore.agreeWithManager) {
     "You're making too many decisions that are at odds with our policies. Keep it up and you'll be out of a job."
 } else {
   managerComments +=
-    "You're doing a great job of making sure content adhears to our policies."
+    "You're doing a great job of making sure content adheres to our policies."
 }
 
 if (GameSessionStore.issuesCompletedThisRound < 10) {
