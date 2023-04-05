@@ -19,12 +19,19 @@ const showLaunchScreen = ref(true)
 
 function shortcutKeys(e) {
   if (e.key == 'D') MetaGameStore.showDevTools = !MetaGameStore.showDevTools
-  if (e.key == 'ArrowLeft') {
-    console.log('taking down')
-    IssueQueueStore.takeAction('takeDown', IssueQueueStore.currentIssueQueue[0])
-  }
-  if (e.key == 'ArrowRight') {
-    IssueQueueStore.takeAction('keepUp', IssueQueueStore.currentIssueQueue[0])
+  if (
+    !GameSessionStore.gameIsPaused &&
+    IssueQueueStore.currentIssueQueue.length
+  ) {
+    if (e.key == 'ArrowLeft') {
+      IssueQueueStore.takeAction(
+        'takeDown',
+        IssueQueueStore.currentIssueQueue[0]
+      )
+    }
+    if (e.key == 'ArrowRight') {
+      IssueQueueStore.takeAction('keepUp', IssueQueueStore.currentIssueQueue[0])
+    }
   }
 }
 
@@ -118,14 +125,14 @@ function continueSession() {
   /* old: rgb(226, 219, 208); */
   --controls-bg-color: rgb(100, 100, 100);
   /* old: rgb(201, 194, 184); */
-  --modal-bg-color: rgb(200,200,200);
+  --modal-bg-color: rgb(200, 200, 200);
   --card-bg-color: white;
   --card-innershadow-color: var(--en-2l);
   /* old: rgb(185, 225, 234); */
   --card-appeal-innershadow-color: var(--en-1m);
   --card-outershadow-color: var(--en-2m);
   /*old: rgb(141, 173, 178); */
-  --card-appeal-outershadow-color: rgb(197, 51, 83);;
+  --card-appeal-outershadow-color: rgb(197, 51, 83);
 
   --takedown-bg-color: rgb(255, 112, 112);
   /*old: rgb(224, 133, 133);*/
