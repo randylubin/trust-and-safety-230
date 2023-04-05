@@ -127,7 +127,9 @@ const examineTime = ref(0)
 let examineClock
 const examineDone = ref(false)
 
+
 const cardTime = ref(
+  /* Make look closer always available when reviewing appeals */
   ActiveCard.value?.issueType?.startsWith('appeal') ? Options.examineDelay : 0
 )
 
