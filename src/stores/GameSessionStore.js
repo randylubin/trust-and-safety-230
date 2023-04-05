@@ -13,7 +13,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 
     // TODO add cards over time
 
-    // Add follow up cards to current queue
+    // Add follow-up and appeals cards to current queue
     let followupsAdded = false
 
     if (IssueQueueStore.unprocessedFollowUps) {

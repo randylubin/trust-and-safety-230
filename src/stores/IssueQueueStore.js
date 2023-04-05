@@ -92,6 +92,7 @@ export const IssueQueueStore = reactive({
     this.currentIssueQueue.push(issue)
   },
   takeAction(action, issueData) {
+    let isAppeal = issueData.issueType.slice(0, 6) == 'appeal'
     GameSessionStore.issuesCompletedThisRound += 1 // TODO - do appeals count toward this?
     GameSessionStore.issuesCompletedThisGame += 1
 
@@ -153,7 +154,7 @@ export const IssueQueueStore = reactive({
     }
     this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
 
-    if (issueData.issueType.slice(0, 6) !== 'appeal') {
+    if (!isAppeal) {
       // if not an appeal
       Object.keys(responseObject[action]).forEach((key) => {
         GameSessionStore[key] += responseObject[action][key]
@@ -195,7 +196,7 @@ export const IssueQueueStore = reactive({
 
     // Check for appeal
     if (
-      issueData.issueType.slice(0, 6) !== 'appeal' && // not already an appeal
+      !isAppeal && // not already an appeal
       Math.random() <= appealLikelihood // chance of appeal
     ) {
       if (action === 'takeDown' && issueData.appealIfTakeDown) {
@@ -209,6 +210,7 @@ export const IssueQueueStore = reactive({
 
         this.insertIssueInQueue(appealData, 2, 3)
       }
+      // console.log('adding appeal to queue', this.unprocessedFollowUps)
     }
 
     // Handle consequences
@@ -348,7 +350,9 @@ export const IssueQueueStore = reactive({
 
     // ADD UNPROCESSED QUEUE ISSUES
     for (let i = 0; i < this.unprocessedFollowUps.length; i++) {
-      newQueue.push(this.unprocessedFollowUps[i].issueObject)
+      if (!this.unprocessedFollowUps[i].processed) {
+        newQueue.push(this.unprocessedFollowUps[i].issueObject)
+      }
     }
     this.unprocessedFollowUps = []
 
