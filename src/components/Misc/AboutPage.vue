@@ -7,7 +7,9 @@ import { GameSessionStore } from '../../stores/GameSessionStore'
     <!-- TODO: ADD CONTENT AND STYLE -->
     <h1>About Page</h1>
     <p>Some information about the game</p>
-    <button class="btn-basic" @click="GameSessionStore.showAbout = false">X</button>
+    <button class="btn-basic" @click="GameSessionStore.showAbout = false">
+      X
+    </button>
   </div>
 </template>
 
@@ -20,6 +22,6 @@ import { GameSessionStore } from '../../stores/GameSessionStore'
   bottom: 0;
   z-index: 1001;
 
-  background: var(--controls-bg-color);
+  background: var(--modal-bg-color);
 }
 </style>

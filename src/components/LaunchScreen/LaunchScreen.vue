@@ -82,7 +82,7 @@ function startSession(showTutorial = true) {
   justify-content: center;
   align-items: stretch;
 
-  background: var(--controls-bg-color);
+  background: var(--modal-bg-color);
 }
 
 .launch-text {
