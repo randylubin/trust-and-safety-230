@@ -8,9 +8,9 @@ import { GameSessionStore } from '../stores/GameSessionStore'
     <button @click="GameSessionStore.timesUp(true)">Set Timer to Zero</button>
     <div>Current Round: {{ GameSessionStore.currentRound }}</div>
     <div>Time remaining: {{ GameSessionStore.timeRemaining }}</div>
-    <div>Speed: {{ GameSessionStore.moderationSpeed }}</div>
-    <div>Quality: {{ GameSessionStore.moderationQuality }}</div>
-    <div>Perception: {{ GameSessionStore.publicPerception }}</div>
+    <div>Manager Disagreements {{ GameSessionStore.disagreeWithManager }}</div>
+    <div>Public Free Speech {{ GameSessionStore.publicFreeSpeech }}</div>
+    <div>Public Safety {{ GameSessionStore.publicSafety }}</div>
   </div>
 </template>
 
