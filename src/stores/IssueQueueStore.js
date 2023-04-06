@@ -234,10 +234,17 @@ export const IssueQueueStore = reactive({
     if (actionConsequences) {
       // Follow up
       if (actionConsequences.followUpID) {
-        this.insertIssueInQueue(
-          GenericFollowUps.getIssueByID(actionConsequences.followUpID),
-          actionConsequences.followUpTimeDelay
-        )
+        if (issueData.issueType == 'arc') {
+          this.insertIssueInQueue(
+            ArcIssues.getIssueByID(actionConsequences.followUpID),
+            actionConsequences.followUpTimeDelay
+          )
+        } else {
+          this.insertIssueInQueue(
+            GenericFollowUps.getIssueByID(actionConsequences.followUpID),
+            actionConsequences.followUpTimeDelay
+          )
+        }
       }
 
       // Post Interstitial
@@ -288,10 +295,10 @@ export const IssueQueueStore = reactive({
       arcCardsRemaining += this.unprocessedFollowUps.filter(
         (issueInsert) =>
           arcName ===
-          issueInsert.issueObject.issueID.slice(
-            0,
-            issueInsert.issueObject.issueID.indexOf('-')
-          )
+            issueInsert.issueObject.issueID.slice(
+              0,
+              issueInsert.issueObject.issueID.indexOf('-')
+            ) && !issueInsert.processed
       ).length
 
       // update metadata
