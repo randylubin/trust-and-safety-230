@@ -24,7 +24,8 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 
         if (issue.insertTime >= timeRemaining.value && !issue.processed) {
           IssueQueueStore.addIssueToCurrentQueue(
-            JSON.parse(JSON.stringify(issue.issueObject))
+            JSON.parse(JSON.stringify(issue.issueObject)),
+            issue.insertPosition
           )
 
           IssueQueueStore.unprocessedFollowUps[i].processed = true
