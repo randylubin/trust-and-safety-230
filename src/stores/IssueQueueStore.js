@@ -10,6 +10,7 @@ import { MetaGameStore } from './MetaGameStore.js'
 
 const minimumStartingQueueLength = 5
 const appealLikelihood = 0.5
+const AppealDelay = 2
 
 export const IssueQueueStore = reactive({
   currentIssueQueue: [],
@@ -70,7 +71,7 @@ export const IssueQueueStore = reactive({
   },
   startNextCard() {
     if (
-      GameSessionStore.timeRemaining != 0 &&
+      GameSessionStore.timeRemaining > 0 &&
       IssueQueueStore.currentIssueQueue.length
     ) {
       if (this.currentIssueQueue[0].preIssueInterstitial) {
@@ -84,7 +85,9 @@ export const IssueQueueStore = reactive({
       } else {
         GameSessionStore.gameIsPaused = false
       }
-    } else {
+    } else if (GameSessionStore.timeRemaining <= 0) {
+      this.endRound()
+    } else if (this.currentIssueQueue.length == 0) {
       // Currently - do nothing
       // Option 2: draw new card
       // this.currentIssueQueue.push(
@@ -94,10 +97,18 @@ export const IssueQueueStore = reactive({
       // OLD: this.endRound()
     }
   },
-  addIssueToCurrentQueue(issue) {
-    this.currentIssueQueue.push(issue)
+  addIssueToCurrentQueue(issue, position) {
+    if (!position || position >= this.currentIssueQueue.length) {
+      this.currentIssueQueue.push(issue)
+    } else {
+      this.currentIssueQueue.splice(position, 0, issue)
+    }
   },
   takeAction(action, issueData) {
+    let actionConsequences =
+      action === 'keepUp'
+        ? issueData.keepUpConsequences
+        : issueData.takeDownConsequences
     let isAppeal = issueData.issueType.slice(0, 6) == 'appeal'
     GameSessionStore.issuesCompletedThisRound += 1 // TODO - do appeals count toward this?
     GameSessionStore.issuesCompletedThisGame += 1
@@ -203,27 +214,28 @@ export const IssueQueueStore = reactive({
     // Check for appeal
     if (
       !isAppeal && // not already an appeal
-      Math.random() <= appealLikelihood // chance of appeal
+      ((action === 'takeDown' && issueData.appealIfTakeDown) ||
+        (action === 'keepUp' && issueData.appealIfKeepUp)) &&
+      (Math.random() <= appealLikelihood || actionConsequences?.instantAppeal)
     ) {
+      let appealData = JSON.parse(JSON.stringify(issueData))
       if (action === 'takeDown' && issueData.appealIfTakeDown) {
-        let appealData = JSON.parse(JSON.stringify(issueData))
         appealData.issueType = 'appealTakeDown'
-
-        this.insertIssueInQueue(appealData, 2, 3)
       } else if (action === 'keepUp' && issueData.appealIfKeepUp) {
-        let appealData = JSON.parse(JSON.stringify(issueData))
         appealData.issueType = 'appealKeepUp'
-
-        this.insertIssueInQueue(appealData, 2, 3)
       }
-      // console.log('adding appeal to queue', this.unprocessedFollowUps)
+      if (actionConsequences?.instantAppeal) {
+        console.log('adding to queue', this.currentIssueQueue)
+        this.insertIssueInQueue(appealData, 0, 1)
+        // this.currentIssueQueue.splice(2, 0, appealData) // weird behavior
+        console.log(this.currentIssueQueue)
+      } else {
+        this.insertIssueInQueue(appealData, AppealDelay, 3) // TODO - do we want appeals added to the end?
+        // console.log('adding appeal to queue', this.unprocessedFollowUps)
+      }
     }
 
     // Handle consequences
-    let actionConsequences =
-      action === 'keepUp'
-        ? issueData.keepUpConsequences
-        : issueData.takeDownConsequences
 
     if (actionConsequences) {
       // Follow up
@@ -249,7 +261,6 @@ export const IssueQueueStore = reactive({
         : null
 
     // check for arc ending
-
     // check for arc ending from consequence
     if (actionConsequences && actionConsequences.endArc) {
       this.updatedArcMetadataForCompletedArc(arcName)
@@ -295,7 +306,6 @@ export const IssueQueueStore = reactive({
         this.updatedArcMetadataForCompletedArc(arcName)
       }
     }
-
     // CHECK FOR INTERSTITIAL AND REMOVE CARD FROM QUEUE
     if (issueData.postIssueInterstitial) {
       GameSessionStore.gameIsPaused = true
@@ -308,7 +318,7 @@ export const IssueQueueStore = reactive({
       this.currentIssueQueue.shift()
       if (actionConsequences?.endRound) {
         this.endRound()
-      } else if (GameSessionStore.timeRemaining != 0) {
+      } else if (GameSessionStore.timeRemaining > 0) {
         this.startNextCard()
       } else if (!issueData.postIssueInterstitial) {
         this.endRound()
