@@ -15,7 +15,7 @@ axios
   .get(issueSheet)
   .then((response) => {
     // CLEAN UP DATA
-    console.log(response.data.sheets)
+    // console.log(response.data.sheets)
     let rawSheetData = response.data.sheets[0].data[0].rowData
     let cleanData = []
     rawSheetData.forEach((item, i) => {
@@ -60,7 +60,7 @@ axios
       followupsFromGoogleSheet.push(newIssue)
     })
 
-    console.log(followupsFromGoogleSheet)
+    // console.log(followupsFromGoogleSheet)
     GenericFollowUps.importIssues(followupsFromGoogleSheet)
   })
   .catch((error) => {
