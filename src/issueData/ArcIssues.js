@@ -54,13 +54,30 @@ axios
       }
 
       newIssue.issueType = 'arc'
+      let keepUpConsequences = issue[keepUpConsequencesColumnIndex]
+      let takeDownConsequences = issue[takeDownConsequencesColumnIndex]
 
-      newIssue['keepUpConsequences'] = issue[keepUpConsequencesColumnIndex]
-        ? JSON.parse(issue[keepUpConsequencesColumnIndex])
-        : null
-      newIssue['takeDownConsequences'] = issue[takeDownConsequencesColumnIndex]
-        ? JSON.parse(issue[takeDownConsequencesColumnIndex])
-        : null
+      if (keepUpConsequences) {
+        if (keepUpConsequences.slice(0, 1) == '{') {
+          newIssue['keepUpConsequences'] = JSON.parse(keepUpConsequences)
+        } else {
+          newIssue['keepUpConsequences'] = {
+            followUpID: keepUpConsequences,
+            followUpTimeDelay: 2, // TODO tie to variable
+          }
+        }
+      }
+
+      if (takeDownConsequences) {
+        if (takeDownConsequences.slice(0, 1) == '{') {
+          newIssue['takeDownConsequences'] = JSON.parse(takeDownConsequences)
+        } else {
+          newIssue['takeDownConsequences'] = {
+            followUpID: takeDownConsequences,
+            followUpTimeDelay: 2,
+          }
+        }
+      }
 
       arcsFromGoogleSheet.push(newIssue)
 
