@@ -16,6 +16,22 @@ import { IssueQueueStore } from '../stores/IssueQueueStore'
     <div>Manager Disagreements {{ GameSessionStore.disagreeWithManager }}</div>
     <div>Public Free Speech {{ GameSessionStore.publicFreeSpeech }}</div>
     <div>Public Safety {{ GameSessionStore.publicSafety }}</div>
+    <h2>Current Queue</h2>
+    <div
+      v-for="(issue, key) in IssueQueueStore.currentIssueQueue"
+      v-bind:key="key"
+      style="margin-bottom: 5px"
+    >
+      {{ issue.issueText }}
+    </div>
+    <h2>Unprocessed Queue</h2>
+    <div
+      v-for="(issue, key) in IssueQueueStore.unprocessedFollowUps"
+      v-bind:key="key"
+      style="margin-bottom: 5px"
+    >
+      {{ issue.issueObject.issueText }}
+    </div>
   </div>
 </template>
 
@@ -28,5 +44,6 @@ import { IssueQueueStore } from '../stores/IssueQueueStore'
   background-color: white;
   margin: 1rem;
   padding: 1rem;
+  max-width: 300px;
 }
 </style>
