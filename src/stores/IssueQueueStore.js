@@ -74,7 +74,8 @@ export const IssueQueueStore = reactive({
       GameSessionStore.timeRemaining > 0 &&
       IssueQueueStore.currentIssueQueue.length
     ) {
-      if (this.currentIssueQueue[0].preIssueInterstitial) {
+      let isAppeal = this.currentIssueQueue[0].issueType.slice(0, 6) == 'appeal'
+      if (this.currentIssueQueue[0].preIssueInterstitial && !isAppeal) {
         this.interstitialShown = this.currentIssueQueue[0].preIssueInterstitial
         this.interstitialType = 'pre'
         GameSessionStore.gameIsPaused = true
@@ -97,12 +98,8 @@ export const IssueQueueStore = reactive({
       // OLD: this.endRound()
     }
   },
-  addIssueToCurrentQueue(issue, position) {
-    if (!position || position >= this.currentIssueQueue.length) {
-      this.currentIssueQueue.push(issue)
-    } else {
-      this.currentIssueQueue.splice(position, 0, issue)
-    }
+  addIssueToCurrentQueue(issue) {
+    this.currentIssueQueue.push(issue)
   },
   takeAction(action, issueData) {
     let actionConsequences =
@@ -225,12 +222,9 @@ export const IssueQueueStore = reactive({
         appealData.issueType = 'appealKeepUp'
       }
       if (actionConsequences?.instantAppeal) {
-        console.log('adding to queue', this.currentIssueQueue)
-        this.insertIssueInQueue(appealData, 0, 1)
-        // this.currentIssueQueue.splice(2, 0, appealData) // weird behavior
-        console.log(this.currentIssueQueue)
+        this.insertIssueInQueue(appealData, 0)
       } else {
-        this.insertIssueInQueue(appealData, AppealDelay, 3) // TODO - do we want appeals added to the end?
+        this.insertIssueInQueue(appealData, AppealDelay) // TODO - do we want appeals added to the end?
         // console.log('adding appeal to queue', this.unprocessedFollowUps)
       }
     }
@@ -242,8 +236,7 @@ export const IssueQueueStore = reactive({
       if (actionConsequences.followUpID) {
         this.insertIssueInQueue(
           GenericFollowUps.getIssueByID(actionConsequences.followUpID),
-          actionConsequences.followUpTimeDelay,
-          actionConsequences.followUpPosition
+          actionConsequences.followUpTimeDelay
         )
       }
 
@@ -307,7 +300,7 @@ export const IssueQueueStore = reactive({
       }
     }
     // CHECK FOR INTERSTITIAL AND REMOVE CARD FROM QUEUE
-    if (issueData.postIssueInterstitial) {
+    if (issueData.postIssueInterstitial && !isAppeal) {
       GameSessionStore.gameIsPaused = true
       this.interstitialShown = issueData.postIssueInterstitial
       this.interstitialType = 'post'
@@ -329,12 +322,11 @@ export const IssueQueueStore = reactive({
     GameSessionStore.betweenRounds = true
     GameSessionStore.triggerPostRound()
   },
-  insertIssueInQueue(issueObject, insertDelay = 1, insertPosition = null) {
+  insertIssueInQueue(issueObject, insertDelay = 1) {
     // console.log(issueObject, insertDelay, insertPosition)
     this.unprocessedFollowUps.push({
       issueObject: issueObject,
       insertTime: GameSessionStore.timeRemaining - insertDelay,
-      insertPosition: insertPosition,
     })
   },
   closeInterstitial() {
