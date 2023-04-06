@@ -11,7 +11,7 @@ import IssueQueue from './Issues/IssueQueue.vue'
 import InterstitialScreen from './Issues/InterstitialScreen.vue'
 import InterRoundScreens from './InterRoundScreens.vue'
 import GameOver from './GameOver/GameOver.vue'
-import DevTools from './DevTools.vue'
+import DevTools from './Misc/DevTools.vue'
 
 const playerPausedGame = ref(false)
 

@@ -55,7 +55,6 @@ axios
 
       newIssue.issueType = 'arc'
 
-      // console.log(issue[keepUpConsequencesColumnIndex])
       newIssue['keepUpConsequences'] = issue[keepUpConsequencesColumnIndex]
         ? JSON.parse(issue[keepUpConsequencesColumnIndex])
         : null

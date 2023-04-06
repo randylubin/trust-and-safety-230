@@ -1,6 +1,6 @@
 <script setup>
-import { GameSessionStore } from '../stores/GameSessionStore'
-import { IssueQueueStore } from '../stores/IssueQueueStore'
+import { GameSessionStore } from '../../stores/GameSessionStore'
+import { IssueQueueStore } from '../../stores/IssueQueueStore'
 </script>
 
 <template>
