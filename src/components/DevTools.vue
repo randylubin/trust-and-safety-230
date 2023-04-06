@@ -21,7 +21,12 @@ import { IssueQueueStore } from '../stores/IssueQueueStore'
 
 <style scoped>
 .dev-tools {
+  position: fixed;
+  top: 0;
+  left: 0;
   border: 1px darkgrey solid;
-  margin-top: 1rem;
+  background-color: white;
+  margin: 1rem;
+  padding: 1rem;
 }
 </style>
