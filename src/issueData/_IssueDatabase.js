@@ -135,10 +135,11 @@ export default class IssueDatabase {
     return outputObject
   }
   getIDsOfBotIssues() {
-    let filteredIssues = this.#Issues.filter((issue) => issue.botFlagged)
     let issueIDs = []
-    filteredIssues.forEach((issue) => {
-      issueIDs.push(issue.issueID)
+    Object.keys(this.#Issues).forEach((issueID) => {
+      if (this.#Issues[issueID].botFlagged) {
+        issueIDs.push(issueID)
+      }
     })
     return issueIDs
   }
