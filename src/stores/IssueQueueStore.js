@@ -302,9 +302,13 @@ export const IssueQueueStore = reactive({
       this.interstitialShown = issueData.postIssueInterstitial
       this.interstitialType = 'post'
       this.currentIssueQueue.shift()
+      // TODO add end round from consequences trigger
+      // TODO check for end round from time? Maybe?
     } else {
       this.currentIssueQueue.shift()
-      if (GameSessionStore.timeRemaining != 0) {
+      if (actionConsequences?.endRound) {
+        this.endRound()
+      } else if (GameSessionStore.timeRemaining != 0) {
         this.startNextCard()
       } else if (!issueData.postIssueInterstitial) {
         this.endRound()
