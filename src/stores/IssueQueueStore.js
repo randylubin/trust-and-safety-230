@@ -51,7 +51,7 @@ export const IssueQueueStore = reactive({
       interstitialShown: this.interstitialShown,
     })
   },
-  updatedArcMetadataForCompletedArc(arcName) {
+  processEndedArc(arcName) {
     MetaGameStore.arcsCompleted.push(arcName)
 
     MetaGameStore.arcsSeenButNotCompleted.splice(
@@ -65,6 +65,8 @@ export const IssueQueueStore = reactive({
       IssueQueueStore.arcsInProgress.indexOf(arcName),
       1
     )
+
+    // TODO specific arc logic (e.g. ending of election 1 triggers election 2)
 
     // TODO arc acheivement
     console.log('arc over')
@@ -263,7 +265,7 @@ export const IssueQueueStore = reactive({
     // check for arc ending
     // check for arc ending from consequence
     if (actionConsequences && actionConsequences.endArc) {
-      this.updatedArcMetadataForCompletedArc(arcName)
+      this.processEndedArc(arcName)
 
       // remove any remaining arc cards from current queue
       let currentCard = this.currentIssueQueue.shift()
@@ -303,7 +305,7 @@ export const IssueQueueStore = reactive({
 
       // update metadata
       if (arcCardsRemaining <= 1) {
-        this.updatedArcMetadataForCompletedArc(arcName)
+        this.processEndedArc(arcName)
       }
     }
     // CHECK FOR INTERSTITIAL AND REMOVE CARD FROM QUEUE
@@ -444,7 +446,10 @@ export const IssueQueueStore = reactive({
     this.startNextCard()
   },
   addRandomIssue() {
-    let excludeArray = this.genericIssuesSeen.concat(this.currentIssueQueue)
+    let excludeArray = this.genericIssuesSeen.concat(
+      this.currentIssueQueue,
+      GenericIssues.getIDsOfBotIssues()
+    )
 
     this.currentIssueQueue.push(GenericIssues.getRandomIssue(excludeArray))
   },

@@ -134,6 +134,14 @@ export default class IssueDatabase {
 
     return outputObject
   }
+  getIDsOfBotIssues() {
+    let filteredIssues = this.#Issues.filter((issue) => issue.botFlagged)
+    let issueIDs = []
+    filteredIssues.forEach((issue) => {
+      issueIDs.push(issue.issueID)
+    })
+    return issueIDs
+  }
   getRandomIssues(limit = Infinity, exclude = [], assignUniqueKeys = true) {
     exclude.concat(this.#ExcludedGroupIDs)
     let filteredIssues = this.IssueIndex.filter((id) => !exclude.includes(id))
