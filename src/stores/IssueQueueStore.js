@@ -1,4 +1,5 @@
 import { reactive } from 'vue'
+import { GameDefaults } from '../GameDefaults.js'
 import { GenericIssues } from '../issueData/GenericIssues.js'
 // import { MetaGameStore } from '../stores/MetaGameStore'
 import { GenericFollowUps } from '../issueData/GenericFollowUps.js'
@@ -8,9 +9,9 @@ import { GameSessionStore } from './GameSessionStore'
 import { MetaGameStore } from './MetaGameStore.js'
 // import { ArcIssues } from '../issueData/ArcIssues.js'
 
-const minimumStartingQueueLength = 5
-const appealLikelihood = 0.5
-const AppealDelay = 2
+const minimumStartingQueueLength = GameDefaults.minimumStartingQueueLength
+const appealLikelihood = GameDefaults.appealLikelihood
+const AppealDelay = GameDefaults.appealDelay
 
 export const IssueQueueStore = reactive({
   currentIssueQueue: [],
@@ -262,9 +263,14 @@ export const IssueQueueStore = reactive({
         ? issueData.issueID.slice(0, issueData.issueID.indexOf('-'))
         : null
 
+    // check for game ending
+    if (actionConsequences?.endGame) {
+      GameSessionStore.endGame(actionConsequences.endGame)
+    }
+
     // check for arc ending
     // check for arc ending from consequence
-    if (actionConsequences && actionConsequences.endArc) {
+    if (actionConsequences?.endArc) {
       this.processEndedArc(arcName)
 
       // remove any remaining arc cards from current queue

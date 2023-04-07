@@ -1,12 +1,15 @@
 import { reactive } from 'vue'
 import { ref } from 'vue'
 import { useIntervalFn } from '@vueuse/core'
+import { GameDefaults } from '../GameDefaults'
 
 import { IssueQueueStore } from './IssueQueueStore'
 
-const timeRemaining = ref(100)
 const gameIsPaused = ref(true)
-const extraTimeForLastCard = -5
+
+const timeRemaining = ref(GameDefaults.roundLength)
+const extraTimeForLastCard = GameDefaults.extraTimeForLastCard
+const genericDrawLikelihood = GameDefaults.genericDrawLikelihood
 
 const { pause, resume, isActive } = useIntervalFn(() => {
   if (!gameIsPaused.value && timeRemaining.value > 0) {
@@ -37,7 +40,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 
     // ADD GENERICS OVER TIME
     if (
-      Math.random() < 0.33 &&
+      Math.random() < genericDrawLikelihood &&
       GameSessionStore.currentRound != 0 &&
       !followupsAdded
     ) {
@@ -61,15 +64,15 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 
 export const GameSessionStore = reactive({
   currentRound: 0,
-  initialTimeInRound: 100,
+  initialTimeInRound: GameDefaults.roundLength,
   timeRemaining: timeRemaining,
   issuesCompletedThisRound: 0,
   issuesCompletedThisGame: 0,
   gameIsPaused: gameIsPaused,
   betweenRounds: false,
-  moderationSpeed: 5,
-  moderationQuality: 5,
-  publicPerception: 5,
+  // moderationSpeed: 5,
+  // moderationQuality: 5,
+  // publicPerception: 5,
   agreeWithManager: 0,
   disagreeWithManager: 0,
   showGameOver: false,
@@ -122,9 +125,9 @@ export const GameSessionStore = reactive({
       issuesCompletedThisGame: this.issuesCompletedThisGame,
       gameIsPaused: this.gameIsPaused,
       betweenRounds: this.betweenRounds,
-      moderationSpeed: this.moderationSpeed,
-      moderationQuality: this.moderationQuality,
-      agreeWithManager: this.agreeWithManager,
+      // moderationSpeed: this.moderationSpeed,
+      // moderationQuality: this.moderationQuality,
+      // agreeWithManager: this.agreeWithManager,
       disagreeWithManager: this.disagreeWithManager,
       publicPerception: this.publicPerception,
       publicSafety: this.publicSafety,
@@ -143,5 +146,9 @@ export const GameSessionStore = reactive({
       this.timeRemaining = 0
       this.betweenRounds = true
     }
+  },
+  endGame(endGameReason) {
+    this.endGame = endGameReason
+    this.pauseTimer()
   },
 })
