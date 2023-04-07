@@ -40,7 +40,11 @@ function unpauseGame() {
       <GameStateBar @pause-game="showPauseScreen()" />
     </div>
     <div class="play-area">
-      <GameOver v-if="GameSessionStore.showGameOver" />
+      <GameOver
+        v-if="
+          GameSessionStore.showGameOver && !IssueQueueStore.interstitialShown
+        "
+      />
       <IssueQueue
         v-else-if="!GameSessionStore.betweenRounds"
         :isActive="!GameSessionStore.gameIsPaused"

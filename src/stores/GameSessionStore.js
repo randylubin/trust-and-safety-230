@@ -75,10 +75,11 @@ export const GameSessionStore = reactive({
   // publicPerception: 5,
   agreeWithManager: 0,
   disagreeWithManager: 0,
-  showGameOver: false,
-  showAbout: false,
   publicSafety: 5,
   publicFreeSpeech: 5,
+  showGameOver: false,
+  gameOverReason: '',
+  showAbout: false,
   achievementsUnlockedThisSession: [],
   pauseTimer: function () {
     pause
@@ -132,6 +133,8 @@ export const GameSessionStore = reactive({
       publicPerception: this.publicPerception,
       publicSafety: this.publicSafety,
       publicFreeSpeech: this.publicFreeSpeech,
+      showGameOver: this.showGameOver,
+      gameOverReason: this.gameOverReason,
       achievementsUnlockedThisSession: this.achievementsUnlockedThisSession,
     })
   },
@@ -147,8 +150,11 @@ export const GameSessionStore = reactive({
       this.betweenRounds = true
     }
   },
-  endGame(endGameReason) {
-    this.endGame = endGameReason
-    this.pauseTimer()
+  endGame(gameOverReason) {
+    this.gameOverReason = gameOverReason
+    this.showGameOver = true
+    if (!gameIsPaused.value) {
+      this.pauseTimer()
+    }
   },
 })

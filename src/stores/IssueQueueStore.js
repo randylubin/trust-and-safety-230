@@ -322,7 +322,7 @@ export const IssueQueueStore = reactive({
       this.currentIssueQueue.shift()
       // TODO add end round from consequences trigger
       // TODO check for end round from time? Maybe?
-    } else {
+    } else if (!actionConsequences?.endGame) {
       this.currentIssueQueue.shift()
       if (actionConsequences?.endRound) {
         this.endRound()
@@ -352,7 +352,9 @@ export const IssueQueueStore = reactive({
       if (this.interstitialType === 'interstitialOnly') {
         this.currentIssueQueue.shift()
       }
-      this.startNextCard()
+      if (!GameSessionStore.showGameOver) {
+        this.startNextCard()
+      }
     }
   },
   startTutorial() {

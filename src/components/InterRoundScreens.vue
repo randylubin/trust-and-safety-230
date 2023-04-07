@@ -4,48 +4,69 @@ import { GameSessionStore } from '../stores/GameSessionStore'
 
 let interScreenIndex = ref(0)
 let contentsArray = []
+const triggerGameOver = ref(false)
 
-// ADD CONTENT
-// Manager Check-in
-let managerComments = ''
+// CHECK FOR GAME OVER
+// TODO FIX LOGIC AND CONTENT
+let gameOverReason = []
+if (GameSessionStore.disagreeWithManager >= 15)
+  gameOverReason.push('Fired for bad judgement')
+// TODO speed check
+if (GameSessionStore.publicFreeSpeech == 0)
+  gameOverReason.push('Censorship accusations')
+if (GameSessionStore.publicSafety == 0) gameOverReason.push('Platform safety')
+if (GameSessionStore.endGameAtEndOfRound) gameOverReason.push('ARC')
 
-if (GameSessionStore.disagreeWithManager > GameSessionStore.agreeWithManager) {
-  // TODO: fix logic
-  managerComments +=
-    "You're making too many decisions that are at odds with our policies. Keep it up and you'll be out of a job."
-} else {
-  managerComments +=
-    "You're doing a great job of making sure content adheres to our policies."
+if (gameOverReason.length) {
+  triggerGameOver.value = true
+  GameSessionStore.endGame(gameOverReason)
 }
 
-if (GameSessionStore.issuesCompletedThisRound < 10) {
-  // TODO: fix logic
-  managerComments +=
-    "<br><br>You're making decisions too slowly... move faster."
-} else {
-  managerComments +=
-    "<br><br>You're doing a great job making decisions quickly."
+// GENERATE CONTENT (IF NOT GAME OVER)
+if (!triggerGameOver.value) {
+  // Manager Check-in
+  let managerComments = ''
+
+  if (
+    GameSessionStore.disagreeWithManager > GameSessionStore.agreeWithManager
+  ) {
+    // TODO: fix logic
+    managerComments +=
+      "You're making too many decisions that are at odds with our policies. Keep it up and you'll be out of a job."
+  } else {
+    managerComments +=
+      "You're doing a great job of making sure content adheres to our policies."
+  }
+
+  if (GameSessionStore.issuesCompletedThisRound < 10) {
+    // TODO: fix logic
+    managerComments +=
+      "<br><br>You're making decisions too slowly... move faster."
+  } else {
+    managerComments +=
+      "<br><br>You're doing a great job making decisions quickly."
+  }
+
+  contentsArray.push(managerComments)
+
+  // Public Check-in
+  let publicComments = ''
+
+  if (GameSessionStore.publicFreeSpeech <= 3) {
+    publicComments +=
+      'People are angry about the platform "censoring" their views'
+  } else {
+    publicComments += 'TODO no censorship'
+  }
+
+  if (GameSessionStore.publicSafety <= 3) {
+    publicComments += '<br><br>People are worried about the site being unsafe'
+  } else {
+    publicComments += '<br><br>TODO no safety issue'
+  }
+
+  contentsArray.push(publicComments)
 }
-
-contentsArray.push(managerComments)
-
-// Public Check-in
-let publicComments = ''
-
-if (GameSessionStore.publicFreeSpeech <= 3) {
-  publicComments +=
-    'People are angry about the platform "censoring" their views'
-} else {
-  publicComments += 'TODO no censorship'
-}
-
-if (GameSessionStore.publicSafety <= 3) {
-  publicComments += '<br><br>People are worried about the site being unsafe'
-} else {
-  publicComments += '<br><br>TODO no safety issue'
-}
-
-contentsArray.push(publicComments)
 </script>
 
 <template>
