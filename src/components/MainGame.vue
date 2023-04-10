@@ -33,20 +33,27 @@ function unpauseGame() {
         v-if="playerPausedGame"
         @unpause-game="unpauseGame()"
       ></PauseMenu>
+      <GameOver
+        v-else-if="
+          GameSessionStore.showGameOver && !IssueQueueStore.interstitialShown
+        "
+      />
       <InterstitialScreen v-else-if="IssueQueueStore.interstitialShown" />
-      <InterRoundScreens v-else-if="GameSessionStore.betweenRounds" />
+      <InterRoundScreens
+        v-else-if="
+          GameSessionStore.betweenRounds && !GameSessionStore.showGameOver
+        "
+      />
     </Transition>
     <div class="top-bar">
       <GameStateBar @pause-game="showPauseScreen()" />
     </div>
+    <GameOver
+      v-if="GameSessionStore.showGameOver && !IssueQueueStore.interstitialShown"
+    />
     <div class="play-area">
-      <GameOver
-        v-if="
-          GameSessionStore.showGameOver && !IssueQueueStore.interstitialShown
-        "
-      />
       <IssueQueue
-        v-else-if="!GameSessionStore.betweenRounds"
+        v-if="!GameSessionStore.betweenRounds && !GameSessionStore.showGameOver"
         :isActive="!GameSessionStore.gameIsPaused"
       />
       <DevTools v-if="MetaGameStore.showDevTools" />

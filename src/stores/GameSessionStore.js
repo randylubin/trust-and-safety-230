@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useIntervalFn } from '@vueuse/core'
 import { GameDefaults } from '../GameDefaults'
 
+import { MetaGameStore } from './MetaGameStore'
 import { IssueQueueStore } from './IssueQueueStore'
 
 const gameIsPaused = ref(true)
@@ -155,8 +156,9 @@ export const GameSessionStore = reactive({
   endGame(gameOverReason) {
     this.gameOverReason = gameOverReason
     this.showGameOver = true
-    if (!gameIsPaused.value) {
-      this.pauseTimer()
-    }
+    this.betweenRounds = false
+    MetaGameStore.activeSession = false
+    this.pauseTimer()
+    // TODO update other MetaGame data
   },
 })

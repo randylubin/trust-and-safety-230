@@ -17,26 +17,16 @@ export const IssueQueueStore = reactive({
   currentIssueQueue: [],
   unprocessedFollowUps: [],
   genericIssuesSeen: [],
+  forcedNextArc: [],
+  exclusionGroupIDList: [],
   arcsInProgress: [],
   arcsCompleted: [],
   interstitialShown: false,
   loadSessionFromLocal() {
-    this.currentIssueQueue = JSON.parse(
-      localStorage.IssueQueueStore
-    ).currentIssueQueue
-    this.unprocessedFollowUps = JSON.parse(
-      localStorage.IssueQueueStore
-    ).unprocessedFollowUps
-    this.genericIssuesSeen = JSON.parse(
-      localStorage.IssueQueueStore
-    ).genericIssuesSeen
-    this.arcsInProgress = JSON.parse(
-      localStorage.IssueQueueStore
-    ).arcsInProgress
-    this.arcsCompleted = JSON.parse(localStorage.IssueQueueStore).arcsCompleted
-    this.interstitialShown = JSON.parse(
-      localStorage.IssueQueueStore
-    ).interstitialShown
+    const saveData = JSON.parse(localStorage.GameSessionStore)
+    for (const [key, value] of Object.entries(saveData)) {
+      this[key] = value
+    }
     GenericIssues.setExcludionIDs(localStorage.exclusionGroupIDList)
   },
   saveSessionToLocal() {
@@ -46,6 +36,7 @@ export const IssueQueueStore = reactive({
       currentIssueQueue: this.currentIssueQueue,
       unprocessedFollowUps: this.unprocessedFollowUps,
       genericIssuesSeen: this.genericIssuesSeen,
+      forcedNextArc: this.forcedNextArc,
       exclusionGroupIDList: exclusionGroupIDList,
       arcsInProgress: this.arcsInProgress,
       arcsCompleted: this.arcsCompleted,
@@ -263,6 +254,11 @@ export const IssueQueueStore = reactive({
         ? issueData.issueID.slice(0, issueData.issueID.indexOf('-'))
         : null
 
+    // TODO maybe refactor to happen immediately
+    if (actionConsequences?.forcedNextArc) {
+      this.forcedNextArc.push(actionConsequences?.forcedNextArc)
+    }
+
     // check for game ending
     if (actionConsequences?.endGame) {
       GameSessionStore.endGame(actionConsequences.endGame)
@@ -393,9 +389,24 @@ export const IssueQueueStore = reactive({
     let filteredArcOptions = Object.keys(ArcLookup).filter(
       (arc) =>
         ArcLookup[arc].earliestRound <= GameSessionStore.currentRound &&
+        // check session
         !this.arcsInProgress.includes(arc) &&
-        !this.arcsCompleted.includes(arc)
+        !this.arcsCompleted.includes(arc) &&
+        // check meta
+        !MetaGameStore.arcsSeenButNotCompleted.includes(arc) &&
+        !MetaGameStore.arcsCompleted.includes(arc)
     )
+
+    // fallback if player has seen all arcs across sessions
+    if (!filteredArcOptions.length) {
+      filteredArcOptions = Object.keys(ArcLookup).filter(
+        (arc) =>
+          ArcLookup[arc].earliestRound <= GameSessionStore.currentRound &&
+          // check session
+          !this.arcsInProgress.includes(arc) &&
+          !this.arcsCompleted.includes(arc)
+      )
+    }
 
     console.log('filtered arcs: ', filteredArcOptions)
 
@@ -405,11 +416,16 @@ export const IssueQueueStore = reactive({
           Math.floor(Math.random() * filteredArcOptions.length)
         ]
 
+      // check for forced next arc
+      if (this.forcedNextArc.length) {
+        selectedArcName = this.forcedNextArc.shift()
+      }
+
       let selectedArc = ArcLookup[selectedArcName]
 
       this.arcsInProgress.push(selectedArcName)
+      MetaGameStore.arcsSeenButNotCompleted.push(selectedArcName)
       console.log('in progress', this.arcsInProgress)
-      MetaGameStore.arcsSeenButNotCompleted.push(selectedArcName) // TODO set logic for arc completion
 
       let initialArcCards = ArcIssues.getIssuesByID(selectedArc.initialIssues)
 

@@ -1,15 +1,17 @@
 <script setup>
 // import { GameSessionStore } from "../../stores/GameSessionStore";
-import { MetaGameStore } from '../../stores/MetaGameStore'
-
-function startNewGame() {
-  MetaGameStore.numberOfSessions.value++
-}
+import { GameSessionStore } from '../../stores/GameSessionStore'
 </script>
 
 <template>
   <h1>Game Over</h1>
-  <button @click="startNewGame()">New Game</button>
+  <div
+    v-for="(reason, key) in GameSessionStore.gameOverReason"
+    v-bind:key="key"
+  >
+    {{ reason }}
+  </div>
+  <button @click="GameSessionStore.showGameOver = false">New Game</button>
 </template>
 
 <style scoped></style>

@@ -24,8 +24,10 @@ if (GameSessionStore.endGameAtEndOfRound)
   // from ARC
   gameOverReason.push(GameSessionStore.endGameAtEndOfRound)
 
-if (gameOverReason.length) {
+if (gameOverReason.length && GameSessionStore.currentRound != 0) {
   triggerGameOver.value = true
+  GameSessionStore.betweenRounds = false
+  console.log(gameOverReason)
   GameSessionStore.endGame(gameOverReason)
 }
 
