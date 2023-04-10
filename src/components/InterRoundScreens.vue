@@ -6,16 +6,23 @@ let interScreenIndex = ref(0)
 let contentsArray = []
 const triggerGameOver = ref(false)
 
+const cardsPerRoundWarn = 20
+const cardsPerRoundFire = 10
+const publicWarnLevel = 3
+
 // CHECK FOR GAME OVER
 // TODO FIX LOGIC AND CONTENT
 let gameOverReason = []
 if (GameSessionStore.disagreeWithManager >= 15)
   gameOverReason.push('Fired for bad judgement')
-// TODO speed check
+if (GameSessionStore.issuesCompletedThisRound <= cardsPerRoundFire)
+  gameOverReason.push('Too slow!')
 if (GameSessionStore.publicFreeSpeech == 0)
   gameOverReason.push('Censorship accusations')
 if (GameSessionStore.publicSafety == 0) gameOverReason.push('Platform safety')
-if (GameSessionStore.endGameAtEndOfRound) gameOverReason.push('ARC')
+if (GameSessionStore.endGameAtEndOfRound)
+  // from ARC
+  gameOverReason.push(GameSessionStore.endGameAtEndOfRound)
 
 if (gameOverReason.length) {
   triggerGameOver.value = true
@@ -38,7 +45,10 @@ if (!triggerGameOver.value) {
       "You're doing a great job of making sure content adheres to our policies."
   }
 
-  if (GameSessionStore.issuesCompletedThisRound < 10) {
+  if (
+    GameSessionStore.issuesCompletedThisRound <= cardsPerRoundWarn &&
+    GameSessionStore.issuesCompletedThisRound > cardsPerRoundFire
+  ) {
     // TODO: fix logic
     managerComments +=
       "<br><br>You're making decisions too slowly... move faster."
@@ -52,14 +62,14 @@ if (!triggerGameOver.value) {
   // Public Check-in
   let publicComments = ''
 
-  if (GameSessionStore.publicFreeSpeech <= 3) {
+  if (GameSessionStore.publicFreeSpeech <= publicWarnLevel) {
     publicComments +=
       'People are angry about the platform "censoring" their views'
   } else {
     publicComments += 'TODO no censorship'
   }
 
-  if (GameSessionStore.publicSafety <= 3) {
+  if (GameSessionStore.publicSafety <= publicWarnLevel) {
     publicComments += '<br><br>People are worried about the site being unsafe'
   } else {
     publicComments += '<br><br>TODO no safety issue'

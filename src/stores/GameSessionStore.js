@@ -79,6 +79,7 @@ export const GameSessionStore = reactive({
   publicFreeSpeech: 5,
   showGameOver: false,
   gameOverReason: '',
+  endGameAtEndOfRound: null,
   showAbout: false,
   achievementsUnlockedThisSession: [],
   pauseTimer: function () {
@@ -134,6 +135,7 @@ export const GameSessionStore = reactive({
       publicSafety: this.publicSafety,
       publicFreeSpeech: this.publicFreeSpeech,
       showGameOver: this.showGameOver,
+      endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
       achievementsUnlockedThisSession: this.achievementsUnlockedThisSession,
     })

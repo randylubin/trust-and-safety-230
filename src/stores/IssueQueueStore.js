@@ -268,6 +268,11 @@ export const IssueQueueStore = reactive({
       GameSessionStore.endGame(actionConsequences.endGame)
     }
 
+    if (actionConsequences?.endGameAtEndOfRound) {
+      GameSessionStore.endGameAtEndOfRound =
+        actionConsequences?.endGameAtEndOfRound
+    }
+
     // check for arc ending
     // check for arc ending from consequence
     if (actionConsequences?.endArc) {
