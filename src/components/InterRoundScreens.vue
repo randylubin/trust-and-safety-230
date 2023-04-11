@@ -7,7 +7,7 @@ let contentsArray = []
 const triggerGameOver = ref(false)
 
 const cardsPerRoundWarn = 20
-const cardsPerRoundFire = 10
+const cardsPerRoundFire = 2
 const publicWarnLevel = 3
 
 // CHECK FOR GAME OVER

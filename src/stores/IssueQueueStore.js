@@ -23,11 +23,13 @@ export const IssueQueueStore = reactive({
   arcsCompleted: [],
   interstitialShown: false,
   loadSessionFromLocal() {
-    const saveData = JSON.parse(localStorage.GameSessionStore)
+    const saveData = JSON.parse(localStorage.IssueQueueStore)
     for (const [key, value] of Object.entries(saveData)) {
       this[key] = value
     }
-    GenericIssues.setExcludionIDs(localStorage.exclusionGroupIDList)
+    GenericIssues.setExcludionIDs(
+      localStorage.IssueQueueStore.exclusionGroupIDList
+    )
   },
   saveSessionToLocal() {
     let exclusionGroupIDList = GenericIssues.getExclusionIDList()
