@@ -247,6 +247,22 @@ export const IssueQueueStore = reactive({
       if (actionConsequences.postIssueInterstitial) {
         issueData.postIssueInterstitial =
           actionConsequences.postIssueInterstitial
+      } else if (
+        !issueData.postIssueInterstitial &&
+        !isAppeal &&
+        Math.random() < GameDefaults.oddsOfFeedbackInterstitial
+      ) {
+        // feedback post-interstitial
+        if (responseObject[action].disagreeWithManager) {
+          issueData.postIssueInterstitial =
+            'Hmm... Not the decision I would have made. -Manager'
+        } else if (responseObject[action].publicSafety < 0) {
+          issueData.postIssueInterstitial =
+            "Some users are leaving the platform, saying it's not safe for them."
+        } else if (responseObject[action].publicFreeSpeech < 0) {
+          issueData.postIssueInterstitial =
+            'Some users are angry about us "censoring" them.'
+        }
       }
     }
 

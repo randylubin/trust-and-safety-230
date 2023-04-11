@@ -12,4 +12,7 @@ export const GameDefaults = {
   // Interactions
   // Wait to unlock 'learn more'
   // 'learn more' hold time
+
+  // Feedback
+  oddsOfFeedbackInterstitial: 0.25,
 }
