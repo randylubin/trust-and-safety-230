@@ -6,7 +6,7 @@ let interScreenIndex = ref(0)
 let contentsArray = []
 const triggerGameOver = ref(false)
 
-const cardsPerRoundWarn = 20
+const cardsPerRoundWarn = 15
 const cardsPerRoundFire = 2
 const publicWarnLevel = 3
 

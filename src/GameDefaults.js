@@ -3,6 +3,7 @@ export const GameDefaults = {
   roundLength: 100, // default seconds for a round
   extraTimeForLastCard: -5, // seconds after round clock hits 0
   minimumStartingQueueLength: 5, // min number of cards at start of a round
+  maxCarryoverLength: 5, // max number of cards at start of a round (arcs might push this over)
   genericDrawLikelihood: 0.33, // odds of drawing a generic card each second
 
   // Appeals
