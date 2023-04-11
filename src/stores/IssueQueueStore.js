@@ -396,11 +396,35 @@ export const IssueQueueStore = reactive({
     }
 
     // ADD UNPROCESSED QUEUE ISSUES
+    let leftOverArcCards = []
+    let leftOverAppeals = []
+    let carryoverQueue = []
     for (let i = 0; i < this.unprocessedFollowUps.length; i++) {
       if (!this.unprocessedFollowUps[i].processed) {
-        newQueue.push(this.unprocessedFollowUps[i].issueObject)
+        let issue = this.unprocessedFollowUps[i].issueData
+        if (issue.issueType.slice(0, 6) == 'appeal') {
+          leftOverAppeals.push(issue)
+        } else {
+          leftOverArcCards.push(issue)
+        }
       }
     }
+    // create new queue under max size
+    carryoverQueue.push(...leftOverArcCards)
+    let roomForAppeals =
+      GameDefaults.maxCarryoverLength - leftOverArcCards.length
+    if (roomForAppeals > 0) {
+      for (let i = 0; i < roomForAppeals; i++) {
+        if (leftOverAppeals.length) {
+          carryoverQueue.splice(
+            Math.random() * carryoverQueue.length,
+            0,
+            leftOverAppeals.splice(Math.random() * leftOverAppeals.length, 1)
+          )
+        }
+      }
+    }
+    newQueue.push(...carryoverQueue)
     this.unprocessedFollowUps = []
 
     // SELECT ARC
@@ -428,7 +452,7 @@ export const IssueQueueStore = reactive({
 
     console.log('filtered arcs: ', filteredArcOptions)
 
-    if (filteredArcOptions.length) {
+    if (filteredArcOptions.length || this.forcedNextArc.length) {
       let selectedArcName =
         filteredArcOptions[
           Math.floor(Math.random() * filteredArcOptions.length)
