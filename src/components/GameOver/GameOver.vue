@@ -1,6 +1,7 @@
 <script setup>
 // import { GameSessionStore } from "../../stores/GameSessionStore";
 import { GameSessionStore } from '../../stores/GameSessionStore'
+import AchievementsList from '../Misc/AchievementsList.vue'
 </script>
 
 <template>
@@ -12,6 +13,19 @@ import { GameSessionStore } from '../../stores/GameSessionStore'
     {{ reason }}
   </div>
   <button @click="GameSessionStore.showGameOver = false">New Game</button>
+
+  <h2 v-if="GameSessionStore.achievementsUnlockedThisSession.length">
+    New Achievements
+  </h2>
+  <div
+    v-for="(
+      achievement, key
+    ) in GameSessionStore.achievementsUnlockedThisSession"
+    v-bind:key="key"
+  >
+    {{ achievement }}
+  </div>
+  <AchievementsList></AchievementsList>
 </template>
 
 <style scoped></style>
