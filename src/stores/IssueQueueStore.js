@@ -98,6 +98,7 @@ export const IssueQueueStore = reactive({
     this.currentIssueQueue.push(issue)
   },
   takeAction(action, issueData) {
+    if (action === 'closeInterstitial') action = 'keepUp'
     let actionConsequences =
       action === 'keepUp'
         ? issueData.keepUpConsequences
@@ -369,7 +370,7 @@ export const IssueQueueStore = reactive({
     this.interstitialShown = false
     if (this.interstitialType !== 'pre') {
       if (this.interstitialType === 'interstitialOnly') {
-        this.currentIssueQueue.shift()
+        this.takeAction('closeInterstitial', this.currentIssueQueue[0])
       }
       if (!GameSessionStore.showGameOver) {
         this.startNextCard()
@@ -401,7 +402,9 @@ export const IssueQueueStore = reactive({
     let carryoverQueue = []
     for (let i = 0; i < this.unprocessedFollowUps.length; i++) {
       if (!this.unprocessedFollowUps[i].processed) {
-        let issue = this.unprocessedFollowUps[i].issueData
+        let issue = JSON.parse(
+          JSON.stringify(this.unprocessedFollowUps[i].issueObject)
+        )
         if (issue.issueType.slice(0, 6) == 'appeal') {
           leftOverAppeals.push(issue)
         } else {
