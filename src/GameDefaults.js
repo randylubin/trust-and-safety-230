@@ -5,6 +5,8 @@ export const GameDefaults = {
   minimumStartingQueueLength: 5, // min number of cards at start of a round
   maxCarryoverLength: 5, // max number of cards at start of a round (arcs might push this over)
   genericDrawLikelihood: 0.33, // odds of drawing a generic card each second
+  startingGrabBagCardCount: 3,
+  timeBetweenArcCards: 3, // seconds between arc cards being added (for grab bags)
 
   // Appeals
   appealLikelihood: 0.5, // percent chance of appeal
