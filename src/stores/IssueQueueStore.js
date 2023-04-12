@@ -364,6 +364,19 @@ export const IssueQueueStore = reactive({
       insertTime: GameSessionStore.timeRemaining - insertDelay,
     })
   },
+  interleaveDecks(deckOne, deckTwo) {
+    const result = []
+    const maxLength = Math.max(deckOne.length, deckTwo.length)
+    for (let i = 0; i < maxLength; i++) {
+      if (i < deckOne.length) {
+        result.push(deckOne[i])
+      }
+      if (i < deckTwo.length) {
+        result.push(deckTwo[i])
+      }
+    }
+    return result
+  },
   closeInterstitial() {
     console.log('closing interstitial')
     GameSessionStore.gameIsPaused = false
@@ -422,7 +435,7 @@ export const IssueQueueStore = reactive({
           carryoverQueue.splice(
             Math.random() * carryoverQueue.length,
             0,
-            leftOverAppeals.splice(Math.random() * leftOverAppeals.length, 1)
+            ...leftOverAppeals.splice(Math.random() * leftOverAppeals.length, 1)
           )
         }
       }
@@ -480,15 +493,16 @@ export const IssueQueueStore = reactive({
         newQueue.unshift(arcIntroInterstitial)
       }
 
-      // TODO: add logic for having only a subset of initial cards and placing the rest in a queue
-      if (initialArcCards.length > 3) {
-        // Grab three random cards
+      if (initialArcCards.length > GameDefaults.startingGrabBagCardCount) {
+        // Grab random cards
         let firstCards = []
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < GameDefaults.startingGrabBagCardCount; i++) {
           let randomIndex = Math.floor(Math.random() * initialArcCards.length)
           firstCards.push(...initialArcCards.splice(randomIndex, 1))
         }
-        newQueue.push(...firstCards)
+        console.log(newQueue)
+        newQueue = this.interleaveDecks(newQueue, firstCards)
+        console.log(newQueue)
 
         // add other cards to queue
         let cardsRemaining = initialArcCards.length
@@ -496,23 +510,25 @@ export const IssueQueueStore = reactive({
           let randomIndex = Math.floor(Math.random() * initialArcCards.length)
           let issue = initialArcCards.splice(randomIndex, 1)
 
-          // space issues out by 3 seconds
-          this.insertIssueInQueue(issue[0], 3 * (i + 1))
+          // space issues out
+          this.insertIssueInQueue(
+            issue[0],
+            GameDefaults.timeBetweenArcCards * (i + 1)
+          )
         }
       } else {
-        newQueue.push(...initialArcCards)
+        newQueue = this.interleaveDecks(newQueue, initialArcCards)
       }
     }
 
     // TEMP: Add random generics to bring up to min queue size, excluding those already seen
     if (newQueue.length < minimumStartingQueueLength) {
       let genericsToAdd = minimumStartingQueueLength - newQueue.length
-      newQueue.push(
-        ...GenericIssues.getRandomIssues(genericsToAdd, this.genericIssuesSeen)
+      newQueue = this.interleaveDecks(
+        newQueue,
+        GenericIssues.getRandomIssues(genericsToAdd, this.genericIssuesSeen)
       )
     }
-
-    // TODO: Add logic for shuffling arcs and generics
 
     this.currentIssueQueue = newQueue
 
