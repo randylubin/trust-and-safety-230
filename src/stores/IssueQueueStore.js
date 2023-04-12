@@ -61,7 +61,6 @@ export const IssueQueueStore = reactive({
     )
 
     // TODO specific arc logic (e.g. ending of election 1 triggers election 2)
-
     // TODO arc acheivement
     console.log('arc over')
   },
@@ -221,7 +220,7 @@ export const IssueQueueStore = reactive({
       if (actionConsequences?.instantAppeal) {
         this.insertIssueInQueue(appealData, 0)
       } else {
-        this.insertIssueInQueue(appealData, AppealDelay) // TODO - do we want appeals added to the end?
+        this.insertIssueInQueue(appealData, AppealDelay)
         // console.log('adding appeal to queue', this.unprocessedFollowUps)
       }
     }
@@ -267,7 +266,6 @@ export const IssueQueueStore = reactive({
       }
     }
 
-    // TODO Arcs
     let arcName =
       issueData.issueType === 'arc'
         ? issueData.issueID.slice(0, issueData.issueID.indexOf('-'))
@@ -340,8 +338,6 @@ export const IssueQueueStore = reactive({
       this.interstitialShown = issueData.postIssueInterstitial
       this.interstitialType = 'post'
       this.currentIssueQueue.shift()
-      // TODO add end round from consequences trigger
-      // TODO check for end round from time? Maybe?
     } else if (!actionConsequences?.endGame) {
       this.currentIssueQueue.shift()
       if (actionConsequences?.endRound) {
@@ -398,8 +394,6 @@ export const IssueQueueStore = reactive({
     this.startNextCard()
   },
   startNewRound() {
-    // TODO
-
     let newQueue = []
     // REMOVE GENERICS FROM OLD QUEUE
     for (let i = 0; i < this.currentIssueQueue.length; i++) {

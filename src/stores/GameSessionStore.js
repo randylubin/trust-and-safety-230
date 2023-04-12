@@ -17,8 +17,6 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     timeRemaining.value--
     let queueStartedEmpty = !IssueQueueStore.currentIssueQueue.length
 
-    // TODO add cards over time
-
     // Add follow-up and appeals cards to current queue
     let followupsAdded = false
 
@@ -34,7 +32,6 @@ const { pause, resume, isActive } = useIntervalFn(() => {
           IssueQueueStore.unprocessedFollowUps[i].processed = true
 
           followupsAdded = true
-          // TODO pay attention to insert order, right now it adds to end
         }
       }
     }
@@ -58,7 +55,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
   ) {
     timeRemaining.value--
   } else if (timeRemaining.value == extraTimeForLastCard) {
-    // TODO - handle last card
+    // TODO - handle last card if no action taken
     IssueQueueStore.endRound()
   }
 }, 1000)
@@ -95,7 +92,6 @@ export const GameSessionStore = reactive({
     }
   },
   startNewSession() {
-    // TODO
     if (this.showTutorial) {
       IssueQueueStore.startTutorial()
     } else {
@@ -142,7 +138,6 @@ export const GameSessionStore = reactive({
     })
   },
   triggerPostRound() {
-    // TODO
     if (
       this.moderationQuality * this.moderationSpeed * this.publicPerception ==
       0 // TODO update formula for ending the game
