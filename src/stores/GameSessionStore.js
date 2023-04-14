@@ -73,6 +73,7 @@ export const GameSessionStore = reactive({
   // publicPerception: 5,
   agreeWithManager: 0,
   disagreeWithManager: 0,
+  disagreeWithManagerThisRound: 0,
   publicSafety: 5,
   publicFreeSpeech: 5,
   showGameOver: false,
@@ -106,6 +107,7 @@ export const GameSessionStore = reactive({
 
     // RESET PER-ROUND STATS
     GameSessionStore.issuesCompletedThisRound = 0
+    GameSessionStore.disagreeWithManagerThisRound = 0
 
     // Construct Card Queue
     IssueQueueStore.startNewRound()
@@ -128,6 +130,7 @@ export const GameSessionStore = reactive({
       // moderationQuality: this.moderationQuality,
       // agreeWithManager: this.agreeWithManager,
       disagreeWithManager: this.disagreeWithManager,
+      disagreeWithManagerThisRound: this.disagreeWithManagerThisRound,
       publicPerception: this.publicPerception,
       publicSafety: this.publicSafety,
       publicFreeSpeech: this.publicFreeSpeech,

@@ -36,16 +36,27 @@ if (!triggerGameOver.value) {
   // Manager Check-in
   let managerComments = ''
 
-  if (
-    GameSessionStore.disagreeWithManager > GameSessionStore.agreeWithManager
-  ) {
-    // TODO: fix logic
-    managerComments +=
-      "You're making too many decisions that are at odds with our policies. Keep it up and you'll be out of a job."
-  } else {
-    managerComments +=
-      "You're doing a great job of making sure content adheres to our policies."
+  let managerAgreementFeedbackArray = [
+    "You're making too many decisions that are at odds with our policies. Keep it up and you'll be out of a job.",
+    'Many of your decisions are at odds with our policies. Be more careful.',
+    'Some of your decisions go against platform policy. Take a bit more care.',
+    "You're doing a okay job with your decisions but there's room for improvement",
+    "You're doing a great job of making sure content adheres to our policies.",
+  ]
+
+  // TODO calibrate
+  let managersAgreementArrayScores = [1, 3, 5, 10, 15]
+
+  let managerScore = GameSessionStore.disagreeWithManager
+  let managerFeedback = ''
+
+  // Assign manager level
+  for (let i = 0; i < managersAgreementArrayScores.length; i++) {
+    if (managerScore > managersAgreementArrayScores[i]) {
+      managerFeedback = managerAgreementFeedbackArray[i]
+    }
   }
+  managerComments += managerFeedback
 
   if (
     GameSessionStore.issuesCompletedThisRound <= cardsPerRoundWarn &&

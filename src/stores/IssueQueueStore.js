@@ -168,6 +168,10 @@ export const IssueQueueStore = reactive({
       // if not an appeal
       Object.keys(responseObject[action]).forEach((key) => {
         GameSessionStore[key] += responseObject[action][key]
+        if (key === 'disagreeWithManager') {
+          GameSessionStore.disagreeWithManagerThisRound +=
+            responseObject[action][key]
+        }
       })
     } else {
       // if appeal, unwind previous game state change
