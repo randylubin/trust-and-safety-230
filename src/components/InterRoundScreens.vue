@@ -6,6 +6,9 @@ let interScreenIndex = ref(0)
 let contentsArray = []
 const triggerGameOver = ref(false)
 
+const managerQualityWarn = 5
+const managerQualityPraise = 10
+const cardsPerRoundPraise = 25
 const cardsPerRoundWarn = 15
 const cardsPerRoundFire = 2
 const publicWarnLevel = 3
@@ -37,39 +40,87 @@ if (!triggerGameOver.value) {
   // Manager Check-in
   let managerComments = ''
 
-  let managerAgreementFeedbackArray = [
-    "You're making too many decisions that are at odds with our policies. Keep it up and you'll be out of a job.",
-    'Many of your decisions are at odds with our policies. Be more careful.',
-    'Some of your decisions go against platform policy. Take a bit more care.',
-    "You're doing a okay job with your decisions but there's room for improvement",
-    "You're doing a great job of making sure content adheres to our policies.",
-  ]
+  let managerQualityLevel = 'medium'
+  let managerSpeedLevel = 'medium'
 
-  // TODO calibrate
-  let managersAgreementArrayScores = [1, 3, 5, 10, 15]
+  let managerQualityNumber = GameSessionStore.disagreeWithManager // TODO update
+  let managerSpeedNumber = GameSessionStore.issuesCompletedThisRound
 
-  let managerScore = GameSessionStore.disagreeWithManager
-  let managerFeedback = ''
+  if (managerQualityNumber <= managerQualityWarn) {
+    managerQualityLevel = 'low'
+  } else if (managerQualityNumber < managerQualityPraise) {
+    managerQualityLevel = 'medium'
+  } else {
+    managerQualityLevel = 'high'
+  }
 
-  // Assign manager level
-  for (let i = 0; i < managersAgreementArrayScores.length; i++) {
-    if (managerScore > managersAgreementArrayScores[i]) {
-      managerFeedback = managerAgreementFeedbackArray[i]
+  if (managerSpeedNumber <= cardsPerRoundWarn) {
+    managerSpeedLevel = 'low'
+  } else if (managerSpeedNumber < cardsPerRoundPraise) {
+    managerSpeedLevel = 'medium'
+  } else {
+    managerSpeedLevel = 'high'
+  }
+
+  if (managerQualityLevel === 'low') {
+    if (managerSpeedLevel === 'low') {
+      managerComments = 'TK LOW LOW'
+    } else if (managerSpeedLevel === 'medium') {
+      managerComments = 'TK LOW MED'
+    } else if (managerSpeedLevel === 'high') {
+      managerComments = 'TK LOW HIGH'
+    }
+  } else if (managerQualityLevel === 'medium') {
+    if (managerSpeedLevel === 'low') {
+      managerComments = 'TK MED LOW'
+    } else if (managerSpeedLevel === 'medium') {
+      managerComments = 'TK MED MED'
+    } else if (managerSpeedLevel === 'high') {
+      managerComments = 'TK MED HIGH'
+    }
+  } else if (managerQualityLevel === 'high') {
+    if (managerSpeedLevel === 'low') {
+      managerComments = 'TK HIGH LOW'
+    } else if (managerSpeedLevel === 'medium') {
+      managerComments = 'TK HIGH MED'
+    } else if (managerSpeedLevel === 'high') {
+      managerComments = 'TK HIGH HIGH'
     }
   }
-  managerComments += managerFeedback
 
-  if (
-    GameSessionStore.issuesCompletedThisRound <= cardsPerRoundWarn &&
-    GameSessionStore.issuesCompletedThisRound > cardsPerRoundFire
-  ) {
-    // TODO: fix logic
-    managerComments +=
-      "<br><br>You're making decisions too slowly... move faster."
-  } else {
-    managerComments +=
-      "<br><br>You're doing a great job making decisions quickly."
-  }
+  // let managerAgreementFeedbackArray = [
+  //   "You're making too many decisions that are at odds with our policies. Keep it up and you'll be out of a job.",
+  //   'Many of your decisions are at odds with our policies. Be more careful.',
+  //   'Some of your decisions go against platform policy. Take a bit more care.',
+  //   "You're doing a okay job with your decisions but there's room for improvement",
+  //   "You're doing a great job of making sure content adheres to our policies.",
+  // ]
+
+  // // TODO calibrate
+  // let managersAgreementArrayScores = [1, 3, 5, 10, 15]
+
+  // let managerScore = GameSessionStore.disagreeWithManager
+  // let managerFeedback = ''
+
+  // // Assign manager level
+  // for (let i = 0; i < managersAgreementArrayScores.length; i++) {
+  //   if (managerScore > managersAgreementArrayScores[i]) {
+  //     managerFeedback = managerAgreementFeedbackArray[i]
+  //   }
+  // }
+  // managerComments += managerFeedback
+
+  // if (
+  //   GameSessionStore.issuesCompletedThisRound <= cardsPerRoundWarn &&
+  //   GameSessionStore.issuesCompletedThisRound > cardsPerRoundFire
+  // ) {
+  //   // TODO: fix logic
+  //   managerComments +=
+  //     "<br><br>You're making decisions too slowly... move faster."
+  // } else {
+  //   managerComments +=
+  //     "<br><br>You're doing a great job making decisions quickly."
+  // }
 
   contentsArray.push(managerComments)
 
