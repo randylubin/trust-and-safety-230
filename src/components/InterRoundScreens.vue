@@ -9,6 +9,7 @@ const triggerGameOver = ref(false)
 const cardsPerRoundWarn = 15
 const cardsPerRoundFire = 2
 const publicWarnLevel = 3
+const publicPraiseLevel = 8
 
 // CHECK FOR GAME OVER
 // TODO FIX LOGIC AND CONTENT
@@ -75,18 +76,63 @@ if (!triggerGameOver.value) {
   // Public Check-in
   let publicComments = ''
 
+  let publicFreeSpeechTier = 'medium'
+  let publicSafetyTier = 'medium'
+
   if (GameSessionStore.publicFreeSpeech <= publicWarnLevel) {
-    publicComments +=
-      'People are angry about the platform "censoring" their views'
+    publicFreeSpeechTier = 'low'
+  } else if (GameSessionStore.publicFreeSpeech < publicPraiseLevel) {
+    publicFreeSpeechTier = 'medium'
   } else {
-    publicComments += 'TODO no censorship'
+    publicFreeSpeechTier = 'high'
   }
 
   if (GameSessionStore.publicSafety <= publicWarnLevel) {
-    publicComments += '<br><br>People are worried about the site being unsafe'
+    publicSafetyTier = 'low'
+  } else if (GameSessionStore.publicSafety < publicPraiseLevel) {
+    publicSafetyTier = 'medium'
   } else {
-    publicComments += '<br><br>TODO no safety issue'
+    publicSafetyTier = 'high'
   }
+
+  if (publicFreeSpeechTier === 'low') {
+    if (publicSafetyTier === 'low') {
+      publicComments = 'TK LOW LOW'
+    } else if (publicSafetyTier === 'medium') {
+      publicComments = 'TK LOW MED'
+    } else if (publicSafetyTier === 'high') {
+      publicComments = 'TK LOW HIGH'
+    }
+  } else if (publicFreeSpeechTier === 'medium') {
+    if (publicSafetyTier === 'low') {
+      publicComments = 'TK MED LOW'
+    } else if (publicSafetyTier === 'medium') {
+      publicComments = 'TK MED MED'
+    } else if (publicSafetyTier === 'high') {
+      publicComments = 'TK MED HIGH'
+    }
+  } else if (publicFreeSpeechTier === 'high') {
+    if (publicSafetyTier === 'low') {
+      publicComments = 'TK HIGH LOW'
+    } else if (publicSafetyTier === 'medium') {
+      publicComments = 'TK HIGH MED'
+    } else if (publicSafetyTier === 'high') {
+      publicComments = 'TK HIGH HIGH'
+    }
+  }
+
+  // if (GameSessionStore.publicFreeSpeech <= publicWarnLevel) {
+  //   publicComments +=
+  //     'People are angry about the platform "censoring" their views'
+  // } else {
+  //   publicComments += 'TODO no censorship'
+  // }
+
+  // if (GameSessionStore.publicSafety <= publicWarnLevel) {
+  //   publicComments += '<br><br>People are worried about the site being unsafe'
+  // } else {
+  //   publicComments += '<br><br>TODO no safety issue'
+  // }
 
   contentsArray.push(publicComments)
 }
