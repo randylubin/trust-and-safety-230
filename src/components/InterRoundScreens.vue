@@ -64,27 +64,36 @@ if (!triggerGameOver.value) {
 
   if (managerQualityLevel === 'low') {
     if (managerSpeedLevel === 'low') {
-      managerComments = 'TK LOW LOW'
+      managerComments =
+        "You're too slow and you're making poor decisions. Get your act together or you're fired."
     } else if (managerSpeedLevel === 'medium') {
-      managerComments = 'TK LOW MED'
+      managerComments =
+        "You're moving at a decent pace but you need to improve your decision quality."
     } else if (managerSpeedLevel === 'high') {
-      managerComments = 'TK LOW HIGH'
+      managerComments =
+        "You've got a great throughput but your decision quality is poor. Slow down and make sure your decisions align with our policies."
     }
   } else if (managerQualityLevel === 'medium') {
     if (managerSpeedLevel === 'low') {
-      managerComments = 'TK MED LOW'
+      managerComments =
+        "Your decision quality is fine but you're taking too long. You'll need to make faster decisions if you want to keep your job."
     } else if (managerSpeedLevel === 'medium') {
-      managerComments = 'TK MED MED'
+      managerComments =
+        "You're making decent decisions at a decent pace; keep up the good work."
     } else if (managerSpeedLevel === 'high') {
-      managerComments = 'TK MED HIGH'
+      managerComments =
+        "You're making decent decisions and your pace is excellent. If only all our works were as fast as you."
     }
   } else if (managerQualityLevel === 'high') {
     if (managerSpeedLevel === 'low') {
-      managerComments = 'TK HIGH LOW'
+      managerComments =
+        "You're doing an excellent job of making decisions but you're way too slow. Speed up if you want to keep your job."
     } else if (managerSpeedLevel === 'medium') {
-      managerComments = 'TK HIGH MED'
+      managerComments =
+        "You're doing an excellent job of making decisions, and at a decent pace. Keep up the good work."
     } else if (managerSpeedLevel === 'high') {
-      managerComments = 'TK HIGH HIGH'
+      managerComments =
+        "You're making excellent decisions at a fast pace. Keep it up and we'll get you at raise at the end of the year."
     }
   }
 
@@ -148,27 +157,36 @@ if (!triggerGameOver.value) {
 
   if (publicFreeSpeechTier === 'low') {
     if (publicSafetyTier === 'low') {
-      publicComments = 'TK LOW LOW'
+      publicComments =
+        'This is a disaster - half our users are accusing us of censorship and the other half say the platform is unsafe for anyone to use!'
     } else if (publicSafetyTier === 'medium') {
-      publicComments = 'TK LOW MED'
+      publicComments =
+        "Some users accuse us of being overzealous in our take-downs but we're keeping the most harmful content off the platform."
     } else if (publicSafetyTier === 'high') {
-      publicComments = 'TK LOW HIGH'
+      publicComments =
+        "We're doing a great job at keep the site safe for our users but it's coming at a cost: a lot of users are angry about us taking down their content."
     }
   } else if (publicFreeSpeechTier === 'medium') {
     if (publicSafetyTier === 'low') {
-      publicComments = 'TK MED LOW'
+      publicComments =
+        'The public is accusing us of having an unsafe platform. We need to turn that perception around if we want to stay in business.'
     } else if (publicSafetyTier === 'medium') {
-      publicComments = 'TK MED MED'
+      publicComments =
+        "We're doing a decent job of balancing platform safety with free speech concerns, though not everyone is happy."
     } else if (publicSafetyTier === 'high') {
-      publicComments = 'TK MED HIGH'
+      publicComments =
+        "We're doing an excellent job of keeping the site safe, though some users accuse us of overzealous moderation."
     }
   } else if (publicFreeSpeechTier === 'high') {
     if (publicSafetyTier === 'low') {
-      publicComments = 'TK HIGH LOW'
+      publicComments =
+        "Some users are lauding our commitment to free speech but there's a lot of unsafe content on our site and other users are fleeing."
     } else if (publicSafetyTier === 'medium') {
-      publicComments = 'TK HIGH MED'
+      publicComments =
+        "We're doing a decent job of maintaining platform safety with the minimum amount of content takedowns."
     } else if (publicSafetyTier === 'high') {
-      publicComments = 'TK HIGH HIGH'
+      publicComments =
+        "We're doing a fantastic job of keeping the platform safe while minimizing content removal; great work!"
     }
   }
 
