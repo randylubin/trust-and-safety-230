@@ -113,7 +113,8 @@ onUpdated(shrinkText)
             {{ originalDecision }}
           </span>
           content that was reported as
-          <span class="tag-rule">{{ ContentRule.ruleName }}</span>.
+          <span class="tag-rule">{{ ContentRule.ruleName }}</span
+          >.
         </div>
       </div>
       <div class="appeal-text-sizer" ref="appealTextElement">
@@ -169,7 +170,8 @@ onUpdated(shrinkText)
     -1px 0 0 var(--card-outershadow-color),
     0 1px 0 var(--card-outershadow-color);
 }
-.appeal-card, .appeal .issue-card {
+.appeal-card,
+.appeal .issue-card {
   border: 1.6rem solid var(--card-appeal-innershadow-color);
   box-shadow: 0 -2px 0 var(--card-appeal-outershadow-color),
     1px 0 0 var(--card-appeal-outershadow-color),
@@ -188,7 +190,7 @@ onUpdated(shrinkText)
   top: 0;
   bottom: 0;
   transform-style: preserve-3d;
-  transition: transform .5s;
+  transition: transform 0.5s;
 }
 
 .appeal.flipped .flip-container {

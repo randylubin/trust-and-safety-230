@@ -127,13 +127,13 @@ const examineTime = ref(0)
 let examineClock
 const examineDone = ref(false)
 
-
 const cardTime = ref(
   /* Make look closer always available when reviewing appeals */
   ActiveCard.value?.issueType?.startsWith('appeal') ? Options.examineDelay : 0
 )
 
-const examineDisabled = computed(() =>
+const examineDisabled = computed(
+  () =>
     isDragging.value ||
     isLeaving.value ||
     CardQueue.length === 0 ||
@@ -245,7 +245,7 @@ watchEffect(() => {
                 }
           "
         >
-          <IssueCard :IssueData="issue" @flipCard="flipCard"/>
+          <IssueCard :IssueData="issue" @flipCard="flipCard" />
           <div
             v-if="index === 0 && !isLeaving"
             class="swipe-indicator takedown"
@@ -370,11 +370,12 @@ watchEffect(() => {
   z-index: 900;
   height: 15%;
   min-height: 95px;
-  background-image: linear-gradient(
+  padding-bottom: 1.5rem;
+  /*background-image: linear-gradient(
     to bottom,
     transparent 40%,
     var(--controls-bg-color) 40%
-  );
+  );*/
 }
 
 .examine-popup {
@@ -469,9 +470,9 @@ watchEffect(() => {
   height: 100%;
   width: auto;
   margin-left: -1%;
-  padding: 3%;
-
-  background-color: var(--controls-bg-color);
+  padding: 0.3rem;
+  background-color: var(--stack-bg-color);
+  border: 1rem solid var(--controls-bg-color);
   border-radius: 100%;
 }
 
@@ -487,6 +488,8 @@ watchEffect(() => {
   width: 100%;
   height: 100%;
   padding: 25%;
+  position: relative;
+  top: -0.4rem;
   border-radius: 100%;
   border: none;
   background-origin: content-box;
@@ -497,12 +500,13 @@ watchEffect(() => {
 }
 
 .button-frame > button:active:not(:disabled) {
-  box-shadow: inset 0 0.3rem rgba(0, 0, 0, 0.25);
-  background-position: 0 0.3rem;
+  box-shadow: none;
+  top: 0;
 }
 
 .button-frame > button.show-disabled {
   background-color: var(--button-disabled-bg-color);
+  box-shadow: 0 0.4rem var(--button-disabled-shadow-color);
   cursor: default;
 }
 
@@ -525,16 +529,19 @@ button:hover {
 
 .button-takedown {
   background-color: var(--takedown-bg-color);
+  box-shadow: 0 0.4rem var(--takedown-shadow-color);
   background-image: url('./../../assets/svg/icon-takedown.svg');
 }
 
 .button-leaveup {
-  background-color: var(--keepup-bg-color);
+  background-color: var(--leaveup-bg-color);
+  box-shadow: 0 0.4rem var(--leaveup-shadow-color);
   background-image: url('./../../assets/svg/icon-leaveup.svg');
 }
 
 .button-examine {
   background-color: var(--examine-bg-color);
+  box-shadow: 0 0.4rem var(--examine-shadow-color);
   background-image: url('./../../assets/svg/icon-examine.svg');
 }
 
@@ -548,7 +555,7 @@ button:hover {
   left: 8%;
   right: 8%;
   top: 65px;
-  bottom: 3%;
+  bottom: 2.5%;
 }
 
 .card-container {
@@ -600,7 +607,7 @@ button:hover {
 }
 
 .swipe-indicator.leaveup {
-  background-color: var(--keepup-bg-color);
+  background-color: var(--leaveup-bg-color);
   background-image: url('./../../assets/svg/icon-leaveup.svg');
   left: -2rem;
 }
