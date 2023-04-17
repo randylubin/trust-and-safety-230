@@ -78,7 +78,7 @@ function unpauseGame() {
 
 .top-bar {
   position: relative;
-  height: 12%;
+  height: 10%;
   min-height: 75px;
   box-sizing: border-box;
   background-color: var(--stack-bg-color);

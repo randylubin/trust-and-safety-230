@@ -492,7 +492,7 @@ watchEffect(() => {
   top: -0.4rem;
   border-radius: 100%;
   border: none;
-  background-origin: content-box;
+  background-origin: content-box, border-box;
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-blend-mode: luminosity;
@@ -530,19 +530,22 @@ button:hover {
 .button-takedown {
   background-color: var(--takedown-bg-color);
   box-shadow: 0 0.4rem var(--takedown-shadow-color);
-  background-image: url('./../../assets/svg/icon-takedown.svg');
+  background-image: url('./../../assets/svg/icon-takedown.svg'),
+    var(--fade-bg-gradient);
 }
 
 .button-leaveup {
   background-color: var(--leaveup-bg-color);
   box-shadow: 0 0.4rem var(--leaveup-shadow-color);
-  background-image: url('./../../assets/svg/icon-leaveup.svg');
+  background-image: url('./../../assets/svg/icon-leaveup.svg'),
+    var(--fade-bg-gradient);
 }
 
 .button-examine {
   background-color: var(--examine-bg-color);
   box-shadow: 0 0.4rem var(--examine-shadow-color);
-  background-image: url('./../../assets/svg/icon-examine.svg');
+  background-image: url('./../../assets/svg/icon-examine.svg'),
+    var(--fade-bg-gradient);
 }
 
 .stack-area {

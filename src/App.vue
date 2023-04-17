@@ -135,10 +135,10 @@ function continueSession() {
   --card-appeal-outershadow-color: hsl(345, 78%, 43%);
 
   --takedown-bg-color: rgb(255, 112, 112);
-  --takedown-shadow-color: rgb(161, 71, 71);
+  --takedown-shadow-color: rgb(143, 65, 65);
   /*old: rgb(224, 133, 133);*/
   --leaveup-bg-color: rgb(187, 236, 106);
-  --leaveup-shadow-color: rgb(121, 155, 66);
+  --leaveup-shadow-color: rgb(102, 131, 55);
   /*old: rgb(186, 219, 134);*/
   --examine-bg-color: rgb(124, 218, 250);
   --examine-shadow-color: rgb(86, 145, 165);
@@ -154,6 +154,12 @@ function continueSession() {
 
   --examine-popup-incomplete-bg-color: rgb(215, 215, 215);
   --examine-popup-complete-bg-color: rgb(230, 230, 230);
+
+  --timer-bg-color: rgb(27, 19, 19);
+  --timer-bar-bg-color: rgb(192, 62, 224);
+  --timer-overlay-color: rgba(255, 255, 255, 0.7);
+
+  --fade-bg-gradient: linear-gradient(to bottom, rgba(0,0,0,0) 10%, rgba(0,0,0,.2) 90%);
 }
 
 .btn-basic {
