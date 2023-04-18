@@ -12,16 +12,16 @@ let arcsFromGoogleSheet = []
 const ArcIssues = new IssueDatabase()
 
 let ArcLookup = {
-  NUDITY: { earliestRound: 11 },
-  NUDE_ART: { earliestRound: 11 },
-  HEALTHCARE: { earliestRound: 21 },
   ELECTION: { earliestRound: 1 },
+  NUDITY: { earliestRound: 1 },
+  NUDE_ART: { earliestRound: 1 },
+  HEALTHCARE: { earliestRound: 1 },
+  OFFPLAT1: { earliestRound: 1 },
+  OFFPLAT2: { earliestRound: 1 },
+  BRIGADE: { earliestRound: 1 },
+  COPYRIGHT: { earliestRound: 1 },
+  INTL: { earliestRound: 1 },
   POSTELECT: { earliestRound: 99 },
-  OFFPLAT1: { earliestRound: 11 },
-  OFFPLAT2: { earliestRound: 11 },
-  BRIGADE: { earliestRound: 11 },
-  COPYRIGHT: { earliestRound: 11 },
-  INTL: { earliestRound: 11 },
   BETAAI: { earliestRound: 99 },
   BETTERAI: { earliestRound: 99 },
 }
