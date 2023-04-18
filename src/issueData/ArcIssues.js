@@ -94,6 +94,10 @@ axios
       if (newIssue.initialIssue === 'TRUE') {
         let arcName = newIssue.issueID.slice(0, newIssue.issueID.indexOf('-'))
 
+        if (!ArcLookup[arcName]) {
+          ArcLookup[arcName] = { earliestRound: 1 }
+        }
+
         if (ArcLookup[arcName].initialIssues) {
           ArcLookup[arcName].initialIssues.push(newIssue.issueID)
         } else {
