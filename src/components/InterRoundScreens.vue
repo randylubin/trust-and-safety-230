@@ -346,6 +346,7 @@ if (!triggerGameOver.value) {
   width: 40%;
   filter: grayscale(1);
   font-size: 1.7rem;
+  line-height: 1.7rem;
   padding: 0.8rem 1.2rem;
 }
 
