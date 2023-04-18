@@ -45,15 +45,13 @@ export const IssueQueueStore = reactive({
       interstitialShown: this.interstitialShown,
     })
   },
-  computed: {
-    issueIDsInCurrentQueue() {
-      let issueIDArray
-      this.currentIssueQueue.forEach((issue) => {
-        issueIDArray.push(issue.issueID)
-      })
+  getIssueIDsInCurrentQueue() {
+    let issueIDArray = []
+    this.currentIssueQueue.forEach((issue) => {
+      issueIDArray.push(issue.issueID)
+    })
 
-      return issueIDArray
-    }
+    return issueIDArray
   },
   processEndedArc(arcName) {
     MetaGameStore.arcsCompleted.push(arcName)
@@ -80,7 +78,10 @@ export const IssueQueueStore = reactive({
       IssueQueueStore.currentIssueQueue.length
     ) {
       let isAppeal = this.currentIssueQueue[0].issueType.slice(0, 6) == 'appeal'
-      if (this.genericIssuesSeen.includes(this.currentIssueQueue[0].issueID) && !isAppeal) {
+      if (
+        this.genericIssuesSeen.includes(this.currentIssueQueue[0].issueID) &&
+        !isAppeal
+      ) {
         console.log('ALREADY SEEN!', this.currentIssueQueue[0].issueID)
       }
       if (this.currentIssueQueue[0].preIssueInterstitial && !isAppeal) {
@@ -535,7 +536,7 @@ export const IssueQueueStore = reactive({
     // TEMP: Add random generics to bring up to min queue size, excluding those already seen
     if (newQueue.length < minimumStartingQueueLength) {
       let excludeArray = this.genericIssuesSeen.concat(
-        this.issueIDsInCurrentQueue,
+        this.getIssueIDsInCurrentQueue(),
         GenericIssues.getIDsOfBotIssues()
       )
       let genericsToAdd = minimumStartingQueueLength - newQueue.length
@@ -552,14 +553,22 @@ export const IssueQueueStore = reactive({
   },
   addRandomIssue(numberOfIssues = 1) {
     let excludeArray = this.genericIssuesSeen.concat(
-      this.issueIDsInCurrentQueue,
+      this.getIssueIDsInCurrentQueue(),
       GenericIssues.getIDsOfBotIssues()
     )
 
+    // console.log('queue IDs', this.getIssueIDsInCurrentQueue())
+
     if (numberOfIssues == 1) {
-      this.currentIssueQueue.push(GenericIssues.getRandomIssue(excludeArray))
+      let newIssue = GenericIssues.getRandomIssue(excludeArray)
+      if (excludeArray.includes(newIssue.issueID)) {
+        console.log('DUPE ADDED', newIssue.issueID)
+      }
+      this.currentIssueQueue.push(newIssue)
     } else {
-      this.currentIssueQueue.push(...GenericIssues.getRandomIssues(numberOfIssues, excludeArray))
+      this.currentIssueQueue.push(
+        ...GenericIssues.getRandomIssues(numberOfIssues, excludeArray)
+      )
     }
   },
 })
