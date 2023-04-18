@@ -47,10 +47,10 @@ Returned objects are ready to use in the main game engine.
 let nextUniqueKey = 1000
 
 export default class IssueDatabase {
-  #Issues = {}
-  #ExcludedGroups = []
-  #ExcludedGroupIDs = []
-  #ExclusionGroupLookup = {}
+  #Issues = {};
+  #ExcludedGroups = [];
+  #ExcludedGroupIDs = [];
+  #ExclusionGroupLookup = {};
   static copyObject(obj) {
     return JSON.parse(JSON.stringify(obj))
   }
