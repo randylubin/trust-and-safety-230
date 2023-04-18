@@ -99,7 +99,6 @@ function unpauseGame() {
   height: 10%;
   min-height: 75px;
   box-sizing: border-box;
-  
 }
 
 .play-area {
