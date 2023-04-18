@@ -32,7 +32,9 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
       v-bind:key="key"
       style="margin-bottom: 5px"
     >
-      {{ issue.issueObject.issueText }}
+      <div v-if="!issue.processed">
+        {{ issue.issueObject.issueText }}
+      </div>
     </div>
   </div>
 </template>
