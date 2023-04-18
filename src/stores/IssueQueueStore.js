@@ -45,6 +45,16 @@ export const IssueQueueStore = reactive({
       interstitialShown: this.interstitialShown,
     })
   },
+  computed: {
+    issueIDsInCurrentQueue() {
+      let issueIDArray
+      this.currentIssueQueue.forEach((issue) => {
+        issueIDArray.push(issue.issueID)
+      })
+
+      return issueIDArray
+    }
+  },
   processEndedArc(arcName) {
     MetaGameStore.arcsCompleted.push(arcName)
 
@@ -71,7 +81,7 @@ export const IssueQueueStore = reactive({
     ) {
       let isAppeal = this.currentIssueQueue[0].issueType.slice(0, 6) == 'appeal'
       if (this.genericIssuesSeen.includes(this.currentIssueQueue[0].issueID) && !isAppeal) {
-        console.log('ALREADY SEEN!')
+        console.log('ALREADY SEEN!', this.currentIssueQueue[0].issueID)
       }
       if (this.currentIssueQueue[0].preIssueInterstitial && !isAppeal) {
         this.interstitialShown = this.currentIssueQueue[0].preIssueInterstitial
@@ -165,9 +175,9 @@ export const IssueQueueStore = reactive({
         }
       }
     }
-    this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
 
     if (!isAppeal) {
+      this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
       // if not an appeal
       Object.keys(responseObject[action]).forEach((key) => {
         GameSessionStore[key] += responseObject[action][key]
@@ -525,7 +535,7 @@ export const IssueQueueStore = reactive({
     // TEMP: Add random generics to bring up to min queue size, excluding those already seen
     if (newQueue.length < minimumStartingQueueLength) {
       let excludeArray = this.genericIssuesSeen.concat(
-        this.currentIssueQueue,
+        this.issueIDsInCurrentQueue,
         GenericIssues.getIDsOfBotIssues()
       )
       let genericsToAdd = minimumStartingQueueLength - newQueue.length
@@ -542,7 +552,7 @@ export const IssueQueueStore = reactive({
   },
   addRandomIssue(numberOfIssues = 1) {
     let excludeArray = this.genericIssuesSeen.concat(
-      this.currentIssueQueue,
+      this.issueIDsInCurrentQueue,
       GenericIssues.getIDsOfBotIssues()
     )
 
