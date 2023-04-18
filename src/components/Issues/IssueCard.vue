@@ -134,7 +134,7 @@ onUpdated(shrinkText)
             {{ originalDecision }}
           </span>
           content that was reported as
-          <span class="tag-rule rule-tip">{{ ContentRule.ruleName }}</span
+          <span class="tag-rule">{{ ContentRule.ruleName }}</span
           >.
         </div>
       </div>
