@@ -524,10 +524,14 @@ export const IssueQueueStore = reactive({
 
     // TEMP: Add random generics to bring up to min queue size, excluding those already seen
     if (newQueue.length < minimumStartingQueueLength) {
+      let excludeArray = this.genericIssuesSeen.concat(
+        this.currentIssueQueue,
+        GenericIssues.getIDsOfBotIssues()
+      )
       let genericsToAdd = minimumStartingQueueLength - newQueue.length
       newQueue = this.interleaveDecks(
         newQueue,
-        GenericIssues.getRandomIssues(genericsToAdd, this.genericIssuesSeen)
+        GenericIssues.getRandomIssues(genericsToAdd, excludeArray)
       )
     }
 
@@ -536,12 +540,16 @@ export const IssueQueueStore = reactive({
     GameSessionStore.betweenRounds = false
     this.startNextCard()
   },
-  addRandomIssue() {
+  addRandomIssue(numberOfIssues = 1) {
     let excludeArray = this.genericIssuesSeen.concat(
       this.currentIssueQueue,
       GenericIssues.getIDsOfBotIssues()
     )
 
-    this.currentIssueQueue.push(GenericIssues.getRandomIssue(excludeArray))
+    if (numberOfIssues == 1) {
+      this.currentIssueQueue.push(GenericIssues.getRandomIssue(excludeArray))
+    } else {
+      this.currentIssueQueue.push(...GenericIssues.getRandomIssues(numberOfIssues, excludeArray))
+    }
   },
 })

@@ -16,6 +16,8 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
     <div>Manager Disagreements {{ GameSessionStore.disagreeWithManager }}</div>
     <div>Public Free Speech {{ GameSessionStore.publicFreeSpeech }}</div>
     <div>Public Safety {{ GameSessionStore.publicSafety }}</div>
+    <h2>Generics Seen</h2>
+    <div>{{ IssueQueueStore.genericIssuesSeen }}</div>
     <h2>Current Queue</h2>
     <div
       v-for="(issue, key) in IssueQueueStore.currentIssueQueue"
@@ -45,5 +47,7 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
   margin: 1rem;
   padding: 1rem;
   max-width: 300px;
+  max-height: 90%;
+  overflow-y: auto;
 }
 </style>
