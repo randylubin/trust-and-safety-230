@@ -121,18 +121,21 @@ function continueSession() {
 
   /* Game Palette */
 
-  --stack-bg-color: rgb(35, 25, 25);
+  --stack-bg-color: rgb(39, 31, 31);
   /* old: rgb(226, 219, 208); */
   --controls-bg-color: rgb(53, 53, 53);
+  --controls-shadow-color: rgb(37, 37, 37);
   /* old: rgb(201, 194, 184); */
-  --modal-bg-color: rgb(200, 200, 200);
+  --modal-bg-color: rgb(39, 39, 39);
   --card-bg-color: white;
-  --card-innershadow-color: var(--en-2d);
+  --card-text-color: rgb(44, 62, 80);
+  --card-innershadow-color: rgb(255, 138, 80);
+  /*--card-innershadow-color: var(--en-2d);*/
+  --card-outershadow-color: rgb(197, 106, 61);
   /* old: rgb(185, 225, 234); */
-  --card-appeal-innershadow-color: var(--en-1d);
-  --card-outershadow-color: hsl(9, 56%, 49%);
+  --card-appeal-innershadow-color: rgb(221, 43, 43);
   /*old: rgb(141, 173, 178); */
-  --card-appeal-outershadow-color: hsl(345, 78%, 43%);
+  --card-appeal-outershadow-color: rgb(187, 39, 34);
 
   --takedown-bg-color: rgb(255, 112, 112);
   --takedown-shadow-color: rgb(143, 65, 65);
@@ -141,7 +144,7 @@ function continueSession() {
   --leaveup-shadow-color: rgb(102, 131, 55);
   /*old: rgb(186, 219, 134);*/
   --examine-bg-color: rgb(124, 218, 250);
-  --examine-shadow-color: rgb(86, 145, 165);
+  --examine-shadow-color: rgb(81, 137, 156);
   /*old: rgb(178, 222, 237);*/
 
   --takedown-text-color: rgb(180, 80, 80);
@@ -150,20 +153,28 @@ function continueSession() {
   --button-basic-bg-color: rgb(140, 226, 255);
   --button-basic-shadow-color: rgb(86, 145, 165);
   --button-disabled-bg-color: #999;
-  --button-disabled-shadow-color: #707070;
+  --button-disabled-shadow-color: #5e5d5d;
 
   --examine-popup-incomplete-bg-color: rgb(215, 215, 215);
   --examine-popup-complete-bg-color: rgb(230, 230, 230);
+  --examine-popup-text-color: rgb(44, 62, 80);
 
   --timer-bg-color: rgb(27, 19, 19);
-  --timer-bar-bg-color: rgb(192, 62, 224);
+  --timer-bar-bg-color: rgb(168, 83, 234);
   --timer-overlay-color: rgba(255, 255, 255, 0.7);
+  --timer-alert-color: rgb(199, 54, 54);
 
-  --fade-bg-gradient: linear-gradient(to bottom, rgba(0,0,0,0) 10%, rgba(0,0,0,.2) 90%);
+  --fade-bg-gradient: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 10%,
+    rgba(0, 0, 0, 0.2) 90%
+  );
 }
 
 .btn-basic {
   background-color: var(--button-basic-bg-color);
+  background-image: var(--fade-bg-gradient);
+  box-shadow: 0 0.4rem var(--button-basic-shadow-color);
   border: none;
   border-radius: 1rem;
   padding: 1rem 1.5rem;
@@ -175,6 +186,11 @@ function continueSession() {
   cursor: pointer;
 }
 
+.card-container .btn-basic {
+  box-shadow: none;
+  background-image: none;
+}
+
 body {
   font-size: 1.4rem;
   margin: 0;
@@ -184,9 +200,9 @@ body {
 #app {
   font-family: var(--font-1), Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
-  color: #2c3e50;
+  color: white;
 
-  background: #333;
+  background: #222;
 
   display: flex;
   justify-content: center;

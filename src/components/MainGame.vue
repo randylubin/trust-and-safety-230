@@ -72,7 +72,25 @@ function unpauseGame() {
   right: 0;
   top: 0;
   bottom: 0;
-
+  background-color: var(--stack-bg-color);
+  background-image: linear-gradient(
+      45deg,
+      hsla(0, 0%, 0%, 0.25) 25%,
+      transparent 25%,
+      transparent 75%,
+      hsla(0, 0%, 0%, 0.25) 75%,
+      hsla(0, 0%, 0%, 0.25)
+    ),
+    linear-gradient(
+      45deg,
+      hsla(0, 0%, 0%, 0.25) 25%,
+      transparent 25%,
+      transparent 75%,
+      hsla(0, 0%, 0%, 0.25) 75%,
+      hsla(0, 0%, 0%, 0.25)
+    );
+  background-position: 0 0, 3px 3px;
+  background-size: 6px 6px;
   user-select: none;
 }
 
@@ -81,7 +99,7 @@ function unpauseGame() {
   height: 10%;
   min-height: 75px;
   box-sizing: border-box;
-  background-color: var(--stack-bg-color);
+  
 }
 
 .play-area {
@@ -90,6 +108,5 @@ function unpauseGame() {
   align-items: stretch;
   flex-grow: 1;
   position: relative;
-  background-color: var(--stack-bg-color);
 }
 </style>

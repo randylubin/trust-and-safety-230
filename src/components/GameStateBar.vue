@@ -11,7 +11,9 @@ const timerBarWidth = computed(() => {
 })
 
 const roundLabel = computed(() => {
-  if (GameSessionStore.currentRound === 0) {
+  if (GameSessionStore.timeRemaining <= 0) {
+    return 'Hurry Up!'
+  } else if (GameSessionStore.currentRound === 0) {
     return 'Tutorial'
   } else {
     return 'Round ' + GameSessionStore.currentRound
@@ -21,7 +23,10 @@ const roundLabel = computed(() => {
 
 <template>
   <div class="game-state-bar">
-    <div class="round-timer">
+    <div
+      class="round-timer"
+      :class="{ alert: GameSessionStore.timeRemaining <= 0 }"
+    >
       <div class="timer-bar"></div>
       <div class="timer-overlay">
         <div class="round-label">{{ roundLabel }}</div>
@@ -74,6 +79,19 @@ const roundLabel = computed(() => {
   filter: drop-shadow(0 0.2rem 0 rgba(255, 255, 255, 0.25));
 }
 
+@keyframes alert-pulse {
+  0% {
+    background-color: var(--timer-bg-color);
+  }
+  50% {
+    background-color: var(--timer-alert-color);
+  }
+}
+
+.round-timer.alert {
+  animation: alert-pulse 0.5s linear infinite;
+}
+
 .timer-bar {
   width: v-bind('timerBarWidth');
   height: 100%;
@@ -106,6 +124,10 @@ const roundLabel = computed(() => {
   height: 1.2rem;
   margin-right: 1rem;
   color: var(--timer-overlay-color);
+  position: relative;
+}
+
+.game-controls {
   position: relative;
 }
 

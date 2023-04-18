@@ -18,6 +18,16 @@ if (Props.IssueData.issueType === 'appealTakeDown') {
   originalDecision.value = 'keep up'
 }
 
+const ruleTooltipActive = ref(false)
+
+function showRuleTooltip() {
+  ruleTooltipActive.value = true
+}
+
+function hideRuleTooltip() {
+  ruleTooltipActive.value = false
+}
+
 const issueTextSize = ref(2.5)
 const appealTextSize = ref(2.5)
 const issueTextElement = ref(null)
@@ -55,13 +65,24 @@ onUpdated(shrinkText)
 
 <template>
   <div class="flip-container">
+    <Transition name="rule-tooltip">
+      <div class="rule-info" v-if="ruleTooltipActive">
+        <div>{{ ContentRule?.ruleDescription }}</div>
+      </div>
+    </Transition>
     <div class="issue-card" ref="cardElement">
       <div v-if="ContentRule" class="card-section section-rule">
         <div class="section-label">
           <span>Reported For:</span>
         </div>
         <div class="rule-text" :class="'rule-' + ContentRule.ruleID">
-          {{ ContentRule.ruleName }}
+          <span
+            class="rule-tip"
+            @pointerdown="showRuleTooltip"
+            @pointerup="hideRuleTooltip"
+            @pointerout="hideRuleTooltip"
+            >{{ ContentRule.ruleName }}</span
+          >
         </div>
       </div>
       <div class="issue-text-sizer" ref="issueTextElement">
@@ -113,7 +134,7 @@ onUpdated(shrinkText)
             {{ originalDecision }}
           </span>
           content that was reported as
-          <span class="tag-rule">{{ ContentRule.ruleName }}</span
+          <span class="tag-rule rule-tip">{{ ContentRule.ruleName }}</span
           >.
         </div>
       </div>
@@ -161,6 +182,7 @@ onUpdated(shrinkText)
   backface-visibility: hidden;
   touch-action: none;
   text-align: left;
+  color: var(--card-text-color);
 }
 
 .issue-card {
@@ -272,5 +294,48 @@ onUpdated(shrinkText)
 
 .tag-decision.keepup {
   color: var(--keepup-text-color);
+}
+
+.rule-info {
+  position: absolute;
+  left: 2.6rem;
+  right: 2.6rem;
+  top: calc(-65px - 0.8rem);
+  box-sizing: border-box;
+  height: calc(65px + 4.5rem);
+  padding: 1.8rem 2.5rem;
+  z-index: 10000;
+  background: var(--examine-popup-complete-bg-color);
+  filter: drop-shadow(0 0 0.3rem rgba(0, 0, 0, 0.5));
+  border-radius: 3rem;
+  color: var(--examine-popup-text-color);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  font-size: 1.8rem;
+}
+
+.rule-tip {
+  cursor: pointer;
+  padding-right: 0.85em;
+  background-image: url('@/assets/svg/icon-information.svg');
+  background-position: center right;
+  background-repeat: no-repeat;
+  background-size: auto 50%;
+}
+
+/* Vue Transitions */
+
+.rule-tooltip-enter-from,
+.rule-tooltip-leave-to {
+  opacity: 0;
+  transform: translateY(2rem);
+}
+
+.rule-tooltip-enter-active,
+.rule-tooltip-leave-active {
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
 </style>
