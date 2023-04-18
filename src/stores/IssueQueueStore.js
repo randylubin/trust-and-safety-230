@@ -70,6 +70,9 @@ export const IssueQueueStore = reactive({
       IssueQueueStore.currentIssueQueue.length
     ) {
       let isAppeal = this.currentIssueQueue[0].issueType.slice(0, 6) == 'appeal'
+      if (this.genericIssuesSeen.includes(this.currentIssueQueue[0].issueID) && !isAppeal) {
+        console.log('ALREADY SEEN!')
+      }
       if (this.currentIssueQueue[0].preIssueInterstitial && !isAppeal) {
         this.interstitialShown = this.currentIssueQueue[0].preIssueInterstitial
         this.interstitialType = 'pre'
@@ -233,7 +236,7 @@ export const IssueQueueStore = reactive({
 
     if (actionConsequences) {
       // Follow up
-      if (actionConsequences.followUpID) {
+      if (actionConsequences.followUpID && !isAppeal) {
         if (issueData.issueType == 'arc') {
           this.insertIssueInQueue(
             ArcIssues.getIssueByID(actionConsequences.followUpID),
@@ -385,7 +388,7 @@ export const IssueQueueStore = reactive({
       if (this.interstitialType === 'interstitialOnly') {
         this.takeAction('closeInterstitial', this.currentIssueQueue[0])
       }
-      if (!GameSessionStore.showGameOver) {
+      if (!GameSessionStore.showGameOver && this.currentIssueQueue.length) {
         this.startNextCard()
       }
     }

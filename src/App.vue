@@ -21,6 +21,7 @@ function shortcutKeys(e) {
   if (e.key == 'D') MetaGameStore.showDevTools = !MetaGameStore.showDevTools
   if (
     !GameSessionStore.gameIsPaused &&
+    !IssueQueueStore.interstitialShown &&
     IssueQueueStore.currentIssueQueue.length
   ) {
     if (e.key == 'ArrowLeft') {
