@@ -108,6 +108,7 @@ export default class IssueDatabase {
     return issueArray
   }
   addExclusionIDsByExclusionGroup(exclusionGroup) {
+    console.log('adding exclusion group', exclusionGroup)
     this.#ExcludedGroupIDs = this.#ExcludedGroupIDs.concat(
       this.#ExclusionGroupLookup[exclusionGroup]
     )
@@ -119,7 +120,7 @@ export default class IssueDatabase {
     this.#ExcludedGroupIDs = excludeArray
   }
   getRandomIssue(exclude = [], assignUniqueKey = true) {
-    exclude.concat(this.#ExcludedGroupIDs)
+    exclude = exclude.concat(this.#ExcludedGroupIDs)
     const filteredIssues = this.IssueIndex.filter((id) => !exclude.includes(id))
     // console.log('filtered issues', filteredIssues)
     const outputObject = IssueDatabase.copyObject(
@@ -144,7 +145,7 @@ export default class IssueDatabase {
     return issueIDs
   }
   getRandomIssues(limit = Infinity, exclude = [], assignUniqueKeys = true) {
-    exclude.concat(this.#ExcludedGroupIDs)
+    exclude = exclude.concat(this.#ExcludedGroupIDs)
     let filteredIssues = this.IssueIndex.filter((id) => !exclude.includes(id))
     const outputArray = []
     while (outputArray.length <= limit && filteredIssues.length > 0) {
