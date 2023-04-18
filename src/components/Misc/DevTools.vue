@@ -39,6 +39,7 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
 
 <style scoped>
 .dev-tools {
+  color: black;
   position: fixed;
   top: 0;
   left: 0;
