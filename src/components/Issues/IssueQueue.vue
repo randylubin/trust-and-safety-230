@@ -127,13 +127,13 @@ const examineTime = ref(0)
 let examineClock
 const examineDone = ref(false)
 
-
 const cardTime = ref(
   /* Make look closer always available when reviewing appeals */
   ActiveCard.value?.issueType?.startsWith('appeal') ? Options.examineDelay : 0
 )
 
-const examineDisabled = computed(() =>
+const examineDisabled = computed(
+  () =>
     isDragging.value ||
     isLeaving.value ||
     CardQueue.length === 0 ||
@@ -245,7 +245,7 @@ watchEffect(() => {
                 }
           "
         >
-          <IssueCard :IssueData="issue" @flipCard="flipCard"/>
+          <IssueCard :IssueData="issue" @flipCard="flipCard" />
           <div
             v-if="index === 0 && !isLeaving"
             class="swipe-indicator takedown"
@@ -370,19 +370,23 @@ watchEffect(() => {
   z-index: 900;
   height: 15%;
   min-height: 95px;
-  background-image: linear-gradient(
+  padding-bottom: 1.5rem;
+  /*background-image: linear-gradient(
     to bottom,
     transparent 40%,
     var(--controls-bg-color) 40%
-  );
+  );*/
 }
 
 .examine-popup {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--examine-popup-text-color);
 
   box-sizing: border-box;
   width: 25rem;
-  height: 12rem;
+  max-height: 25rem;
+  min-height: 12rem;
   padding: 1.5rem;
 
   display: flex;
@@ -391,7 +395,7 @@ watchEffect(() => {
   align-items: center;
 
   position: absolute;
-  bottom: 110%;
+  bottom: 107%;
 
   background-color: var(--examine-popup-incomplete-bg-color);
   background-image: linear-gradient(
@@ -406,7 +410,7 @@ watchEffect(() => {
   filter: drop-shadow(0 0 0.3rem rgba(0, 0, 0, 0.5));
   transform-origin: center bottom;
 
-  transition: width 0.2s ease-out, height 0.2s ease-out,
+  transition: width 0.2s ease-out, max-height 0.2s ease-out,
     border-radius 0.2s ease-out, transform 0.2s ease-out;
 }
 
@@ -430,14 +434,14 @@ watchEffect(() => {
   opacity: 0;
   content: url('./../../assets/svg/icon-more.svg');
   position: absolute;
-
   aspect-ratio: 1 / 0.26;
   transition: opacity 0.2s linear;
 }
 
 .examine-popup.minimized {
   width: 6rem;
-  height: 4rem;
+  max-height: 4rem;
+  min-height: 4rem;
   border-radius: 1rem;
   transform: translateY(0.5rem);
   transition-delay: 0.2s;
@@ -469,10 +473,11 @@ watchEffect(() => {
   height: 100%;
   width: auto;
   margin-left: -1%;
-  padding: 3%;
-
-  background-color: var(--controls-bg-color);
+  padding: 0.3rem;
+  background-color: var(--stack-bg-color);
+  border: 1rem solid var(--controls-bg-color);
   border-radius: 100%;
+  box-shadow: 0 0.2rem 0 var(--controls-shadow-color);
 }
 
 .button-frame.small {
@@ -487,22 +492,25 @@ watchEffect(() => {
   width: 100%;
   height: 100%;
   padding: 25%;
+  position: relative;
+  top: -0.4rem;
   border-radius: 100%;
   border: none;
-  background-origin: content-box;
-  background-size: 100% 100%;
+  background-origin: content-box, border-box;
+  background-size: 100% 100%, 100% 100%;
   background-repeat: no-repeat;
-  background-blend-mode: luminosity;
+  background-blend-mode: luminosity, normal;
   transition: background-color 0.1s linear;
 }
 
 .button-frame > button:active:not(:disabled) {
-  box-shadow: inset 0 0.3rem rgba(0, 0, 0, 0.25);
-  background-position: 0 0.3rem;
+  box-shadow: none;
+  top: 0;
 }
 
 .button-frame > button.show-disabled {
   background-color: var(--button-disabled-bg-color);
+  box-shadow: 0 0.4rem var(--button-disabled-shadow-color);
   cursor: default;
 }
 
@@ -525,17 +533,23 @@ button:hover {
 
 .button-takedown {
   background-color: var(--takedown-bg-color);
-  background-image: url('./../../assets/svg/icon-takedown.svg');
+  box-shadow: 0 0.4rem var(--takedown-shadow-color);
+  background-image: url('./../../assets/svg/icon-takedown.svg'),
+    var(--fade-bg-gradient);
 }
 
 .button-leaveup {
-  background-color: var(--keepup-bg-color);
-  background-image: url('./../../assets/svg/icon-leaveup.svg');
+  background-color: var(--leaveup-bg-color);
+  box-shadow: 0 0.4rem var(--leaveup-shadow-color);
+  background-image: url('./../../assets/svg/icon-leaveup.svg'),
+    var(--fade-bg-gradient);
 }
 
 .button-examine {
   background-color: var(--examine-bg-color);
-  background-image: url('./../../assets/svg/icon-examine.svg');
+  box-shadow: 0 0.4rem var(--examine-shadow-color);
+  background-image: url('./../../assets/svg/icon-examine.svg'),
+    var(--fade-bg-gradient);
 }
 
 .stack-area {
@@ -548,7 +562,7 @@ button:hover {
   left: 8%;
   right: 8%;
   top: 65px;
-  bottom: 3%;
+  bottom: 2.5%;
 }
 
 .card-container {
@@ -600,7 +614,7 @@ button:hover {
 }
 
 .swipe-indicator.leaveup {
-  background-color: var(--keepup-bg-color);
+  background-color: var(--leaveup-bg-color);
   background-image: url('./../../assets/svg/icon-leaveup.svg');
   left: -2rem;
 }

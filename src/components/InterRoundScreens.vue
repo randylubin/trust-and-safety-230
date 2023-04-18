@@ -1,10 +1,15 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { GameSessionStore } from '../stores/GameSessionStore'
 
-let interScreenIndex = ref(0)
-let contentsArray = []
+const interScreenIndex = ref(-1)
 const triggerGameOver = ref(false)
+const publicComments = ref('')
+const managerComments = ref('')
+
+onMounted(() => {
+  interScreenIndex.value = 0
+})
 
 const managerQualityWarn = 5
 const managerQualityPraise = 10
@@ -38,7 +43,7 @@ if (gameOverReason.length && GameSessionStore.currentRound != 0) {
 // GENERATE CONTENT (IF NOT GAME OVER)
 if (!triggerGameOver.value) {
   // Manager Check-in
-  let managerComments = ''
+
 
   let managerQualityLevel = 'medium'
   let managerSpeedLevel = 'medium'
@@ -62,79 +67,45 @@ if (!triggerGameOver.value) {
     managerSpeedLevel = 'high'
   }
 
-  if (managerQualityLevel === 'low') {
+  if (GameSessionStore.currentRound === 0) {
+    managerComments.value =
+      "After each round, you'll get feedback from your manager about the speed and quality of your decisions."
+  } else if (managerQualityLevel === 'low') {
     if (managerSpeedLevel === 'low') {
-      managerComments =
+      managerComments.value =
         "You're too slow and you're making poor decisions. Get your act together or you're fired."
     } else if (managerSpeedLevel === 'medium') {
-      managerComments =
+      managerComments.value =
         "You're moving at a decent pace but you need to improve your decision quality."
     } else if (managerSpeedLevel === 'high') {
-      managerComments =
+      managerComments.value =
         "You've got a great throughput but your decision quality is poor. Slow down and make sure your decisions align with our policies."
     }
   } else if (managerQualityLevel === 'medium') {
     if (managerSpeedLevel === 'low') {
-      managerComments =
+      managerComments.value =
         "Your decision quality is fine but you're taking too long. You'll need to make faster decisions if you want to keep your job."
     } else if (managerSpeedLevel === 'medium') {
-      managerComments =
+      managerComments.value =
         "You're making decent decisions at a decent pace; keep up the good work."
     } else if (managerSpeedLevel === 'high') {
-      managerComments =
+      managerComments.value =
         "You're making decent decisions and your pace is excellent. If only all our works were as fast as you."
     }
   } else if (managerQualityLevel === 'high') {
     if (managerSpeedLevel === 'low') {
-      managerComments =
+      managerComments.value =
         "You're doing an excellent job of making decisions but you're way too slow. Speed up if you want to keep your job."
     } else if (managerSpeedLevel === 'medium') {
-      managerComments =
+      managerComments.value =
         "You're doing an excellent job of making decisions, and at a decent pace. Keep up the good work."
     } else if (managerSpeedLevel === 'high') {
-      managerComments =
+      managerComments.value =
         "You're making excellent decisions at a fast pace. Keep it up and we'll get you at raise at the end of the year."
     }
   }
 
-  // let managerAgreementFeedbackArray = [
-  //   "You're making too many decisions that are at odds with our policies. Keep it up and you'll be out of a job.",
-  //   'Many of your decisions are at odds with our policies. Be more careful.',
-  //   'Some of your decisions go against platform policy. Take a bit more care.',
-  //   "You're doing a okay job with your decisions but there's room for improvement",
-  //   "You're doing a great job of making sure content adheres to our policies.",
-  // ]
-
-  // // TODO calibrate
-  // let managersAgreementArrayScores = [1, 3, 5, 10, 15]
-
-  // let managerScore = GameSessionStore.disagreeWithManager
-  // let managerFeedback = ''
-
-  // // Assign manager level
-  // for (let i = 0; i < managersAgreementArrayScores.length; i++) {
-  //   if (managerScore > managersAgreementArrayScores[i]) {
-  //     managerFeedback = managerAgreementFeedbackArray[i]
-  //   }
-  // }
-  // managerComments += managerFeedback
-
-  // if (
-  //   GameSessionStore.issuesCompletedThisRound <= cardsPerRoundWarn &&
-  //   GameSessionStore.issuesCompletedThisRound > cardsPerRoundFire
-  // ) {
-  //   // TODO: fix logic
-  //   managerComments +=
-  //     "<br><br>You're making decisions too slowly... move faster."
-  // } else {
-  //   managerComments +=
-  //     "<br><br>You're doing a great job making decisions quickly."
-  // }
-
-  contentsArray.push(managerComments)
-
   // Public Check-in
-  let publicComments = ''
 
   let publicFreeSpeechTier = 'medium'
   let publicSafetyTier = 'medium'
@@ -155,60 +126,134 @@ if (!triggerGameOver.value) {
     publicSafetyTier = 'high'
   }
 
-  if (publicFreeSpeechTier === 'low') {
+  if (GameSessionStore.currentRound === 0) {
+    publicComments.value =
+      "You'll also get information about the broader public perception of the platform."
+  } else if (publicFreeSpeechTier === 'low') {
     if (publicSafetyTier === 'low') {
-      publicComments =
+      publicComments.value =
         'This is a disaster - half our users are accusing us of censorship and the other half say the platform is unsafe for anyone to use!'
     } else if (publicSafetyTier === 'medium') {
-      publicComments =
+      publicComments.value =
         "Some users accuse us of being overzealous in our take-downs but we're keeping the most harmful content off the platform."
     } else if (publicSafetyTier === 'high') {
-      publicComments =
+      publicComments.value =
         "We're doing a great job at keep the site safe for our users but it's coming at a cost: a lot of users are angry about us taking down their content."
     }
   } else if (publicFreeSpeechTier === 'medium') {
     if (publicSafetyTier === 'low') {
-      publicComments =
+      publicComments.value =
         'The public is accusing us of having an unsafe platform. We need to turn that perception around if we want to stay in business.'
     } else if (publicSafetyTier === 'medium') {
-      publicComments =
+      publicComments.value =
         "We're doing a decent job of balancing platform safety with free speech concerns, though not everyone is happy."
     } else if (publicSafetyTier === 'high') {
-      publicComments =
+      publicComments.value =
         "We're doing an excellent job of keeping the site safe, though some users accuse us of overzealous moderation."
     }
   } else if (publicFreeSpeechTier === 'high') {
     if (publicSafetyTier === 'low') {
-      publicComments =
+      publicComments.value =
         "Some users are lauding our commitment to free speech but there's a lot of unsafe content on our site and other users are fleeing."
     } else if (publicSafetyTier === 'medium') {
-      publicComments =
+      publicComments.value =
         "We're doing a decent job of maintaining platform safety with the minimum amount of content takedowns."
     } else if (publicSafetyTier === 'high') {
-      publicComments =
+      publicComments.value =
         "We're doing a fantastic job of keeping the platform safe while minimizing content removal; great work!"
     }
   }
-
-  // if (GameSessionStore.publicFreeSpeech <= publicWarnLevel) {
-  //   publicComments +=
-  //     'People are angry about the platform "censoring" their views'
-  // } else {
-  //   publicComments += 'TODO no censorship'
-  // }
-
-  // if (GameSessionStore.publicSafety <= publicWarnLevel) {
-  //   publicComments += '<br><br>People are worried about the site being unsafe'
-  // } else {
-  //   publicComments += '<br><br>TODO no safety issue'
-  // }
-
-  contentsArray.push(publicComments)
 }
 </script>
 
 <template>
   <div class="round-screen">
+    <Transition
+      name="subscreen"
+      :duration="{ enter: 1300, leave: 200 }"
+      mode="out-in"
+    >
+      <div
+        v-if="interScreenIndex === 0"
+        class="round-subscreen screen-achievements"
+      >
+        <div class="big-round-label">
+          {{
+            GameSessionStore.currentRound === 0
+              ? 'Tutorial'
+              : 'Round ' + GameSessionStore.currentRound
+          }}
+          <div class="completed-label">Complete</div>
+        </div>
+        <div
+          class="round-achievements"
+          v-if="GameSessionStore.currentRound != 0"
+        >
+          <div class="issues-completed">
+            Decisions Made: {{ GameSessionStore.issuesCompletedThisRound }}
+          </div>
+        </div>
+        <div class="subscreen-buttons">
+          <button class="btn-basic" @click="interScreenIndex++">Continue</button>
+        </div>
+      </div>
+      <div
+        v-else-if="interScreenIndex === 1"
+        class="round-subscreen screen-manager"
+      >
+        <div class="subscreen-header-image manager">
+          <img src="@/assets/svg/image-manager.svg">
+        </div>
+        <div class="subscreen-header">Employee Evaluation</div>
+        <div class="subscreen-text" v-html="managerComments"></div>
+        <div class="subscreen-buttons">
+          <button class="btn-basic" @click="interScreenIndex++">
+            {{
+              GameSessionStore.currentRound === 0
+                ? 'Got it!'
+                : "I'll do my best!"
+            }}
+          </button>
+          <button class="btn-basic btn-back" @click="interScreenIndex--">Back</button>
+        </div>
+      </div>
+      <div
+        v-else-if="interScreenIndex === 2"
+        class="round-subscreen screen-public"
+      >
+        <div class="subscreen-header-image public">
+          <img src="@/assets/svg/image-public.svg">
+        </div>
+        <div class="subscreen-header">Public Opinion</div>
+        <div class="subscreen-text" v-html="publicComments"></div>
+        <div class="subscreen-buttons">
+          <button class="btn-basic" @click="interScreenIndex++">
+            {{ GameSessionStore.currentRound === 0 ? 'Got it!' : 'Continue' }}
+          </button>
+          <button class="btn-basic btn-back" @click="interScreenIndex--">Back</button>
+        </div>
+      </div>
+      <div
+        v-else-if="interScreenIndex === 3"
+        class="round-subscreen screen-nextround"
+      >
+        <div class="big-round-label">
+          Round {{ GameSessionStore.currentRound + 1 }}
+        </div>
+        <div class="subscreen-text">
+          Ready for your
+          {{ GameSessionStore.currentRound === 0 ? 'first' : 'next' }} shift?
+        </div>
+        <div class="subscreen-buttons">
+          <button class="btn-basic" @click="GameSessionStore.startNewRound()">
+            Let's Go!
+          </button>
+          <button class="btn-basic btn-back" @click="interScreenIndex--">Back</button>
+        </div>
+      </div>
+    </Transition>
+    <!--
+    
     <div class="round-text">Round {{ GameSessionStore.currentRound + 1 }}</div>
     <div
       class="feedback-text"
@@ -237,6 +282,7 @@ if (!triggerGameOver.value) {
     >
       Next Round
     </button>
+  -->
   </div>
 </template>
 
@@ -250,12 +296,102 @@ if (!triggerGameOver.value) {
   z-index: 1000;
 
   box-sizing: border-box;
-  padding: 3rem;
+  padding: 4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
 
   background: var(--modal-bg-color);
+}
+
+.big-round-label {
+  position: relative;
+  font-family: var(--font-2);
+  font-size: 6rem;
+  line-height: 6rem;
+  height: 6rem;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.completed-label {
+  position: relative;
+  top: -4.5rem;
+  left: 30%;
+  transform: scale(100%) rotateZ(-20deg);
+  font-size: 1.6rem;
+  line-height: 1.6rem;
+  height: 1.6rem;
+  width: 40%;
+  padding: 0.7rem;
+  background-color: var(--en-2d);
+}
+
+.round-achievements {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 3rem;
+}
+
+.subscreen-buttons > button {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.subscreen-buttons > .btn-back {
+  margin-left: 0;
+  width: 40%;
+  filter: grayscale(1);
+  font-size: 1.7rem;
+  line-height: 1.7rem;
+  padding: 0.8rem 1.2rem;
+}
+
+.subscreen-header-image {
+  width: 100%;
+  overflow: hidden;
+}
+
+.subscreen-header-image > img {
+  display: block;
+  margin: 0 auto;
+  width: 95%;
+}
+
+.subscreen-header {
+  position: relative;
+  z-index: 200;
+  font-family: var(--font-2);
+  font-size: 2rem;
+  line-height: 2rem;
+  height: 2rem;
+  width: 100%;
+  font-weight: 700;
+  text-transform: uppercase;
+  background-color: var(--en-2d);
+  background-image: var(--fade-bg-gradient);
+  box-shadow: 0 -0.5rem 3rem rgba(0, 0, 0, 0.5);
+  padding: 1rem 0;
+  margin: 0 auto 2rem;
+}
+
+.subscreen-header-image + .subscreen-header {
+  position: relative;
+  top: -2rem;
+  margin-bottom: 0;
+}
+
+.subscreen-text {
+  font-weight: 300;
+  font-size: 2.2rem;
+  margin-bottom: 2.5rem;
+}
+
+.big-round-label + .subscreen-text {
+  margin-bottom: 3.5rem;
 }
 
 .round-text {
@@ -268,5 +404,76 @@ if (!triggerGameOver.value) {
   font-size: 2rem;
   font-weight: 400;
   margin-bottom: 2rem;
+}
+
+/* Vue Transitions */
+
+.subscreen-leave-to {
+  opacity: 0;
+  transform: scale(120%);
+}
+
+.subscreen-leave-active {
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.subscreen-enter-from .big-round-label,
+.subscreen-enter-from .subscreen-header {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.subscreen-enter-from .round-achievements,
+.subscreen-enter-from .subscreen-buttons,
+.subscreen-enter-from .subscreen-text {
+  opacity: 0;
+  transform: translateY(3rem);
+}
+
+.subscreen-enter-active .big-round-label,
+.subscreen-enter-active .round-achievements,
+.subscreen-enter-active .subscreen-text,
+.subscreen-enter-active .subscreen-buttons,
+.subscreen-enter-active .subscreen-header {
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.subscreen-enter-active .big-round-label {
+  transition-delay: 0.3s, 0.3s;
+}
+
+.subscreen-enter-active .round-achievements {
+  transition-delay: 0.9s, 0.9s;
+}
+
+.subscreen-enter-from .completed-label {
+  opacity: 0;
+  transform: scale(300%) rotateZ(45deg);
+}
+
+.subscreen-enter-active .completed-label {
+  transition: opacity 0.3s ease-in, transform 0.3s ease-in;
+  transition-delay: 0.6s, 0.6s;
+}
+
+.subscreen-enter-active .subscreen-header {
+  transition-delay: 0;
+}
+
+.subscreen-enter-from .subscreen-header-image img {
+  transform: translateY(100%);
+}
+
+.subscreen-enter-active .subscreen-header-image img {
+  transition: transform 0.4s ease-out;
+  transition-delay: 0.2s;
+}
+
+.subscreen-enter-active .subscreen-text {
+  transition-delay: 0.5s;
+}
+
+.subscreen-enter-active .subscreen-buttons {
+  transition-delay: 1s;
 }
 </style>
