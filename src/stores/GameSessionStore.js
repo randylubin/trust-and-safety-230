@@ -80,7 +80,8 @@ export const GameSessionStore = reactive({
   gameOverReason: '',
   endGameAtEndOfRound: null,
   showAbout: false,
-  achievementsUnlockedThisSession: [],
+  achievementsUnlockedThisRound: [],
+  achievementsUnlockedThisGame: [],
   pauseTimer: function () {
     pause
   },
@@ -108,6 +109,7 @@ export const GameSessionStore = reactive({
     // RESET PER-ROUND STATS
     GameSessionStore.issuesCompletedThisRound = 0
     GameSessionStore.disagreeWithManagerThisRound = 0
+    GameSessionStore.achievementsUnlockedThisRound = []
 
     // Construct Card Queue
     IssueQueueStore.startNewRound()
@@ -137,7 +139,8 @@ export const GameSessionStore = reactive({
       showGameOver: this.showGameOver,
       endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
-      achievementsUnlockedThisSession: this.achievementsUnlockedThisSession,
+      achievementsUnlockedThisGame: this.achievementsUnlockedThisGame,
+      achievementsUnlockedThisRound: this.achievementsUnlockedThisRound,
     })
   },
   triggerPostRound() {
