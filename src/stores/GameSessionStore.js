@@ -19,39 +19,42 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 
   if (!gameIsPaused.value && timeRemaining.value > 0) {
     timeRemaining.value -= tickDuration
-    let queueStartedEmpty = !IssueQueueStore.currentIssueQueue.length
 
-    // Add follow-up and appeals cards to current queue
-    let followupsAdded = false
+    if (timeRemaining.value % 1 == 0) {
+      let queueStartedEmpty = !IssueQueueStore.currentIssueQueue.length
 
-    if (IssueQueueStore.unprocessedFollowUps) {
-      for (let i = 0; i < IssueQueueStore.unprocessedFollowUps.length; i++) {
-        let issue = IssueQueueStore.unprocessedFollowUps[i]
+      // Add follow-up and appeals cards to current queue
+      let followupsAdded = false
 
-        if (issue.insertTime >= timeRemaining.value && !issue.processed) {
-          IssueQueueStore.addIssueToCurrentQueue(
-            JSON.parse(JSON.stringify(issue.issueObject))
-          )
+      if (IssueQueueStore.unprocessedFollowUps) {
+        for (let i = 0; i < IssueQueueStore.unprocessedFollowUps.length; i++) {
+          let issue = IssueQueueStore.unprocessedFollowUps[i]
 
-          IssueQueueStore.unprocessedFollowUps[i].processed = true
+          if (issue.insertTime >= timeRemaining.value && !issue.processed) {
+            IssueQueueStore.addIssueToCurrentQueue(
+              JSON.parse(JSON.stringify(issue.issueObject))
+            )
 
-          followupsAdded = true
+            IssueQueueStore.unprocessedFollowUps[i].processed = true
+
+            followupsAdded = true
+          }
         }
       }
-    }
 
-    // ADD GENERICS OVER TIME
-    if (
-      Math.random() < genericDrawLikelihood &&
-      GameSessionStore.currentRound != 0 &&
-      !followupsAdded
-    ) {
-      IssueQueueStore.addRandomIssue()
-    }
+      // ADD GENERICS OVER TIME
+      if (
+        Math.random() < genericDrawLikelihood &&
+        GameSessionStore.currentRound != 0 &&
+        !followupsAdded
+      ) {
+        IssueQueueStore.addRandomIssue()
+      }
 
-    // handle a previously empty queue
-    if (queueStartedEmpty && IssueQueueStore.currentIssueQueue.length) {
-      IssueQueueStore.startNextCard()
+      // handle a previously empty queue
+      if (queueStartedEmpty && IssueQueueStore.currentIssueQueue.length) {
+        IssueQueueStore.startNextCard()
+      }
     }
   } else if (
     !gameIsPaused.value &&
