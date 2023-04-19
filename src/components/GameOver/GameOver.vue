@@ -6,7 +6,10 @@ import { onMounted } from 'vue'
 import { event } from 'vue-gtag'
 
 onMounted(() => {
-  event('game_over')
+  event('game_over', {
+    round: GameSessionStore.currentRound,
+    reason: GameSessionStore.gameOverReason,
+  })
 })
 </script>
 

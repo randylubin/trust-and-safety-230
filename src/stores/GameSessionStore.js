@@ -6,6 +6,8 @@ import { GameDefaults } from '../GameDefaults'
 import { MetaGameStore } from './MetaGameStore'
 import { IssueQueueStore } from './IssueQueueStore'
 
+import { event } from 'vue-gtag'
+
 const gameIsPaused = ref(true)
 
 const timeRemaining = ref(GameDefaults.roundLength)
@@ -103,6 +105,7 @@ export const GameSessionStore = reactive({
   },
   startNewRound() {
     GameSessionStore.currentRound++
+    event('start_round', { round: GameSessionStore.currentRound })
     GameSessionStore.timeRemaining = GameSessionStore.initialTimeInRound // TODO
 
     // RESET PER-ROUND STATS
