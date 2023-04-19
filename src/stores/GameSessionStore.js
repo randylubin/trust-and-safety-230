@@ -17,7 +17,11 @@ const genericDrawLikelihood = GameDefaults.genericDrawLikelihood
 const { pause, resume, isActive } = useIntervalFn(() => {
   let tickDuration = GameSessionStore.slowMode ? GameDefaults.slowModeTick : 1
 
-  if (!gameIsPaused.value && timeRemaining.value > 0) {
+  if (
+    !gameIsPaused.value &&
+    !IssueQueueStore.interstitialShown &&
+    timeRemaining.value > 0
+  ) {
     timeRemaining.value -= tickDuration
 
     if (timeRemaining.value % 1 == 0) {
@@ -58,6 +62,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     }
   } else if (
     !gameIsPaused.value &&
+    !IssueQueueStore.interstitialShown &&
     timeRemaining.value > extraTimeForLastCard
   ) {
     timeRemaining.value -= tickDuration

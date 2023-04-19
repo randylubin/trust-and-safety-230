@@ -190,7 +190,7 @@ export const IssueQueueStore = reactive({
       this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
       // if not an appeal
       Object.keys(responseObject[action]).forEach((key) => {
-        console.log(key, responseObject[action][key])
+        // console.log(key, responseObject[action][key])
         GameSessionStore[key] += responseObject[action][key]
         if (key === 'disagreeWithManager') {
           GameSessionStore.disagreeWithManagerThisRound +=
@@ -384,18 +384,24 @@ export const IssueQueueStore = reactive({
     // check for BETAAI
     if (GameSessionStore.currentRound == 3) {
       // remove any remaining BETAAI cards from current queue
-      this.currentIssueQueue = this.currentIssueQueue.filter(
-        (issue) => issue.issueID != 'betaAI'
+      IssueQueueStore.currentIssueQueue =
+        IssueQueueStore.currentIssueQueue.filter(
+          (issue) => issue.issueID !== 'BETAAI'
+        )
+      console.log(
+        'NEXT CARD (SHOULD NOT BE BETAAI)',
+        IssueQueueStore.currentIssueQueue[0].issueID
       )
 
       // remove any remaining BETAAI cards from unprocessed queue
-      this.unprocessedFollowUps = this.unprocessedFollowUps.filter(
-        (issueInsert) =>
-          issueInsert.issueObject.issueID.slice(
-            0,
-            issueInsert.issueObject.issueID.indexOf('-')
-          ) != 'BETAAI'
-      )
+      IssueQueueStore.unprocessedFollowUps =
+        IssueQueueStore.unprocessedFollowUps.filter(
+          (issueInsert) =>
+            issueInsert.issueObject.issueID.slice(
+              0,
+              issueInsert.issueObject.issueID.indexOf('-')
+            ) !== 'BETAAI'
+        )
       this.processEndedArc('BETAAI')
     }
   },

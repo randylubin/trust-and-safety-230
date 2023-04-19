@@ -14,7 +14,9 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
       Unprocessed Queue: {{ IssueQueueStore.unprocessedFollowUps.length }}
     </div>
     <div>Manager Quality {{ GameSessionStore.managerQuality }}</div>
-    <div>Manager Disagreements {{ GameSessionStore.disagreeWithManagerThisRound }}</div>
+    <div>
+      Manager Disagreements {{ GameSessionStore.disagreeWithManagerThisRound }}
+    </div>
     <div>Public Free Speech {{ GameSessionStore.publicFreeSpeech }}</div>
     <div>Public Safety {{ GameSessionStore.publicSafety }}</div>
     <h2>Generics Seen</h2>
@@ -25,7 +27,7 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
       v-bind:key="key"
       style="margin-bottom: 5px"
     >
-      {{ issue.issueText }}
+      {{ issue.issueID }} {{ issue.issueText }}
     </div>
     <h2>Unprocessed Queue</h2>
     <div
@@ -34,7 +36,7 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
       style="margin-bottom: 5px"
     >
       <div v-if="!issue.processed">
-        {{ issue.issueObject.issueText }}
+        {{ issue.issueObject.issueID }} {{ issue.issueObject.issueText }}
       </div>
     </div>
   </div>
