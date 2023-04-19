@@ -121,8 +121,11 @@ export default class IssueDatabase {
   }
   getRandomIssue(exclude = [], assignUniqueKey = true) {
     exclude = exclude.concat(this.#ExcludedGroupIDs)
-    const filteredIssues = this.IssueIndex.filter((id) => !exclude.includes(id))
-    // console.log('filtered issues', filteredIssues)
+    let filteredIssues = this.IssueIndex.filter((id) => !exclude.includes(id))
+    if (!filteredIssues.length) {
+      filteredIssues = this.IssueIndex
+    }
+    console.log('filtered issues', filteredIssues)
     const outputObject = IssueDatabase.copyObject(
       this.#Issues[
         filteredIssues[Math.floor(Math.random() * filteredIssues.length)]
