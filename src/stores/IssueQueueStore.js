@@ -146,8 +146,8 @@ export const IssueQueueStore = reactive({
     }
 
     if (action === 'takeDown') {
-      if (issueData.managerRespose) {
-        if (issueData.managerRespose === 'takeDown') {
+      if (issueData.managerResponse) {
+        if (issueData.managerResponse === 'takeDown') {
           responseObject.takeDown.agreeWithManager += 1
         } else {
           responseObject.takeDown.disagreeWithManager += 1
@@ -166,8 +166,8 @@ export const IssueQueueStore = reactive({
       }
     } else {
       // Keep Up
-      if (issueData.managerRespose) {
-        if (issueData.managerRespose === 'keepUp') {
+      if (issueData.managerResponse) {
+        if (issueData.managerResponse === 'keepUp') {
           responseObject.keepUp.agreeWithManager += 1
         } else {
           responseObject.keepUp.disagreeWithManager += 1
@@ -190,6 +190,7 @@ export const IssueQueueStore = reactive({
       this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
       // if not an appeal
       Object.keys(responseObject[action]).forEach((key) => {
+        console.log(key, responseObject[action][key])
         GameSessionStore[key] += responseObject[action][key]
         if (key === 'disagreeWithManager') {
           GameSessionStore.disagreeWithManagerThisRound +=

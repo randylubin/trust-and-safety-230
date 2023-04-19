@@ -13,7 +13,8 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
     <div>
       Unprocessed Queue: {{ IssueQueueStore.unprocessedFollowUps.length }}
     </div>
-    <div>Manager Disagreements {{ GameSessionStore.disagreeWithManager }}</div>
+    <div>Manager Quality {{ GameSessionStore.managerQuality }}</div>
+    <div>Manager Disagreements {{ GameSessionStore.disagreeWithManagerThisRound }}</div>
     <div>Public Free Speech {{ GameSessionStore.publicFreeSpeech }}</div>
     <div>Public Safety {{ GameSessionStore.publicSafety }}</div>
     <h2>Generics Seen</h2>

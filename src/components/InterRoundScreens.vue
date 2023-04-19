@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { GameSessionStore } from '../stores/GameSessionStore'
+import { GameDefaults } from '../GameDefaults'
 
 const interScreenIndex = ref(-1)
 const triggerGameOver = ref(false)
@@ -11,18 +12,21 @@ onMounted(() => {
   interScreenIndex.value = 0
 })
 
-const managerQualityWarn = 5
-const managerQualityPraise = 10
-const cardsPerRoundPraise = 25
-const cardsPerRoundWarn = 15
-const cardsPerRoundFire = 2
-const publicWarnLevel = 3
-const publicPraiseLevel = 8
+const managerQualityPraise = GameDefaults.managerQualityPraise
+const managerQualityWarn = GameDefaults.managerQualityWarn
+const cardsPerRoundPraise = GameDefaults.cardsPerRoundPraise
+const cardsPerRoundWarn = GameDefaults.cardsPerRoundWarn
+const cardsPerRoundFire = GameDefaults.cardsPerRoundFire
+const publicPraiseLevel = GameDefaults.publicPraiseLevel
+const publicWarnLevel = GameDefaults.publicWarnLevel
+
+// update this round's manager disagreements
+GameSessionStore.managerQuality -= GameSessionStore.disagreeWithManagerThisRound
 
 // CHECK FOR GAME OVER
 // TODO FIX LOGIC AND CONTENT
 let gameOverReason = []
-if (GameSessionStore.disagreeWithManager >= 15)
+if (GameSessionStore.managerQuality <= 0)
   gameOverReason.push('Fired for bad judgement')
 if (GameSessionStore.issuesCompletedThisRound <= cardsPerRoundFire)
   gameOverReason.push('Too slow!')
@@ -44,11 +48,10 @@ if (gameOverReason.length && GameSessionStore.currentRound != 0) {
 if (!triggerGameOver.value) {
   // Manager Check-in
 
-
   let managerQualityLevel = 'medium'
   let managerSpeedLevel = 'medium'
 
-  let managerQualityNumber = GameSessionStore.disagreeWithManager // TODO update
+  let managerQualityNumber = GameSessionStore.managerQuality // TODO update
   let managerSpeedNumber = GameSessionStore.issuesCompletedThisRound
 
   if (managerQualityNumber <= managerQualityWarn) {
@@ -194,7 +197,9 @@ if (!triggerGameOver.value) {
           </div>
         </div>
         <div class="subscreen-buttons">
-          <button class="btn-basic" @click="interScreenIndex++">Continue</button>
+          <button class="btn-basic" @click="interScreenIndex++">
+            Continue
+          </button>
         </div>
       </div>
       <div
@@ -202,7 +207,7 @@ if (!triggerGameOver.value) {
         class="round-subscreen screen-manager"
       >
         <div class="subscreen-header-image manager">
-          <img src="@/assets/svg/image-manager.svg">
+          <img src="@/assets/svg/image-manager.svg" />
         </div>
         <div class="subscreen-header">Employee Evaluation</div>
         <div class="subscreen-text" v-html="managerComments"></div>
@@ -214,7 +219,9 @@ if (!triggerGameOver.value) {
                 : "I'll do my best!"
             }}
           </button>
-          <button class="btn-basic btn-back" @click="interScreenIndex--">Back</button>
+          <button class="btn-basic btn-back" @click="interScreenIndex--">
+            Back
+          </button>
         </div>
       </div>
       <div
@@ -222,7 +229,7 @@ if (!triggerGameOver.value) {
         class="round-subscreen screen-public"
       >
         <div class="subscreen-header-image public">
-          <img src="@/assets/svg/image-public.svg">
+          <img src="@/assets/svg/image-public.svg" />
         </div>
         <div class="subscreen-header">Public Opinion</div>
         <div class="subscreen-text" v-html="publicComments"></div>
@@ -230,7 +237,9 @@ if (!triggerGameOver.value) {
           <button class="btn-basic" @click="interScreenIndex++">
             {{ GameSessionStore.currentRound === 0 ? 'Got it!' : 'Continue' }}
           </button>
-          <button class="btn-basic btn-back" @click="interScreenIndex--">Back</button>
+          <button class="btn-basic btn-back" @click="interScreenIndex--">
+            Back
+          </button>
         </div>
       </div>
       <div
@@ -248,7 +257,9 @@ if (!triggerGameOver.value) {
           <button class="btn-basic" @click="GameSessionStore.startNewRound()">
             Let's Go!
           </button>
-          <button class="btn-basic btn-back" @click="interScreenIndex--">Back</button>
+          <button class="btn-basic btn-back" @click="interScreenIndex--">
+            Back
+          </button>
         </div>
       </div>
     </Transition>
@@ -282,8 +293,7 @@ if (!triggerGameOver.value) {
     >
       Next Round
     </button>
-  -->
-  </div>
+  --></div>
 </template>
 
 <style scoped>

@@ -125,7 +125,7 @@ export default class IssueDatabase {
     if (!filteredIssues.length) {
       filteredIssues = this.IssueIndex
     }
-    console.log('filtered issues', filteredIssues)
+    // console.log('filtered issues', filteredIssues)
     const outputObject = IssueDatabase.copyObject(
       this.#Issues[
         filteredIssues[Math.floor(Math.random() * filteredIssues.length)]
