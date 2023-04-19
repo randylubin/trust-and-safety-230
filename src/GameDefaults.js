@@ -1,6 +1,7 @@
 export const GameDefaults = {
   // Rounds
   roundLength: 100, // default seconds for a round
+  slowModeTick: 0.5, // time change per tick for slow mode (regular mode is 1 second per tick)
   extraTimeForLastCard: -5, // seconds after round clock hits 0
   minimumStartingQueueLength: 5, // min number of cards at start of a round
   maxCarryoverLength: 5, // max number of cards at start of a round (arcs might push this over)

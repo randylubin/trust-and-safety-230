@@ -15,8 +15,10 @@ const extraTimeForLastCard = GameDefaults.extraTimeForLastCard
 const genericDrawLikelihood = GameDefaults.genericDrawLikelihood
 
 const { pause, resume, isActive } = useIntervalFn(() => {
+  let tickDuration = GameSessionStore.slowMode ? GameDefaults.slowModeTick : 1
+
   if (!gameIsPaused.value && timeRemaining.value > 0) {
-    timeRemaining.value--
+    timeRemaining.value -= tickDuration
     let queueStartedEmpty = !IssueQueueStore.currentIssueQueue.length
 
     // Add follow-up and appeals cards to current queue
@@ -55,7 +57,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     !gameIsPaused.value &&
     timeRemaining.value > extraTimeForLastCard
   ) {
-    timeRemaining.value--
+    timeRemaining.value -= tickDuration
   } else if (timeRemaining.value == extraTimeForLastCard) {
     // TODO - handle last card if no action taken
     IssueQueueStore.endRound()
@@ -65,6 +67,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 export const GameSessionStore = reactive({
   currentRound: 0,
   initialTimeInRound: GameDefaults.roundLength,
+  slowMode: false,
   timeRemaining: timeRemaining,
   issuesCompletedThisRound: 0,
   issuesCompletedThisGame: 0,
@@ -141,6 +144,7 @@ export const GameSessionStore = reactive({
       endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
       achievementsUnlockedThisSession: this.achievementsUnlockedThisSession,
+      slowMode: this.slowMode,
     })
   },
   triggerPostRound() {
@@ -161,5 +165,8 @@ export const GameSessionStore = reactive({
     MetaGameStore.activeSession = false
     this.pauseTimer()
     // TODO update other MetaGame data
+  },
+  toggleSlowMode() {
+    this.slowMode = !this.slowMode
   },
 })
