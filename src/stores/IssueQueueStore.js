@@ -386,12 +386,9 @@ export const IssueQueueStore = reactive({
       // remove any remaining BETAAI cards from current queue
       IssueQueueStore.currentIssueQueue =
         IssueQueueStore.currentIssueQueue.filter(
-          (issue) => issue.issueID !== 'BETAAI'
+          (issue) =>
+            issue.issueID.slice(0, issue.issueID.indexOf('-')) !== 'BETAAI'
         )
-      console.log(
-        'NEXT CARD (SHOULD NOT BE BETAAI)',
-        IssueQueueStore.currentIssueQueue[0].issueID
-      )
 
       // remove any remaining BETAAI cards from unprocessed queue
       IssueQueueStore.unprocessedFollowUps =
