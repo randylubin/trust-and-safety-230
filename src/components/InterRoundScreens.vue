@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { GameSessionStore } from '../stores/GameSessionStore'
+import { GameDefaults } from '../GameDefaults'
 
 const interScreenIndex = ref(-1)
 const triggerGameOver = ref(false)
@@ -11,19 +12,169 @@ onMounted(() => {
   interScreenIndex.value = 0
 })
 
-const managerQualityWarn = 5
-const managerQualityPraise = 10
-const cardsPerRoundPraise = 25
-const cardsPerRoundWarn = 15
-const cardsPerRoundFire = 2
-const publicWarnLevel = 3
-const publicPraiseLevel = 8
+const overallPerformancePraise = GameDefaults.overallPerformancePraise
+const overallPerformanceWarn = GameDefaults.overallPerformanceWarn
+const roundQualityPraise = GameDefaults.roundQualityPraise
+const roundQualityWarn = GameDefaults.roundQualityWarn
+const cardsPerRoundPraise = GameDefaults.cardsPerRoundPraise
+const cardsPerRoundWarn = GameDefaults.cardsPerRoundWarn
+const cardsPerRoundFire = GameDefaults.cardsPerRoundFire
+const publicPraiseLevel = GameDefaults.publicPraiseLevel
+const publicWarnLevel = GameDefaults.publicWarnLevel
+
+// Manager feedback calibration
+let roundQualityLevel = 'medium'
+let managerSpeedLevel = 'medium'
+
+let roundQualityNumber =
+  GameDefaults.roundQualityStartingState -
+  GameSessionStore.disagreeWithManagerThisRound // TODO update
+let managerSpeedNumber = GameSessionStore.issuesCompletedThisRound
+
+if (roundQualityNumber <= roundQualityWarn) {
+  roundQualityLevel = 'low'
+} else if (roundQualityNumber < roundQualityPraise) {
+  roundQualityLevel = 'medium'
+} else {
+  roundQualityLevel = 'high'
+}
+
+if (managerSpeedNumber <= cardsPerRoundWarn) {
+  managerSpeedLevel = 'low'
+} else if (managerSpeedNumber < cardsPerRoundPraise) {
+  managerSpeedLevel = 'medium'
+} else {
+  managerSpeedLevel = 'high'
+}
+
+// GENERATE FEEDBACK (SEEN IF NOT GAME OVER) AND UPDATE PERFORMANCE TRACK
+let performanceAdjustment = 0
+if (GameSessionStore.currentRound === 0) {
+  managerComments.value =
+    "After each round, you'll get feedback from your manager about the speed and quality of your decisions."
+} else if (roundQualityLevel === 'low') {
+  if (managerSpeedLevel === 'low') {
+    managerComments.value =
+      "You're too slow and you're making poor decisions. Get your act together or you're fired."
+    performanceAdjustment -= 3
+  } else if (managerSpeedLevel === 'medium') {
+    managerComments.value =
+      "You're moving at a decent pace but you need to improve your decision quality."
+    performanceAdjustment -= 2
+  } else if (managerSpeedLevel === 'high') {
+    managerComments.value =
+      "You've got a great throughput but your decision quality is poor. Slow down and make sure your decisions align with our policies."
+    performanceAdjustment -= 1
+  }
+} else if (roundQualityLevel === 'medium') {
+  if (managerSpeedLevel === 'low') {
+    managerComments.value =
+      "Your decision quality is fine but you're taking too long. You'll need to make faster decisions if you want to keep your job."
+    performanceAdjustment -= 2
+  } else if (managerSpeedLevel === 'medium') {
+    managerComments.value =
+      "You're making decent decisions at a decent pace; keep up the good work."
+  } else if (managerSpeedLevel === 'high') {
+    managerComments.value =
+      "You're making decent decisions and your pace is excellent. If only all our works were as fast as you."
+    performanceAdjustment += 1
+  }
+} else if (roundQualityLevel === 'high') {
+  if (managerSpeedLevel === 'low') {
+    managerComments.value =
+      "You're doing an excellent job of making decisions but you're way too slow. Speed up if you want to keep your job."
+    performanceAdjustment -= 1
+  } else if (managerSpeedLevel === 'medium') {
+    managerComments.value =
+      "You're doing an excellent job of making decisions, and at a decent pace. Keep up the good work."
+    performanceAdjustment += 1
+  } else if (managerSpeedLevel === 'high') {
+    managerComments.value =
+      "You're making excellent decisions at a fast pace. Keep it up and we'll get you at raise at the end of the year."
+    performanceAdjustment += 2
+  }
+}
+
+if (!GameSessionStore.interRoundProcessingComplete) {
+  GameSessionStore.overallPerformance += performanceAdjustment
+  console.log('adjusting performance by', performanceAdjustment)
+}
+
+// TODO OVERALL PERFORMANCE PRAISE OR WARN
+if (GameSessionStore.overallPerformance >= overallPerformancePraise) {
+  console.log('on track for promotion:', GameSessionStore.overallPerformance)
+} else if (GameSessionStore.overallPerformance <= overallPerformanceWarn) {
+  console.log('near firing:', GameSessionStore.overallPerformance)
+} else {
+  console.log('performance is fine', GameSessionStore.overallPerformance)
+}
+
+// Public Check-in
+
+let publicFreeSpeechTier = 'medium'
+let publicSafetyTier = 'medium'
+
+if (GameSessionStore.publicFreeSpeech <= publicWarnLevel) {
+  publicFreeSpeechTier = 'low'
+} else if (GameSessionStore.publicFreeSpeech < publicPraiseLevel) {
+  publicFreeSpeechTier = 'medium'
+} else {
+  publicFreeSpeechTier = 'high'
+}
+
+if (GameSessionStore.publicSafety <= publicWarnLevel) {
+  publicSafetyTier = 'low'
+} else if (GameSessionStore.publicSafety < publicPraiseLevel) {
+  publicSafetyTier = 'medium'
+} else {
+  publicSafetyTier = 'high'
+}
+
+if (GameSessionStore.currentRound === 0) {
+  publicComments.value =
+    "You'll also get information about the broader public perception of the platform."
+} else if (publicFreeSpeechTier === 'low') {
+  if (publicSafetyTier === 'low') {
+    publicComments.value =
+      'This is a disaster - half our users are accusing us of censorship and the other half say the platform is unsafe for anyone to use!'
+  } else if (publicSafetyTier === 'medium') {
+    publicComments.value =
+      "Some users accuse us of being overzealous in our take-downs but we're keeping the most harmful content off the platform."
+  } else if (publicSafetyTier === 'high') {
+    publicComments.value =
+      "We're doing a great job at keep the site safe for our users but it's coming at a cost: a lot of users are angry about us taking down their content."
+  }
+} else if (publicFreeSpeechTier === 'medium') {
+  if (publicSafetyTier === 'low') {
+    publicComments.value =
+      'The public is accusing us of having an unsafe platform. We need to turn that perception around if we want to stay in business.'
+  } else if (publicSafetyTier === 'medium') {
+    publicComments.value =
+      "We're doing a decent job of balancing platform safety with free speech concerns, though not everyone is happy."
+  } else if (publicSafetyTier === 'high') {
+    publicComments.value =
+      "We're doing an excellent job of keeping the site safe, though some users accuse us of overzealous moderation."
+  }
+} else if (publicFreeSpeechTier === 'high') {
+  if (publicSafetyTier === 'low') {
+    publicComments.value =
+      "Some users are lauding our commitment to free speech but there's a lot of unsafe content on our site and other users are fleeing."
+  } else if (publicSafetyTier === 'medium') {
+    publicComments.value =
+      "We're doing a decent job of maintaining platform safety with the minimum amount of content takedowns."
+  } else if (publicSafetyTier === 'high') {
+    publicComments.value =
+      "We're doing a fantastic job of keeping the platform safe while minimizing content removal; great work!"
+  }
+}
 
 // CHECK FOR GAME OVER
 // TODO FIX LOGIC AND CONTENT
 let gameOverReason = []
-if (GameSessionStore.disagreeWithManager >= 15)
-  gameOverReason.push('Fired for bad judgement')
+if (GameSessionStore.overallPerformance <= 0)
+  gameOverReason.push('Fired for poor performance')
+if (GameSessionStore.roundQuality <= 0)
+  gameOverReason.push('Fired for poor performance')
 if (GameSessionStore.issuesCompletedThisRound <= cardsPerRoundFire)
   gameOverReason.push('Too slow!')
 if (GameSessionStore.publicFreeSpeech == 0)
@@ -40,129 +191,8 @@ if (gameOverReason.length && GameSessionStore.currentRound != 0) {
   GameSessionStore.endGame(gameOverReason)
 }
 
-// GENERATE CONTENT (IF NOT GAME OVER)
-if (!triggerGameOver.value) {
-  // Manager Check-in
-
-  let managerQualityLevel = 'medium'
-  let managerSpeedLevel = 'medium'
-
-  let managerQualityNumber = GameSessionStore.disagreeWithManager // TODO update
-  let managerSpeedNumber = GameSessionStore.issuesCompletedThisRound
-
-  if (managerQualityNumber <= managerQualityWarn) {
-    managerQualityLevel = 'low'
-  } else if (managerQualityNumber < managerQualityPraise) {
-    managerQualityLevel = 'medium'
-  } else {
-    managerQualityLevel = 'high'
-  }
-
-  if (managerSpeedNumber <= cardsPerRoundWarn) {
-    managerSpeedLevel = 'low'
-  } else if (managerSpeedNumber < cardsPerRoundPraise) {
-    managerSpeedLevel = 'medium'
-  } else {
-    managerSpeedLevel = 'high'
-  }
-
-  if (GameSessionStore.currentRound === 0) {
-    managerComments.value =
-      "After each round, you'll get feedback from your manager about the speed and quality of your decisions."
-  } else if (managerQualityLevel === 'low') {
-    if (managerSpeedLevel === 'low') {
-      managerComments.value =
-        "You're too slow and you're making poor decisions. Get your act together or you're fired."
-    } else if (managerSpeedLevel === 'medium') {
-      managerComments.value =
-        "You're moving at a decent pace but you need to improve your decision quality."
-    } else if (managerSpeedLevel === 'high') {
-      managerComments.value =
-        "You've got a great throughput but your decision quality is poor. Slow down and make sure your decisions align with our policies."
-    }
-  } else if (managerQualityLevel === 'medium') {
-    if (managerSpeedLevel === 'low') {
-      managerComments.value =
-        "Your decision quality is fine but you're taking too long. You'll need to make faster decisions if you want to keep your job."
-    } else if (managerSpeedLevel === 'medium') {
-      managerComments.value =
-        "You're making decent decisions at a decent pace; keep up the good work."
-    } else if (managerSpeedLevel === 'high') {
-      managerComments.value =
-        "You're making decent decisions and your pace is excellent. If only all our works were as fast as you."
-    }
-  } else if (managerQualityLevel === 'high') {
-    if (managerSpeedLevel === 'low') {
-      managerComments.value =
-        "You're doing an excellent job of making decisions but you're way too slow. Speed up if you want to keep your job."
-    } else if (managerSpeedLevel === 'medium') {
-      managerComments.value =
-        "You're doing an excellent job of making decisions, and at a decent pace. Keep up the good work."
-    } else if (managerSpeedLevel === 'high') {
-      managerComments.value =
-        "You're making excellent decisions at a fast pace. Keep it up and we'll get you at raise at the end of the year."
-    }
-  }
-
-  // Public Check-in
-
-  let publicFreeSpeechTier = 'medium'
-  let publicSafetyTier = 'medium'
-
-  if (GameSessionStore.publicFreeSpeech <= publicWarnLevel) {
-    publicFreeSpeechTier = 'low'
-  } else if (GameSessionStore.publicFreeSpeech < publicPraiseLevel) {
-    publicFreeSpeechTier = 'medium'
-  } else {
-    publicFreeSpeechTier = 'high'
-  }
-
-  if (GameSessionStore.publicSafety <= publicWarnLevel) {
-    publicSafetyTier = 'low'
-  } else if (GameSessionStore.publicSafety < publicPraiseLevel) {
-    publicSafetyTier = 'medium'
-  } else {
-    publicSafetyTier = 'high'
-  }
-
-  if (GameSessionStore.currentRound === 0) {
-    publicComments.value =
-      "You'll also get information about the broader public perception of the platform."
-  } else if (publicFreeSpeechTier === 'low') {
-    if (publicSafetyTier === 'low') {
-      publicComments.value =
-        'This is a disaster - half our users are accusing us of censorship and the other half say the platform is unsafe for anyone to use!'
-    } else if (publicSafetyTier === 'medium') {
-      publicComments.value =
-        "Some users accuse us of being overzealous in our take-downs but we're keeping the most harmful content off the platform."
-    } else if (publicSafetyTier === 'high') {
-      publicComments.value =
-        "We're doing a great job at keep the site safe for our users but it's coming at a cost: a lot of users are angry about us taking down their content."
-    }
-  } else if (publicFreeSpeechTier === 'medium') {
-    if (publicSafetyTier === 'low') {
-      publicComments.value =
-        'The public is accusing us of having an unsafe platform. We need to turn that perception around if we want to stay in business.'
-    } else if (publicSafetyTier === 'medium') {
-      publicComments.value =
-        "We're doing a decent job of balancing platform safety with free speech concerns, though not everyone is happy."
-    } else if (publicSafetyTier === 'high') {
-      publicComments.value =
-        "We're doing an excellent job of keeping the site safe, though some users accuse us of overzealous moderation."
-    }
-  } else if (publicFreeSpeechTier === 'high') {
-    if (publicSafetyTier === 'low') {
-      publicComments.value =
-        "Some users are lauding our commitment to free speech but there's a lot of unsafe content on our site and other users are fleeing."
-    } else if (publicSafetyTier === 'medium') {
-      publicComments.value =
-        "We're doing a decent job of maintaining platform safety with the minimum amount of content takedowns."
-    } else if (publicSafetyTier === 'high') {
-      publicComments.value =
-        "We're doing a fantastic job of keeping the platform safe while minimizing content removal; great work!"
-    }
-  }
-}
+GameSessionStore.interRoundProcessingComplete = true
+GameSessionStore.saveSessionToLocal()
 </script>
 
 <template>

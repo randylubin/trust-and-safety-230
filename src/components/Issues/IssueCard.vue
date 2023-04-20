@@ -70,7 +70,11 @@ onUpdated(shrinkText)
         <div>{{ ContentRule?.ruleDescription }}</div>
       </div>
     </Transition>
-    <div class="issue-card" ref="cardElement">
+    <div
+      class="issue-card"
+      :class="{ 'bot-flagged': IssueData.botFlagged }"
+      ref="cardElement"
+    >
       <div v-if="ContentRule" class="card-section section-rule">
         <div class="section-label">
           <span>Reported For:</span>

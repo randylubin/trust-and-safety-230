@@ -3,8 +3,14 @@ import { MetaGameStore } from '../../stores/MetaGameStore'
 import { GameSessionStore } from '../../stores/GameSessionStore'
 import AchievementsList from '../Misc/AchievementsList.vue'
 import { ref } from 'vue'
+import { event } from 'vue-gtag'
+import { onMounted } from 'vue'
 
 const emit = defineEmits(['newSession', 'continueSession'])
+
+onMounted(() => {
+  event('view_homepage')
+})
 
 const showTutorialButton = ref(false)
 
@@ -15,6 +21,8 @@ function toggleTutorialButton() {
 function startSession(showTutorial = true) {
   GameSessionStore.showTutorial = showTutorial
   emit('newSession')
+
+  event('start_game_session')
 }
 </script>
 

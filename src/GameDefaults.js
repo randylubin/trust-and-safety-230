@@ -1,21 +1,38 @@
 export const GameDefaults = {
-  // Rounds
+  // ROUNDS
+  // Round timing
   roundLength: 100, // default seconds for a round
+  slowModeTick: 0.5, // time change per tick for slow mode (regular mode is 1 second per tick)
   extraTimeForLastCard: -5, // seconds after round clock hits 0
+  genericDrawLikelihood: 1, // odds of drawing a generic card each second
+  // Round setup
   minimumStartingQueueLength: 5, // min number of cards at start of a round
   maxCarryoverLength: 5, // max number of cards at start of a round (arcs might push this over)
-  genericDrawLikelihood: 0.33, // odds of drawing a generic card each second
   startingGrabBagCardCount: 3,
   timeBetweenArcCards: 3, // seconds between arc cards being added (for grab bags)
 
+  // CARD ACTIONS
   // Appeals
   appealLikelihood: 0.5, // percent chance of appeal
   appealDelay: 2, // seconds before appeal is added to queue
-
-  // Interactions
-  // Wait to unlock 'learn more'
-  // 'learn more' hold time
-
-  // Feedback
+  // Immediate Feedback
   oddsOfFeedbackInterstitial: 0.25,
+  // Interactions
+  // Wait to unlock 'learn more' TODO
+  // 'learn more' hold time TODO
+
+  // Game state
+  // Initial state and round updates
+  overallPerformanceStartingState: 5,
+  roundQualityStartingState: 10,
+  // Post-round feedback thresholds
+  overallPerformancePraise: 7,
+  overallPerformanceWarn: 3,
+  roundQualityPraise: 10,
+  roundQualityWarn: 5,
+  cardsPerRoundPraise: 25,
+  cardsPerRoundWarn: 15,
+  cardsPerRoundFire: 2,
+  publicWarnLevel: 3,
+  publicPraiseLevel: 8,
 }

@@ -22,6 +22,7 @@ export const IssueQueueStore = reactive({
   arcsInProgress: [],
   arcsCompleted: [],
   interstitialShown: false,
+  upcomingArcs: [],
   loadSessionFromLocal() {
     const saveData = JSON.parse(localStorage.IssueQueueStore)
     for (const [key, value] of Object.entries(saveData)) {
@@ -43,6 +44,7 @@ export const IssueQueueStore = reactive({
       arcsInProgress: this.arcsInProgress,
       arcsCompleted: this.arcsCompleted,
       interstitialShown: this.interstitialShown,
+      upcomingArcs: this.upcomingArcs,
     })
   },
   getIssueIDsInCurrentQueue() {
@@ -69,8 +71,15 @@ export const IssueQueueStore = reactive({
     )
 
     // TODO specific arc logic (e.g. ending of election 1 triggers election 2)
+    if (arcName === 'ELECTION') {
+      this.upcomingArcs.push({
+        round: GameSessionStore.currentRound + 2,
+        arcName: 'POSTELECT',
+      })
+    }
+
     // TODO arc acheivement
-    console.log('arc over')
+    console.log(arcName, 'arc over')
   },
   startNextCard() {
     if (
@@ -137,8 +146,8 @@ export const IssueQueueStore = reactive({
     }
 
     if (action === 'takeDown') {
-      if (issueData.managerRespose) {
-        if (issueData.managerRespose === 'takeDown') {
+      if (issueData.managerResponse) {
+        if (issueData.managerResponse === 'takeDown') {
           responseObject.takeDown.agreeWithManager += 1
         } else {
           responseObject.takeDown.disagreeWithManager += 1
@@ -157,8 +166,8 @@ export const IssueQueueStore = reactive({
       }
     } else {
       // Keep Up
-      if (issueData.managerRespose) {
-        if (issueData.managerRespose === 'keepUp') {
+      if (issueData.managerResponse) {
+        if (issueData.managerResponse === 'keepUp') {
           responseObject.keepUp.agreeWithManager += 1
         } else {
           responseObject.keepUp.disagreeWithManager += 1
@@ -181,6 +190,7 @@ export const IssueQueueStore = reactive({
       this.genericIssuesSeen.push(this.currentIssueQueue[0].issueID)
       // if not an appeal
       Object.keys(responseObject[action]).forEach((key) => {
+        // console.log(key, responseObject[action][key])
         GameSessionStore[key] += responseObject[action][key]
         if (key === 'disagreeWithManager') {
           GameSessionStore.disagreeWithManagerThisRound +=
@@ -370,6 +380,27 @@ export const IssueQueueStore = reactive({
   endRound() {
     GameSessionStore.betweenRounds = true
     GameSessionStore.triggerPostRound()
+
+    // check for BETAAI
+    if (GameSessionStore.currentRound == 3) {
+      // remove any remaining BETAAI cards from current queue
+      IssueQueueStore.currentIssueQueue =
+        IssueQueueStore.currentIssueQueue.filter(
+          (issue) =>
+            issue.issueID.slice(0, issue.issueID.indexOf('-')) !== 'BETAAI'
+        )
+
+      // remove any remaining BETAAI cards from unprocessed queue
+      IssueQueueStore.unprocessedFollowUps =
+        IssueQueueStore.unprocessedFollowUps.filter(
+          (issueInsert) =>
+            issueInsert.issueObject.issueID.slice(
+              0,
+              issueInsert.issueObject.issueID.indexOf('-')
+            ) !== 'BETAAI'
+        )
+      this.processEndedArc('BETAAI')
+    }
   },
   insertIssueInQueue(issueObject, insertDelay = 1) {
     // console.log(issueObject, insertDelay, insertPosition)
@@ -411,7 +442,23 @@ export const IssueQueueStore = reactive({
     GameSessionStore.betweenRounds = false
     this.startNextCard()
   },
+  selectArcsForSession() {
+    let dedicatedArcs = [
+      {
+        arcName: 'BETAAI',
+        round: 3,
+      },
+      {
+        arcName: 'BETTERAI',
+        round: 5,
+      },
+    ]
+    this.upcomingArcs.push(...dedicatedArcs)
+  },
   startNewRound() {
+    if (GameSessionStore.currentRound == 1) {
+      this.selectArcsForSession()
+    }
     let newQueue = []
     // REMOVE GENERICS FROM OLD QUEUE
     for (let i = 0; i < this.currentIssueQueue.length; i++) {
@@ -467,7 +514,7 @@ export const IssueQueueStore = reactive({
         !MetaGameStore.arcsCompleted.includes(arc)
     )
 
-    // fallback if player has seen all arcs across sessions
+    // fallback if player has seen all arcs across sessions TODO, look at this on a round by round basis
     if (!filteredArcOptions.length) {
       filteredArcOptions = Object.keys(ArcLookup).filter(
         (arc) =>
@@ -479,6 +526,14 @@ export const IssueQueueStore = reactive({
     }
 
     console.log('filtered arcs: ', filteredArcOptions)
+
+    if (this.upcomingArcs.length) {
+      this.upcomingArcs.forEach((arc) => {
+        if (arc.round == GameSessionStore.currentRound) {
+          this.forcedNextArc.unshift(arc.arcName)
+        }
+      })
+    }
 
     if (filteredArcOptions.length || this.forcedNextArc.length) {
       let selectedArcName =

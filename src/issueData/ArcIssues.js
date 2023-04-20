@@ -12,16 +12,20 @@ let arcsFromGoogleSheet = []
 const ArcIssues = new IssueDatabase()
 
 let ArcLookup = {
+  ELECTION: { earliestRound: 1 },
   NUDITY: { earliestRound: 1 },
   NUDE_ART: { earliestRound: 1 },
-  HEALTHCARE: { earliestRound: 2 },
-  ELECTION: { earliestRound: 3 },
-  POSTELECT: { earliestRound: 99 },
+  HEALTHCARE: { earliestRound: 1 },
   OFFPLAT1: { earliestRound: 1 },
   OFFPLAT2: { earliestRound: 1 },
   BRIGADE: { earliestRound: 1 },
   COPYRIGHT: { earliestRound: 1 },
   INTL: { earliestRound: 1 },
+  TERROR: { earliestRound: 1 },
+  ETHICSIN: { earliestRound: 1 },
+  SCHOOL: { earliestRound: 1 },
+  PLIABILITY: { earliestRound: 1 },
+  POSTELECT: { earliestRound: 99 },
   BETAAI: { earliestRound: 99 },
   BETTERAI: { earliestRound: 99 },
 }
@@ -93,6 +97,10 @@ axios
       // Process arcs for ArcLookup
       if (newIssue.initialIssue === 'TRUE') {
         let arcName = newIssue.issueID.slice(0, newIssue.issueID.indexOf('-'))
+
+        if (!ArcLookup[arcName]) {
+          ArcLookup[arcName] = { earliestRound: 1 }
+        }
 
         if (ArcLookup[arcName].initialIssues) {
           ArcLookup[arcName].initialIssues.push(newIssue.issueID)

@@ -6,6 +6,8 @@ import { GameDefaults } from '../GameDefaults'
 import { MetaGameStore } from './MetaGameStore'
 import { IssueQueueStore } from './IssueQueueStore'
 
+import { event } from 'vue-gtag'
+
 const gameIsPaused = ref(true)
 
 const timeRemaining = ref(GameDefaults.roundLength)
@@ -13,47 +15,57 @@ const extraTimeForLastCard = GameDefaults.extraTimeForLastCard
 const genericDrawLikelihood = GameDefaults.genericDrawLikelihood
 
 const { pause, resume, isActive } = useIntervalFn(() => {
-  if (!gameIsPaused.value && timeRemaining.value > 0) {
-    timeRemaining.value--
-    let queueStartedEmpty = !IssueQueueStore.currentIssueQueue.length
+  let tickDuration = GameSessionStore.slowMode ? GameDefaults.slowModeTick : 1
 
-    // Add follow-up and appeals cards to current queue
-    let followupsAdded = false
+  if (
+    !gameIsPaused.value &&
+    !IssueQueueStore.interstitialShown &&
+    timeRemaining.value > 0
+  ) {
+    timeRemaining.value -= tickDuration
 
-    if (IssueQueueStore.unprocessedFollowUps) {
-      for (let i = 0; i < IssueQueueStore.unprocessedFollowUps.length; i++) {
-        let issue = IssueQueueStore.unprocessedFollowUps[i]
+    if (timeRemaining.value % 1 == 0) {
+      let queueStartedEmpty = !IssueQueueStore.currentIssueQueue.length
 
-        if (issue.insertTime >= timeRemaining.value && !issue.processed) {
-          IssueQueueStore.addIssueToCurrentQueue(
-            JSON.parse(JSON.stringify(issue.issueObject))
-          )
+      // Add follow-up and appeals cards to current queue
+      let followupsAdded = false
 
-          IssueQueueStore.unprocessedFollowUps[i].processed = true
+      if (IssueQueueStore.unprocessedFollowUps) {
+        for (let i = 0; i < IssueQueueStore.unprocessedFollowUps.length; i++) {
+          let issue = IssueQueueStore.unprocessedFollowUps[i]
 
-          followupsAdded = true
+          if (issue.insertTime >= timeRemaining.value && !issue.processed) {
+            IssueQueueStore.addIssueToCurrentQueue(
+              JSON.parse(JSON.stringify(issue.issueObject))
+            )
+
+            IssueQueueStore.unprocessedFollowUps[i].processed = true
+
+            followupsAdded = true
+          }
         }
       }
-    }
 
-    // ADD GENERICS OVER TIME
-    if (
-      Math.random() < genericDrawLikelihood &&
-      GameSessionStore.currentRound != 0 &&
-      !followupsAdded
-    ) {
-      IssueQueueStore.addRandomIssue()
-    }
+      // ADD GENERICS OVER TIME
+      if (
+        Math.random() < genericDrawLikelihood &&
+        GameSessionStore.currentRound != 0 &&
+        !followupsAdded
+      ) {
+        IssueQueueStore.addRandomIssue()
+      }
 
-    // handle a previously empty queue
-    if (queueStartedEmpty && IssueQueueStore.currentIssueQueue.length) {
-      IssueQueueStore.startNextCard()
+      // handle a previously empty queue
+      if (queueStartedEmpty && IssueQueueStore.currentIssueQueue.length) {
+        IssueQueueStore.startNextCard()
+      }
     }
   } else if (
     !gameIsPaused.value &&
+    !IssueQueueStore.interstitialShown &&
     timeRemaining.value > extraTimeForLastCard
   ) {
-    timeRemaining.value--
+    timeRemaining.value -= tickDuration
   } else if (timeRemaining.value == extraTimeForLastCard) {
     // TODO - handle last card if no action taken
     IssueQueueStore.endRound()
@@ -63,6 +75,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 export const GameSessionStore = reactive({
   currentRound: 0,
   initialTimeInRound: GameDefaults.roundLength,
+  slowMode: false,
   timeRemaining: timeRemaining,
   issuesCompletedThisRound: 0,
   issuesCompletedThisGame: 0,
@@ -71,14 +84,17 @@ export const GameSessionStore = reactive({
   // moderationSpeed: 5,
   // moderationQuality: 5,
   // publicPerception: 5,
+  overallPerformance: GameDefaults.overallPerformanceStartingState,
   agreeWithManager: 0,
   disagreeWithManager: 0,
   disagreeWithManagerThisRound: 0,
+  roundQuality: GameDefaults.roundQualityStartingState,
   publicSafety: 5,
   publicFreeSpeech: 5,
   showGameOver: false,
   gameOverReason: '',
   endGameAtEndOfRound: null,
+  interRoundProcessingComplete: false,
   showAbout: false,
   achievementsUnlockedThisRound: [],
   achievementsUnlockedThisGame: [],
@@ -104,11 +120,14 @@ export const GameSessionStore = reactive({
   },
   startNewRound() {
     GameSessionStore.currentRound++
+    GameSessionStore.interRoundProcessingComplete = false
+    event('start_round', { round: GameSessionStore.currentRound })
     GameSessionStore.timeRemaining = GameSessionStore.initialTimeInRound // TODO
 
     // RESET PER-ROUND STATS
     GameSessionStore.issuesCompletedThisRound = 0
     GameSessionStore.disagreeWithManagerThisRound = 0
+    GameSessionStore.roundQuality = GameDefaults.roundQualityStartingState
     GameSessionStore.achievementsUnlockedThisRound = []
 
     // Construct Card Queue
@@ -131,16 +150,17 @@ export const GameSessionStore = reactive({
       // moderationSpeed: this.moderationSpeed,
       // moderationQuality: this.moderationQuality,
       // agreeWithManager: this.agreeWithManager,
+      overallPerformance: this.overallPerformance,
       disagreeWithManager: this.disagreeWithManager,
       disagreeWithManagerThisRound: this.disagreeWithManagerThisRound,
+      roundQuality: this.roundQuality,
       publicPerception: this.publicPerception,
       publicSafety: this.publicSafety,
       publicFreeSpeech: this.publicFreeSpeech,
       showGameOver: this.showGameOver,
       endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
-      achievementsUnlockedThisGame: this.achievementsUnlockedThisGame,
-      achievementsUnlockedThisRound: this.achievementsUnlockedThisRound,
+      achievementsUnlockedThisSession: this.achievementsUnlockedThisSession,
     })
   },
   triggerPostRound() {
@@ -152,6 +172,7 @@ export const GameSessionStore = reactive({
     } else {
       this.timeRemaining = 0
       this.betweenRounds = true
+      this.interRoundProcessingComplete = false
     }
   },
   endGame(gameOverReason) {
@@ -161,5 +182,8 @@ export const GameSessionStore = reactive({
     MetaGameStore.activeSession = false
     this.pauseTimer()
     // TODO update other MetaGame data
+  },
+  toggleSlowMode() {
+    this.slowMode = !this.slowMode
   },
 })
