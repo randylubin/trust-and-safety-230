@@ -77,7 +77,9 @@ onUpdated(shrinkText)
     >
       <div v-if="ContentRule" class="card-section section-rule">
         <div class="section-label">
-          <span>Reported For:</span>
+          <span>
+            {{ IssueData.botFlagged ? 'Violation Detected:' : 'Reported For:' }}
+          </span>
         </div>
         <div class="rule-text" :class="'rule-' + ContentRule.ruleID">
           <span
@@ -107,7 +109,13 @@ onUpdated(shrinkText)
             class="card-section section-includes"
           >
             <div class="section-label">
-              <span>Content Includes:</span>
+              <span>
+                {{
+                  IssueData.botFlagged
+                    ? 'Auto-Flagged Content:'
+                    : 'Content Includes:'
+                }}
+              </span>
             </div>
             <div
               class="includes-text"
@@ -205,6 +213,14 @@ onUpdated(shrinkText)
     0 1px 0 var(--card-appeal-outershadow-color);
 }
 
+.issue-card.bot-flagged {
+  border: 1.6rem solid var(--card-bot-innershadow-color);
+  box-shadow: 0 -2px 0 var(--card-bot-outershadow-color),
+    1px 0 0 var(--card-bot-outershadow-color),
+    -1px 0 0 var(--card-bot-outershadow-color),
+    0 1px 0 var(--card-bot-outershadow-color);
+}
+
 .appeal-card {
   transform: rotateY(180deg);
 }
@@ -246,6 +262,10 @@ onUpdated(shrinkText)
 
 .section-rule .section-label > span {
   background-color: #791414;
+}
+
+.bot-flagged .section-rule .section-label > span {
+  background-color: rgb(56, 108, 143);
 }
 
 .issue-text-sizer,

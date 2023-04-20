@@ -160,7 +160,7 @@ export const GameSessionStore = reactive({
       showGameOver: this.showGameOver,
       endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
-      achievementsUnlockedThisSession: this.achievementsUnlockedThisSession,
+      achievementsUnlockedThisGame: this.achievementsUnlockedThisGame,
     })
   },
   triggerPostRound() {
