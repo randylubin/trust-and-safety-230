@@ -83,7 +83,8 @@ export const IssueQueueStore = reactive({
   },
   startNextCard() {
     if (
-      GameSessionStore.timeRemaining > 0 &&
+      (GameSessionStore.timeRemaining > 0 ||
+        GameSessionStore.currentRound == 0) &&
       IssueQueueStore.currentIssueQueue.length
     ) {
       let isAppeal = this.currentIssueQueue[0].issueType.slice(0, 6) == 'appeal'
@@ -104,7 +105,10 @@ export const IssueQueueStore = reactive({
       } else {
         GameSessionStore.gameIsPaused = false
       }
-    } else if (GameSessionStore.timeRemaining <= 0) {
+    } else if (
+      GameSessionStore.timeRemaining <= 0 &&
+      GameSessionStore.currentRound != 0
+    ) {
       this.endRound()
     } else if (this.currentIssueQueue.length == 0) {
       // Currently - do nothing
@@ -370,7 +374,10 @@ export const IssueQueueStore = reactive({
       this.currentIssueQueue.shift()
       if (actionConsequences?.endRound) {
         this.endRound()
-      } else if (GameSessionStore.timeRemaining > 0) {
+      } else if (
+        GameSessionStore.timeRemaining > 0 ||
+        GameSessionStore.currentRound == 0
+      ) {
         this.startNextCard()
       } else if (!issueData.postIssueInterstitial) {
         this.endRound()
@@ -404,6 +411,7 @@ export const IssueQueueStore = reactive({
   },
   insertIssueInQueue(issueObject, insertDelay = 1) {
     // console.log(issueObject, insertDelay, insertPosition)
+    if (GameSessionStore.timeRemaining <= 0) insertDelay = 0
     this.unprocessedFollowUps.push({
       issueObject: issueObject,
       insertTime: GameSessionStore.timeRemaining - insertDelay,

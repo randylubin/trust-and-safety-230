@@ -20,7 +20,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
   if (
     !gameIsPaused.value &&
     !IssueQueueStore.interstitialShown &&
-    timeRemaining.value > 0
+    (timeRemaining.value > 0 || GameSessionStore.currentRound == 0)
   ) {
     timeRemaining.value -= tickDuration
 
@@ -66,7 +66,10 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     timeRemaining.value > extraTimeForLastCard
   ) {
     timeRemaining.value -= tickDuration
-  } else if (timeRemaining.value == extraTimeForLastCard) {
+  } else if (
+    timeRemaining.value == extraTimeForLastCard &&
+    GameSessionStore.currentRound != 0
+  ) {
     // TODO - handle last card if no action taken
     IssueQueueStore.endRound()
   }
