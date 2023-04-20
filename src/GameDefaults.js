@@ -23,11 +23,13 @@ export const GameDefaults = {
 
   // Game state
   // Initial state and round updates
-  managerQualityStartingState: 10,
-  managerQualityNewRoundBump: 2,
+  overallPerformanceStartingState: 5,
+  roundQualityStartingState: 10,
   // Post-round feedback thresholds
-  managerQualityWarn: 5,
-  managerQualityPraise: 10,
+  overallPerformancePraise: 7,
+  overallPerformanceWarn: 3,
+  roundQualityPraise: 10,
+  roundQualityWarn: 5,
   cardsPerRoundPraise: 25,
   cardsPerRoundWarn: 15,
   cardsPerRoundFire: 2,

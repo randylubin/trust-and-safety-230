@@ -13,7 +13,8 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
     <div>
       Unprocessed Queue: {{ IssueQueueStore.unprocessedFollowUps.length }}
     </div>
-    <div>Manager Quality {{ GameSessionStore.managerQuality }}</div>
+    <div>Overall Performance {{ GameSessionStore.overallPerformance }}</div>
+    <div>Round Quality {{ GameSessionStore.roundQuality }}</div>
     <div>
       Manager Disagreements {{ GameSessionStore.disagreeWithManagerThisRound }}
     </div>

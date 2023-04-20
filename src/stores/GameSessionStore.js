@@ -84,15 +84,17 @@ export const GameSessionStore = reactive({
   // moderationSpeed: 5,
   // moderationQuality: 5,
   // publicPerception: 5,
+  overallPerformance: GameDefaults.overallPerformanceStartingState,
   agreeWithManager: 0,
   disagreeWithManager: 0,
   disagreeWithManagerThisRound: 0,
-  managerQuality: GameDefaults.managerQualityStartingState,
+  roundQuality: GameDefaults.roundQualityStartingState,
   publicSafety: 5,
   publicFreeSpeech: 5,
   showGameOver: false,
   gameOverReason: '',
   endGameAtEndOfRound: null,
+  interRoundProcessingComplete: false,
   showAbout: false,
   achievementsUnlockedThisSession: [],
   pauseTimer: function () {
@@ -117,13 +119,14 @@ export const GameSessionStore = reactive({
   },
   startNewRound() {
     GameSessionStore.currentRound++
+    GameSessionStore.interRoundProcessingComplete = false
     event('start_round', { round: GameSessionStore.currentRound })
     GameSessionStore.timeRemaining = GameSessionStore.initialTimeInRound // TODO
 
     // RESET PER-ROUND STATS
     GameSessionStore.issuesCompletedThisRound = 0
     GameSessionStore.disagreeWithManagerThisRound = 0
-    GameSessionStore.managerQuality += GameDefaults.managerQualityNewRoundBump
+    GameSessionStore.roundQuality = GameDefaults.roundQualityStartingState
 
     // Construct Card Queue
     IssueQueueStore.startNewRound()
@@ -145,15 +148,17 @@ export const GameSessionStore = reactive({
       // moderationSpeed: this.moderationSpeed,
       // moderationQuality: this.moderationQuality,
       // agreeWithManager: this.agreeWithManager,
+      overallPerformance: this.overallPerformance,
       disagreeWithManager: this.disagreeWithManager,
       disagreeWithManagerThisRound: this.disagreeWithManagerThisRound,
-      managerQuality: this.managerQuality,
+      roundQuality: this.roundQuality,
       publicPerception: this.publicPerception,
       publicSafety: this.publicSafety,
       publicFreeSpeech: this.publicFreeSpeech,
       showGameOver: this.showGameOver,
       endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
+      interRoundProcessingComplete: this.interRoundProcessingComplete,
       achievementsUnlockedThisSession: this.achievementsUnlockedThisSession,
       slowMode: this.slowMode,
     })
@@ -167,6 +172,7 @@ export const GameSessionStore = reactive({
     } else {
       this.timeRemaining = 0
       this.betweenRounds = true
+      this.interRoundProcessingComplete = false
     }
   },
   endGame(gameOverReason) {
