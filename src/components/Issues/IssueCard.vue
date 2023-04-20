@@ -219,6 +219,11 @@ onUpdated(shrinkText)
     1px 0 0 var(--card-bot-outershadow-color),
     -1px 0 0 var(--card-bot-outershadow-color),
     0 1px 0 var(--card-bot-outershadow-color);
+  background-image: url('@/assets/svg/icon-ai.svg');
+  background-origin: padding-box;
+  background-position: top 1rem right 1rem;
+  background-repeat: no-repeat;
+  background-size: 4.2rem 4.2rem;
 }
 
 .appeal-card {
