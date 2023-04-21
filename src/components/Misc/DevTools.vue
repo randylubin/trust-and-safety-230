@@ -1,12 +1,27 @@
 <script setup>
+import { ref } from 'vue'
 import { GameSessionStore } from '../../stores/GameSessionStore'
 import { IssueQueueStore } from '../../stores/IssueQueueStore'
+import { MetaGameStore } from '../../stores/MetaGameStore'
+import { PossibleAchievementsList } from './AchievementLogic'
+
+const achSelect = ref('')
 </script>
 
 <template>
   <div class="dev-tools">
     <h1>Dev Tools</h1>
-    <button @click="GameSessionStore.timesUp(true)">Set Timer to Zero</button>
+    <button @click="GameSessionStore.timesUp(true)">Set Timer to Zero</button><br>
+    <select v-model="achSelect">
+      <option
+        v-for="achievement in PossibleAchievementsList"
+        :key="achievement.id"
+      >
+        {{ achievement.id }}
+      </option>
+    </select>
+    <button @click="GameSessionStore.registerAchievement(achSelect)">Achieve!</button><br>
+    <button @click="MetaGameStore.clearAchievements">Clear Achievements</button>
     <div>Current Round: {{ GameSessionStore.currentRound }}</div>
     <div>Time Remaining: {{ GameSessionStore.timeRemaining }}</div>
     <div>Current Queue: {{ IssueQueueStore.currentIssueQueue.length }}</div>
@@ -39,6 +54,14 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
       <div v-if="!issue.processed">
         {{ issue.issueObject.issueID }} {{ issue.issueObject.issueText }}
       </div>
+    </div>
+    <h2>Achievements</h2>
+    <div
+      v-for="achievement in MetaGameStore.achievements"
+      v-bind:key="achievement"
+      style="margin-bottom: 5px"
+    >
+      {{ achievement }}
     </div>
   </div>
 </template>

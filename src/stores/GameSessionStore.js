@@ -161,6 +161,7 @@ export const GameSessionStore = reactive({
       endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
       achievementsUnlockedThisGame: this.achievementsUnlockedThisGame,
+      achievementsUnlockedThisRound: this.achievementsUnlockedThisRound,
     })
   },
   triggerPostRound() {
@@ -185,5 +186,15 @@ export const GameSessionStore = reactive({
   },
   toggleSlowMode() {
     this.slowMode = !this.slowMode
+  },
+  registerAchievement(id) {
+    if (id) {
+      console.log('Achieved: ' + id)
+      if (!MetaGameStore.achievements.includes(id)) {
+        this.achievementsUnlockedThisRound.push(id)
+        this.achievementsUnlockedThisGame.push(id)
+        MetaGameStore.achievements.push(id)
+      }
+    }
   },
 })

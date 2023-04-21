@@ -10,6 +10,7 @@ import GameStateBar from './GameStateBar.vue'
 import IssueQueue from './Issues/IssueQueue.vue'
 import InterstitialScreen from './Issues/InterstitialScreen.vue'
 import InterRoundScreens from './InterRoundScreens.vue'
+import AchievementsList from './Misc/AchievementsList.vue'
 import GameOver from './GameOver/GameOver.vue'
 import DevTools from './Misc/DevTools.vue'
 

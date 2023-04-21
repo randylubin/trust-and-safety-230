@@ -27,4 +27,7 @@ export const MetaGameStore = reactive({
       showDevTools: this.showDevTools,
     })
   },
+  clearAchievements() {
+    this.achievements = []
+  },
 })
