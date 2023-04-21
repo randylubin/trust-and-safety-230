@@ -71,7 +71,7 @@ export const IssueQueueStore = reactive({
     // TODO specific arc logic (e.g. ending of election 1 triggers election 2)
     if (arcName === 'ELECTION') {
       this.upcomingArcs.push({
-        round: GameSessionStore.currentRound + 2,
+        round: GameSessionStore.currentRound + 1,
         arcName: 'POSTELECT',
       })
     }
@@ -605,6 +605,11 @@ export const IssueQueueStore = reactive({
         newQueue,
         GenericIssues.getRandomIssues(genericsToAdd, excludeArray)
       )
+    }
+
+    // BETAAI over interstitial
+    if (GameSessionStore.currentRound == 4) {
+      newQueue.unshift(GenericFollowUps.getIssueByID('F-BETAAI-END'))
     }
 
     this.currentIssueQueue = newQueue
