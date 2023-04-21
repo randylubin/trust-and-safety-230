@@ -18,8 +18,8 @@ export const GameDefaults = {
   // Immediate Feedback
   oddsOfFeedbackInterstitial: 0.25,
   // Interactions
-  // Wait to unlock 'learn more' TODO
-  // 'learn more' hold time TODO
+  lookCloserExamineDelay: 25, // time on card before look closer is available, in 200ms ticks
+  lookCloserExamineTime: 15, // time it takes to Look Closer, in 200ms ticks
 
   // Game state
   // Initial state and round updates

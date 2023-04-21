@@ -12,6 +12,7 @@ import { useArrayFilter } from '@vueuse/core'
 import interact from 'interactjs'
 import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
 import IssueCard from './IssueCard.vue'
+import { GameDefaults } from '../../GameDefaults'
 
 const props = defineProps({
   isActive: Boolean,
@@ -41,8 +42,8 @@ const Options = readonly({
   swipeLabelRange: 0.4, // how far towards container edge card must be to display action label
   swipeExitDistance: '200%', // translate value for destination of card flying off screen
   swipeExitRotate: '45deg', // rotate value for destination of card flying off screen
-  examineDelay: 25, // time on card before look closer is available, in 200ms ticks
-  examineTime: 15, // time it takes to Look Closer, in 200ms ticks
+  examineDelay: GameDefaults.lookCloserExamineDelay, // time on card before look closer is available, in 200ms ticks
+  examineTime: GameDefaults.lookCloserExamineTime, // time it takes to Look Closer, in 200ms ticks
 })
 
 const stackOffsetIncrement = computed(() => {
