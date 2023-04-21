@@ -10,7 +10,7 @@ export const MetaGameStore = reactive({
   arcsCompleted: [],
   showDevTools: false,
   loadSessionFromLocal() {
-    const saveData = JSON.parse(localStorage.GameSessionStore)
+    const saveData = JSON.parse(localStorage.MetaGameStore)
     for (const [key, value] of Object.entries(saveData)) {
       this[key] = value
     }
@@ -26,5 +26,8 @@ export const MetaGameStore = reactive({
       arcsCompleted: this.arcsCompleted,
       showDevTools: this.showDevTools,
     })
+  },
+  clearAchievements() {
+    this.achievements = []
   },
 })

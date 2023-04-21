@@ -23,13 +23,11 @@ onMounted(() => {
   </div>
   <button @click="GameSessionStore.showGameOver = false">New Game</button>
 
-  <h2 v-if="GameSessionStore.achievementsUnlockedThisSession.length">
+  <h2 v-if="GameSessionStore.achievementsUnlockedThisGame.length">
     New Achievements
   </h2>
   <div
-    v-for="(
-      achievement, key
-    ) in GameSessionStore.achievementsUnlockedThisSession"
+    v-for="(achievement, key) in GameSessionStore.achievementsUnlockedThisGame"
     v-bind:key="key"
   >
     {{ achievement }}

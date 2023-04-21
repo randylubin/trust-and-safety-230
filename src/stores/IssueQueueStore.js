@@ -28,9 +28,7 @@ export const IssueQueueStore = reactive({
     for (const [key, value] of Object.entries(saveData)) {
       this[key] = value
     }
-    GenericIssues.setExcludionIDs(
-      localStorage.IssueQueueStore.exclusionGroupIDList
-    )
+    GenericIssues.setExcludionIDs(saveData.exclusionGroupIDList)
   },
   saveSessionToLocal() {
     let exclusionGroupIDList = GenericIssues.getExclusionIDList()

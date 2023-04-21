@@ -148,6 +148,6 @@ button.button-pause {
 
 button.button-pause:hover {
   cursor: pointer;
-  opacity: .8;
+  opacity: 0.8;
 }
 </style>

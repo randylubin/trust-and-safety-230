@@ -99,7 +99,8 @@ export const GameSessionStore = reactive({
   endGameAtEndOfRound: null,
   interRoundProcessingComplete: false,
   showAbout: false,
-  achievementsUnlockedThisSession: [],
+  achievementsUnlockedThisRound: [],
+  achievementsUnlockedThisGame: [],
   pauseTimer: function () {
     pause
   },
@@ -130,6 +131,7 @@ export const GameSessionStore = reactive({
     GameSessionStore.issuesCompletedThisRound = 0
     GameSessionStore.disagreeWithManagerThisRound = 0
     GameSessionStore.roundQuality = GameDefaults.roundQualityStartingState
+    GameSessionStore.achievementsUnlockedThisRound = []
 
     // Construct Card Queue
     IssueQueueStore.startNewRound()
@@ -161,9 +163,8 @@ export const GameSessionStore = reactive({
       showGameOver: this.showGameOver,
       endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
-      interRoundProcessingComplete: this.interRoundProcessingComplete,
-      achievementsUnlockedThisSession: this.achievementsUnlockedThisSession,
-      slowMode: this.slowMode,
+      achievementsUnlockedThisGame: this.achievementsUnlockedThisGame,
+      achievementsUnlockedThisRound: this.achievementsUnlockedThisRound,
     })
   },
   triggerPostRound() {
@@ -188,5 +189,15 @@ export const GameSessionStore = reactive({
   },
   toggleSlowMode() {
     this.slowMode = !this.slowMode
+  },
+  registerAchievement(id) {
+    if (id) {
+      console.log('Achieved: ' + id)
+      if (!MetaGameStore.achievements.includes(id)) {
+        this.achievementsUnlockedThisRound.push(id)
+        this.achievementsUnlockedThisGame.push(id)
+        MetaGameStore.achievements.push(id)
+      }
+    }
   },
 })
