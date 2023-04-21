@@ -9,7 +9,7 @@ const triggerGameOver = ref(false)
 const publicComments = ref('')
 const managerComments = ref('')
 
-onMounted(() => { 
+onMounted(() => {
   interScreenIndex.value = 0
 })
 
@@ -17,7 +17,9 @@ const achievementDisplay = computed(() =>
   GameSessionStore.achievementsUnlockedThisRound.slice(0, 2)
 )
 
-const achievementOverflow = ref(Math.max(0, GameSessionStore.achievementsUnlockedThisRound.length - 2))
+const achievementOverflow = ref(
+  Math.max(0, GameSessionStore.achievementsUnlockedThisRound.length - 2)
+)
 
 const overallPerformancePraise = GameDefaults.overallPerformancePraise
 const overallPerformanceWarn = GameDefaults.overallPerformanceWarn
@@ -108,10 +110,34 @@ if (!GameSessionStore.interRoundProcessingComplete) {
 }
 
 // TODO OVERALL PERFORMANCE PRAISE OR WARN
+// Two message options if score is decreasing (based on why), otherwise talk about still being on thin ice
 if (GameSessionStore.overallPerformance >= overallPerformancePraise) {
   console.log('on track for promotion:', GameSessionStore.overallPerformance)
 } else if (GameSessionStore.overallPerformance <= overallPerformanceWarn) {
-  console.log('near firing:', GameSessionStore.overallPerformance)
+  if (performanceAdjustment < 0) {
+    if (roundQualityLevel == 'low') {
+      managerComments.value =
+        "If you don't improve your decision quality soon, I will have to let you go."
+      console.log(
+        "If you don't improve your decision quality soon, I will have to let you go.",
+        GameSessionStore.overallPerformance
+      )
+    } else {
+      managerComments.value =
+        'You need to increase your decision speed or I will have to replace you with someone faster.'
+      console.log(
+        'You need to increase your decision speed or I will have to replace you with someone faster.',
+        GameSessionStore.overallPerformance
+      )
+    }
+  } else {
+    managerComments.value =
+      'You did okay this round but you are still on thin ice.'
+    console.log(
+      'Not bad, but you are still on thin ice',
+      GameSessionStore.overallPerformance
+    )
+  }
 } else {
   console.log('performance is fine', GameSessionStore.overallPerformance)
 }
@@ -235,7 +261,8 @@ GameSessionStore.saveSessionToLocal()
             v-for="achievement in achievementDisplay"
             class="achievement-card"
             :class="'ach-' + achievement"
-            :key="achievement">
+            :key="achievement"
+          >
             <div class="achievement-icon"></div>
             <div class="achievement-info">
               <div class="achievement-name">
@@ -263,7 +290,9 @@ GameSessionStore.saveSessionToLocal()
             </div>
           </div>-->
           <div class="achievements-footer">
-            <strong v-if="achievementOverflow">+ {{ achievementOverflow }} More. </strong><span>View All &raquo;</span>
+            <strong v-if="achievementOverflow"
+              >+ {{ achievementOverflow }} More. </strong
+            ><span>View All &raquo;</span>
           </div>
         </div>
         <div class="subscreen-buttons">
@@ -455,7 +484,7 @@ GameSessionStore.saveSessionToLocal()
   cursor: pointer;
   color: var(--en-3d);
   text-decoration: underline;
-  margin-left: .5rem;
+  margin-left: 0.5rem;
 }
 
 .subscreen-buttons > button {
