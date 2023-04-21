@@ -70,10 +70,16 @@ onUpdated(shrinkText)
         <div>{{ ContentRule?.ruleDescription }}</div>
       </div>
     </Transition>
-    <div class="issue-card" ref="cardElement">
+    <div
+      class="issue-card"
+      :class="{ 'bot-flagged': IssueData.botFlagged }"
+      ref="cardElement"
+    >
       <div v-if="ContentRule" class="card-section section-rule">
         <div class="section-label">
-          <span>Reported For:</span>
+          <span>
+            {{ IssueData.botFlagged ? 'Violation Detected:' : 'Reported For:' }}
+          </span>
         </div>
         <div class="rule-text" :class="'rule-' + ContentRule.ruleID">
           <span
@@ -103,7 +109,13 @@ onUpdated(shrinkText)
             class="card-section section-includes"
           >
             <div class="section-label">
-              <span>Content Includes:</span>
+              <span>
+                {{
+                  IssueData.botFlagged
+                    ? 'Auto-Flagged Content:'
+                    : 'Content Includes:'
+                }}
+              </span>
             </div>
             <div
               class="includes-text"
@@ -201,6 +213,19 @@ onUpdated(shrinkText)
     0 1px 0 var(--card-appeal-outershadow-color);
 }
 
+.issue-card.bot-flagged {
+  border: 1.6rem solid var(--card-bot-innershadow-color);
+  box-shadow: 0 -2px 0 var(--card-bot-outershadow-color),
+    1px 0 0 var(--card-bot-outershadow-color),
+    -1px 0 0 var(--card-bot-outershadow-color),
+    0 1px 0 var(--card-bot-outershadow-color);
+  background-image: url('@/assets/svg/icon-ai.svg');
+  background-origin: padding-box;
+  background-position: top 1rem right 1rem;
+  background-repeat: no-repeat;
+  background-size: 4.2rem 4.2rem;
+}
+
 .appeal-card {
   transform: rotateY(180deg);
 }
@@ -242,6 +267,10 @@ onUpdated(shrinkText)
 
 .section-rule .section-label > span {
   background-color: #791414;
+}
+
+.bot-flagged .section-rule .section-label > span {
+  background-color: rgb(56, 108, 143);
 }
 
 .issue-text-sizer,

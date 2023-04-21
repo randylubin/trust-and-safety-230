@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { reactive } from 'vue'
 
 let issueSheet =
   'https://sheets.googleapis.com/v4/spreadsheets/' +
@@ -6,7 +7,7 @@ let issueSheet =
   '/?includeGridData=true&ranges=Achievements!a1:aa400&key=' +
   import.meta.env.VITE_APP_FIREBASE_API_KEY
 
-let PossibleAchievementsList = []
+let PossibleAchievementsList;
 
 axios
   .get(issueSheet)
@@ -14,20 +15,18 @@ axios
     // CLEAN UP DATA
     // console.log(response.data.sheets)
     let rawSheetData = response.data.sheets[0].data[0].rowData
-    let cleanData = []
-    rawSheetData.forEach((item, i) => {
-      cleanData.push([])
-      if (item.values && item.values[0]) {
-        cleanData[i] = {
-          title: item.values[0],
-          description: item.values[1],
+    let cleanData = {}
+    rawSheetData.forEach((item,i) => {
+      if (item.values && item.values[0] && i > 0) {
+        cleanData[item.values[0].formattedValue] = {
+          id: item.values[0].formattedValue,
+          title: item.values[1].formattedValue,
+          description: item.values[2].formattedValue,
         }
       }
     })
 
-    cleanData.shift()
-
-    PossibleAchievementsList = cleanData
+    PossibleAchievementsList = reactive(cleanData)
   })
   .catch((error) => {
     console.log(error.message, error)
