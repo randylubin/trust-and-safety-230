@@ -1,4 +1,8 @@
 export const GameDefaults = {
+  // META
+  useLocalIssueData: false,
+  enableSavingIssuesLocally: true,
+
   // ROUNDS
   // Round timing
   roundLength: 120, // default seconds for a round

@@ -4,14 +4,44 @@ import { GameSessionStore } from '../../stores/GameSessionStore'
 import { IssueQueueStore } from '../../stores/IssueQueueStore'
 import { MetaGameStore } from '../../stores/MetaGameStore'
 import { PossibleAchievementsList } from './AchievementLogic'
+import { ArcIssues } from '../../issueData/ArcIssues'
+import { ContentRules } from '../../issueData/ContentRules'
+import { GenericIssues } from '../../issueData/GenericIssues'
+import { GenericFollowUps } from '../../issueData/GenericFollowUps'
+import { TutorialIssues } from '../../issueData/TutorialIssues'
 
 const achSelect = ref('')
+
+const saveIssueDataToFile = function () {
+  // Convert the array to a JSON string
+  const objectString =
+    'export default ' +
+    JSON.stringify({
+      ArcIssues: ArcIssues.getAllIssues(),
+      GenericIssues: GenericIssues.getAllIssues(),
+      GenericFollowUps: GenericFollowUps.getAllIssues(),
+      TutorialIssues: TutorialIssues.getAllIssues(),
+      ContentRules: ContentRules,
+      PossibleAchievementsList: PossibleAchievementsList,
+    })
+  console.log('downloading', objectString)
+
+  // Create a Blob object from the JSON data
+  const blob = new Blob([objectString], { type: 'text/javascript' })
+
+  // Create a link element to download the file
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = 'ModeratorMayhemIssueData.js'
+  link.click()
+}
 </script>
 
 <template>
   <div class="dev-tools">
     <h1>Dev Tools</h1>
-    <button @click="GameSessionStore.timesUp(true)">Set Timer to Zero</button><br>
+    <button @click="GameSessionStore.timesUp(true)">Set Timer to Zero</button
+    ><br />
     <select v-model="achSelect">
       <option
         v-for="achievement in PossibleAchievementsList"
@@ -20,7 +50,10 @@ const achSelect = ref('')
         {{ achievement.id }}
       </option>
     </select>
-    <button @click="GameSessionStore.registerAchievement(achSelect)">Achieve!</button><br>
+    <button @click="saveIssueDataToFile()">Save Issues to File</button>
+    <button @click="GameSessionStore.registerAchievement(achSelect)">
+      Achieve!</button
+    ><br />
     <button @click="MetaGameStore.clearAchievements">Clear Achievements</button>
     <div>Current Round: {{ GameSessionStore.currentRound }}</div>
     <div>Time Remaining: {{ GameSessionStore.timeRemaining }}</div>
