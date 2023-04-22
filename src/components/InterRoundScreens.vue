@@ -222,18 +222,22 @@ if (GameSessionStore.currentRound == GameDefaults.finalRound) {
     gameOverType = 'BAD'
   }
 }
-if (GameSessionStore.overallPerformance <= 0)
+if (GameSessionStore.overallPerformance <= 0) {
   gameOverReason.push('Fired for poor performance')
-gameOverType = 'BAD'
-if (GameSessionStore.roundQuality <= 0)
+  gameOverType = 'BAD'
+}
+if (GameSessionStore.roundQuality <= 0) {
   gameOverReason.push('Fired for poor performance')
-gameOverType = 'BAD'
-if (GameSessionStore.issuesCompletedThisRound <= cardsPerRoundFire)
+  gameOverType = 'BAD'
+}
+if (GameSessionStore.issuesCompletedThisRound <= cardsPerRoundFire) {
   gameOverReason.push('Too slow!')
-gameOverType = 'BAD'
-if (GameSessionStore.publicFreeSpeech == 0)
+  gameOverType = 'BAD'
+}
+if (GameSessionStore.publicFreeSpeech == 0) {
   gameOverReason.push('Censorship accusations')
-gameOverType = 'BAD'
+  gameOverType = 'BAD'
+}
 if (GameSessionStore.publicSafety == 0) {
   gameOverReason.push('Platform safety')
   gameOverType = 'BAD'
