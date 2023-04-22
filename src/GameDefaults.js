@@ -2,6 +2,7 @@ export const GameDefaults = {
   // META
   useLocalIssueData: false,
   enableSavingIssuesLocally: true,
+  finalRound: 7,
 
   // ROUNDS
   // Round timing
@@ -30,6 +31,7 @@ export const GameDefaults = {
   overallPerformanceStartingState: 5,
   roundQualityStartingState: 10,
   // Post-round feedback thresholds
+  overallPerformancePromote: 20,
   overallPerformancePraise: 7,
   overallPerformanceWarn: 3,
   roundQualityPraise: 10,

@@ -9,8 +9,14 @@ import { ContentRules } from '../../issueData/ContentRules'
 import { GenericIssues } from '../../issueData/GenericIssues'
 import { GenericFollowUps } from '../../issueData/GenericFollowUps'
 import { TutorialIssues } from '../../issueData/TutorialIssues'
+import { GameDefaults } from '../../GameDefaults.js'
 
 const achSelect = ref('')
+const newPerformance = ref(0)
+
+const updatePerformance = function (newPerformance) {
+  GameSessionStore.overallPerformance = parseInt(newPerformance)
+}
 
 const saveIssueDataToFile = function () {
   // Convert the array to a JSON string
@@ -40,8 +46,14 @@ const saveIssueDataToFile = function () {
 <template>
   <div class="dev-tools">
     <h1>Dev Tools</h1>
-    <button @click="GameSessionStore.timesUp(true)">Set Timer to Zero</button
-    ><br />
+    <button @click="GameSessionStore.timesUp(true)">Set Timer to Zero</button>
+    <button
+      v-if="GameDefaults.enableSavingIssuesLocally"
+      @click="saveIssueDataToFile()"
+    >
+      Save Issues to File
+    </button>
+    <br />
     <select v-model="achSelect">
       <option
         v-for="achievement in PossibleAchievementsList"
@@ -50,9 +62,12 @@ const saveIssueDataToFile = function () {
         {{ achievement.id }}
       </option>
     </select>
-    <button @click="saveIssueDataToFile()">Save Issues to File</button>
     <button @click="GameSessionStore.registerAchievement(achSelect)">
       Achieve!</button
+    ><br />
+    <input v-model="newPerformance" />
+    <button @click="updatePerformance(newPerformance)">
+      Update performance</button
     ><br />
     <button @click="MetaGameStore.clearAchievements">Clear Achievements</button>
     <div>Current Round: {{ GameSessionStore.currentRound }}</div>

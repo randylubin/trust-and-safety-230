@@ -204,6 +204,20 @@ if (GameSessionStore.currentRound === 0) {
 // CHECK FOR GAME OVER
 // TODO FIX LOGIC AND CONTENT
 let gameOverReason = []
+if (
+  GameSessionStore.overallPerformance >= GameDefaults.overallPerformancePromote
+) {
+  gameOverReason.push('Promoted for competence, congrats!')
+}
+if (GameSessionStore.currentRound == GameDefaults.finalRound) {
+  if (
+    GameSessionStore.overallPerformance > GameDefaults.overallPerformanceWarn
+  ) {
+    gameOverReason.push('Promoted for seniority, congrats!')
+  } else {
+    gameOverReason.push('Fired for poor performance at end of game')
+  }
+}
 if (GameSessionStore.overallPerformance <= 0)
   gameOverReason.push('Fired for poor performance')
 if (GameSessionStore.roundQuality <= 0)

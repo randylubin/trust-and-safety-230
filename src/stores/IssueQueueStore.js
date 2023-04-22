@@ -607,9 +607,25 @@ export const IssueQueueStore = reactive({
       )
     }
 
+    // SPECIAL NOTIFICATIONS
     // BETAAI over interstitial
     if (GameSessionStore.currentRound == 4) {
       newQueue.unshift(GenericFollowUps.getIssueByID('F-BETAAI-END'))
+    }
+    // Foreshadow promotion
+    if (GameSessionStore.currentRound == GameDefaults.finalRound) {
+      if (
+        GameSessionStore.overallPerformance >
+        GameDefaults.overallPerformanceWarn
+      ) {
+        newQueue.unshift(
+          GenericFollowUps.getIssueByID('F-PROMOTION-FORESHADOW-GOOD')
+        )
+      } else {
+        newQueue.unshift(
+          GenericFollowUps.getIssueByID('F-PROMOTION-FORESHADOW-BAD')
+        )
+      }
     }
 
     this.currentIssueQueue = newQueue
