@@ -308,7 +308,7 @@ export const IssueQueueStore = reactive({
 
     // check for game ending
     if (actionConsequences?.endGame) {
-      GameSessionStore.endGame(actionConsequences.endGame)
+      GameSessionStore.endGame(actionConsequences.endGame, 'BAD')
     }
 
     if (actionConsequences?.endGameAtEndOfRound) {

@@ -179,8 +179,9 @@ export const GameSessionStore = reactive({
       this.interRoundProcessingComplete = false
     }
   },
-  endGame(gameOverReason) {
+  endGame(gameOverReason, gameOverType) {
     this.gameOverReason = gameOverReason
+    this.gameOverType = gameOverType
     this.showGameOver = true
     this.betweenRounds = false
     MetaGameStore.activeSession = false
