@@ -210,8 +210,7 @@ if (
 ) {
   gameOverReason.push('Promoted for competence, congrats!')
   gameOverType = 'GOOD'
-}
-if (GameSessionStore.currentRound == GameDefaults.finalRound) {
+} else if (GameSessionStore.currentRound == GameDefaults.finalRound) {
   if (
     GameSessionStore.overallPerformance > GameDefaults.overallPerformanceWarn
   ) {
@@ -221,28 +220,22 @@ if (GameSessionStore.currentRound == GameDefaults.finalRound) {
     gameOverReason.push('Fired for poor performance at end of game')
     gameOverType = 'BAD'
   }
-}
-if (GameSessionStore.overallPerformance <= 0) {
+} else if (GameSessionStore.overallPerformance <= 0) {
   gameOverReason.push('Fired for poor performance')
   gameOverType = 'BAD'
-}
-if (GameSessionStore.roundQuality <= 0) {
+} else if (GameSessionStore.roundQuality <= 0) {
   gameOverReason.push('Fired for poor performance')
   gameOverType = 'BAD'
-}
-if (GameSessionStore.issuesCompletedThisRound <= cardsPerRoundFire) {
+} else if (GameSessionStore.issuesCompletedThisRound <= cardsPerRoundFire) {
   gameOverReason.push('Too slow!')
   gameOverType = 'BAD'
-}
-if (GameSessionStore.publicFreeSpeech == 0) {
+} else if (GameSessionStore.publicFreeSpeech == 0) {
   gameOverReason.push('Censorship accusations')
   gameOverType = 'BAD'
-}
-if (GameSessionStore.publicSafety == 0) {
+} else if (GameSessionStore.publicSafety == 0) {
   gameOverReason.push('Platform safety')
   gameOverType = 'BAD'
-}
-if (GameSessionStore.endGameAtEndOfRound) {
+} else if (GameSessionStore.endGameAtEndOfRound) {
   // from ARC
   gameOverReason.push(GameSessionStore.endGameAtEndOfRound)
   gameOverType = 'BAD'
