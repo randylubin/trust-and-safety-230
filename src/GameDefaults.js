@@ -23,15 +23,15 @@ export const GameDefaults = {
   // Immediate Feedback
   oddsOfFeedbackInterstitial: 0.25,
   // Interactions
-  lookCloserExamineDelay: 25, // time on card before look closer is available, in 200ms ticks
-  lookCloserExamineTime: 15, // time it takes to Look Closer, in 200ms ticks
+  lookCloserExamineDelay: 0, // time on card before look closer is available, in 200ms ticks
+  lookCloserExamineTime: 7, // time it takes to Look Closer, in 200ms ticks
 
-  // Game state
+  // GAME STATE
   // Initial state and round updates
   overallPerformanceStartingState: 5,
   roundQualityStartingState: 10,
   // Post-round feedback thresholds
-  overallPerformancePromote: 20,
+  overallPerformancePromote: 10,
   overallPerformancePraise: 7,
   overallPerformanceWarn: 3,
   roundQualityPraise: 10,
@@ -41,4 +41,8 @@ export const GameDefaults = {
   cardsPerRoundFire: 2,
   publicWarnLevel: 3,
   publicPraiseLevel: 8,
+
+  // ARC SELECTION
+  betaAIRound: 3,
+  betterAIRound: 5,
 }
