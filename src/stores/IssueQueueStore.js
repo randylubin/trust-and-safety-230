@@ -386,8 +386,29 @@ export const IssueQueueStore = reactive({
     GameSessionStore.betweenRounds = true
     GameSessionStore.triggerPostRound()
 
+    // check for START
+    if (GameSessionStore.currentRound == 2) {
+      // remove any remaining START cards from current queue
+      IssueQueueStore.currentIssueQueue =
+        IssueQueueStore.currentIssueQueue.filter(
+          (issue) =>
+            issue.issueID.slice(0, issue.issueID.indexOf('-')) !== 'START'
+        )
+
+      // remove any remaining START cards from unprocessed queue
+      IssueQueueStore.unprocessedFollowUps =
+        IssueQueueStore.unprocessedFollowUps.filter(
+          (issueInsert) =>
+            issueInsert.issueObject.issueID.slice(
+              0,
+              issueInsert.issueObject.issueID.indexOf('-')
+            ) !== 'START'
+        )
+      this.processEndedArc('START')
+    }
+
     // check for BETAAI
-    if (GameSessionStore.currentRound == 3) {
+    if (GameSessionStore.currentRound == GameDefaults.betaAIRound) {
       // remove any remaining BETAAI cards from current queue
       IssueQueueStore.currentIssueQueue =
         IssueQueueStore.currentIssueQueue.filter(
@@ -451,12 +472,16 @@ export const IssueQueueStore = reactive({
   selectArcsForSession() {
     let dedicatedArcs = [
       {
+        arcName: 'START',
+        round: 1,
+      },
+      {
         arcName: 'BETAAI',
-        round: 3,
+        round: GameDefaults.betaAIRound,
       },
       {
         arcName: 'BETTERAI',
-        round: 5,
+        round: GameDefaults.betterAIRound,
       },
     ]
     this.upcomingArcs.push(...dedicatedArcs)
@@ -505,8 +530,22 @@ export const IssueQueueStore = reactive({
         }
       }
     }
-    newQueue.push(...carryoverQueue)
+
     this.unprocessedFollowUps = []
+
+    for (let i = 0; i < carryoverQueue.length; i++) {
+      let issue = carryoverQueue[i]
+
+      if (newQueue.length < GameDefaults.maxCarryoverLength) {
+        newQueue.push(issue)
+      } else {
+        // space issues out
+        this.insertIssueInQueue(
+          issue,
+          GameDefaults.timeBetweenArcCards * (i + 1)
+        )
+      }
+    }
 
     // SELECT ARC
     let filteredArcOptions = Object.keys(ArcLookup).filter(
@@ -609,8 +648,11 @@ export const IssueQueueStore = reactive({
 
     // SPECIAL NOTIFICATIONS
     // BETAAI over interstitial
-    if (GameSessionStore.currentRound == 4) {
+    if (GameSessionStore.currentRound == GameDefaults.betaAIRound + 1) {
       newQueue.unshift(GenericFollowUps.getIssueByID('F-BETAAI-END'))
+    }
+    if (GameSessionStore.currentRound == GameDefaults.betterAIRound) {
+      newQueue.unshift(GenericFollowUps.getIssueByID('F-BETTERAI-START'))
     }
     // Foreshadow promotion
     if (GameSessionStore.currentRound == GameDefaults.finalRound) {

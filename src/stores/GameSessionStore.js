@@ -47,6 +47,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
       }
 
       // ADD GENERICS OVER TIME
+      // TODO - maybe recalibrate likelihood based on round (e.g. less likely during a big Grab Bag like BETAAI)
       if (
         Math.random() < genericDrawLikelihood &&
         GameSessionStore.currentRound != 0 &&
@@ -168,16 +169,9 @@ export const GameSessionStore = reactive({
     })
   },
   triggerPostRound() {
-    if (
-      this.moderationQuality * this.moderationSpeed * this.publicPerception ==
-      0 // TODO update formula for ending the game
-    ) {
-      this.showGameOver = true
-    } else {
-      this.timeRemaining = 0
-      this.betweenRounds = true
-      this.interRoundProcessingComplete = false
-    }
+    this.timeRemaining = 0
+    this.betweenRounds = true
+    this.interRoundProcessingComplete = false
   },
   endGame(gameOverReason, gameOverType) {
     this.gameOverReason = gameOverReason
