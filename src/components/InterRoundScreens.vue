@@ -85,7 +85,7 @@ if (GameSessionStore.currentRound === 0) {
       "You're making decent decisions at a decent pace; keep up the good work."
   } else if (managerSpeedLevel === 'high') {
     managerComments.value =
-      "You're making decent decisions and your pace is excellent. If only all our works were as fast as you."
+      "You're making decent decisions and your pace is excellent. If only all our workers were as fast as you."
     performanceAdjustment += 1
   }
 } else if (roundQualityLevel === 'high') {
