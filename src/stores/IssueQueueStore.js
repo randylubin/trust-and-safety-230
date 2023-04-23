@@ -12,6 +12,10 @@ import { MetaGameStore } from './MetaGameStore.js'
 const minimumStartingQueueLength = GameDefaults.minimumStartingQueueLength
 const appealLikelihood = GameDefaults.appealLikelihood
 const AppealDelay = GameDefaults.appealDelay
+const FallbackLearnMore = [
+  "You don't learn anything more",
+  'Nothing else to see here',
+]
 
 export const IssueQueueStore = reactive({
   currentIssueQueue: [],
@@ -86,6 +90,12 @@ export const IssueQueueStore = reactive({
       IssueQueueStore.currentIssueQueue.length
     ) {
       let isAppeal = this.currentIssueQueue[0].issueType.slice(0, 6) == 'appeal'
+      if (!this.currentIssueQueue[0].learnMoreText) {
+        this.currentIssueQueue[0].learnMoreText =
+          FallbackLearnMore[
+            Math.floor(Math.random() * FallbackLearnMore.length)
+          ]
+      }
       if (
         this.genericIssuesSeen.includes(this.currentIssueQueue[0].issueID) &&
         !isAppeal

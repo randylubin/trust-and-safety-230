@@ -99,7 +99,7 @@ if (GameSessionStore.currentRound === 0) {
     performanceAdjustment += 1
   } else if (managerSpeedLevel === 'high') {
     managerComments.value =
-      "You're making excellent decisions at a fast pace. Keep it up and we'll get you at raise at the end of the year."
+      "You're making excellent decisions at a fast pace. Keep it up and we'll get you a raise at the end of the year."
     performanceAdjustment += 2
   }
 }
@@ -175,7 +175,7 @@ if (GameSessionStore.currentRound === 0) {
       "Some users accuse us of being overzealous in our take-downs but we're keeping the most harmful content off the platform."
   } else if (publicSafetyTier === 'high') {
     publicComments.value =
-      "We're doing a great job at keep the site safe for our users but it's coming at a cost: a lot of users are angry about us taking down their content."
+      "We're doing a great job at keeping the site safe for our users but it's coming at a cost: a lot of users are angry about us taking down their content."
   }
 } else if (publicFreeSpeechTier === 'medium') {
   if (publicSafetyTier === 'low') {
