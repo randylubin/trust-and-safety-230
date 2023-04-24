@@ -9,6 +9,10 @@ import { GameSessionStore } from './GameSessionStore'
 import { MetaGameStore } from './MetaGameStore.js'
 // import { ArcIssues } from '../issueData/ArcIssues.js'
 
+Array.prototype.sample = function () {
+  return this[Math.floor(Math.random() * this.length)]
+}
+
 const minimumStartingQueueLength = GameDefaults.minimumStartingQueueLength
 const appealLikelihood = GameDefaults.appealLikelihood
 const AppealDelay = GameDefaults.appealDelay
@@ -294,14 +298,20 @@ export const IssueQueueStore = reactive({
       ) {
         // feedback post-interstitial
         if (responseObject[action].disagreeWithManager) {
-          issueData.postIssueInterstitial =
-            'Hmm... Not the decision I would have made. -Manager'
+          issueData.postIssueInterstitial = [
+            'Hmm... Not the decision I would have made. -Manager',
+            "I don't think that aligns with our policies...",
+          ].sample()
         } else if (responseObject[action].publicSafety < 0) {
-          issueData.postIssueInterstitial =
-            "Some users are leaving the platform, saying it's not safe for them."
+          issueData.postIssueInterstitial = [
+            "Some users are leaving the platform, saying it's not safe for them.",
+            'Users are happy with that content staying up...',
+          ].sample()
         } else if (responseObject[action].publicFreeSpeech < 0) {
-          issueData.postIssueInterstitial =
-            'Some users are angry about us "censoring" them.'
+          issueData.postIssueInterstitial = [
+            'Some users are angry about us "censoring" them.',
+            'Some users are quitting TrustHive and moving to platforms that have more relaxed policies.',
+          ].sample()
         }
       }
     }
