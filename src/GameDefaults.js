@@ -43,6 +43,6 @@ export const GameDefaults = {
   publicPraiseLevel: 8,
 
   // ARC SELECTION
-  betaAIRound: 3,
-  betterAIRound: 5,
+  betaAIRound: 4,
+  betterAIRound: 6,
 }
