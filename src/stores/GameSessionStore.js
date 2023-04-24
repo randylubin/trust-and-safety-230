@@ -208,8 +208,13 @@ export const GameSessionStore = reactive({
     this.showGameOver = true
     this.betweenRounds = false
     MetaGameStore.activeSession = false
+    MetaGameStore.numberOfSessionsFinished++
+    if (gameOverType.startsWith('GOOD')) {
+      MetaGameStore.numberOfWins++
+    } else {
+      MetaGameStore.numberOfLosses++
+    }
     this.pauseTimer()
-    // TODO update other MetaGame data
   },
   toggleSlowMode() {
     this.slowMode = !this.slowMode
