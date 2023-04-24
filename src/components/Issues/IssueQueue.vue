@@ -40,7 +40,7 @@ const Options = readonly({
   stackVisibleLimit: 20, // max number of cards visible in stack
   swipeRotateFactor: 0.05, // how much cards tilt as dragged left or right (degrees per pixel)
   swipeExitRange: 0.5, // how far towards container edge card must be dragged to approve/block
-  swipeLabelRange: 0.4, // how far towards container edge card must be to display action label
+  swipeLabelRange: 0.3, // how far towards container edge card must be to display action label
   swipeExitDistance: '200%', // translate value for destination of card flying off screen
   swipeExitRotate: '45deg', // rotate value for destination of card flying off screen
   examineDelay: GameDefaults.lookCloserExamineDelay, // time on card before look closer is available, in 200ms ticks
