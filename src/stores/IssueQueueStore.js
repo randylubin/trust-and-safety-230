@@ -691,7 +691,7 @@ export const IssueQueueStore = reactive({
       newQueue.unshift(GenericFollowUps.getIssueByID('F-BETAAI-END'))
     }
     if (GameSessionStore.currentRound == GameDefaults.betterAIRound) {
-      newQueue.unshift(GenericFollowUps.getIssueByID('F-BETTERAI-START'))
+      // newQueue.unshift(GenericFollowUps.getIssueByID('F-BETTERAI-START')) TODO - check if needed
     }
     // Foreshadow promotion
     if (GameSessionStore.currentRound == GameDefaults.finalRound) {
