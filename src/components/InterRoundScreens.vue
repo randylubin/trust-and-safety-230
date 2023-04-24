@@ -10,6 +10,7 @@ const interScreenIndex = ref(-1)
 const triggerGameOver = ref(false)
 const publicComments = ref('')
 const managerComments = ref('')
+const roundScreenReadyToShow = ref(false)
 
 onMounted(() => {
   interScreenIndex.value = 0
@@ -240,6 +241,8 @@ if (gameOverReason.length && GameSessionStore.currentRound != 0) {
   GameSessionStore.betweenRounds = false
   console.log(gameOverReason)
   GameSessionStore.endGame(gameOverReason, gameOverType)
+} else {
+  roundScreenReadyToShow.value = true
 }
 
 GameSessionStore.interRoundProcessingComplete = true
@@ -247,7 +250,7 @@ GameSessionStore.saveSessionToLocal()
 </script>
 
 <template>
-  <div class="round-screen">
+  <div class="round-screen" v-if="roundScreenReadyToShow">
     <Transition
       name="subscreen"
       :duration="{ enter: 1400, leave: 200 }"
