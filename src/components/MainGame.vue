@@ -28,16 +28,14 @@ function unpauseGame() {
 
 <template>
   <div class="game-layout">
+    <GameOver
+      v-if="GameSessionStore.showGameOver && !IssueQueueStore.interstitialShown"
+    />
     <Transition appear name="overlay" mode="out-in">
       <PauseMenu
         v-if="playerPausedGame"
         @unpause-game="unpauseGame()"
       ></PauseMenu>
-      <GameOver
-        v-else-if="
-          GameSessionStore.showGameOver && !IssueQueueStore.interstitialShown
-        "
-      />
       <InterstitialScreen v-else-if="IssueQueueStore.interstitialShown" />
       <InterRoundScreens
         v-else-if="
