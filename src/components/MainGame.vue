@@ -10,7 +10,6 @@ import GameStateBar from './GameStateBar.vue'
 import IssueQueue from './Issues/IssueQueue.vue'
 import InterstitialScreen from './Issues/InterstitialScreen.vue'
 import InterRoundScreens from './InterRoundScreens.vue'
-import AchievementsList from './Misc/AchievementsList.vue'
 import GameOver from './GameOver/GameOver.vue'
 import DevTools from './Misc/DevTools.vue'
 
@@ -29,7 +28,7 @@ function unpauseGame() {
 
 <template>
   <div class="game-layout">
-    <Transition name="overlay" mode="out-in">
+    <Transition appear name="overlay" mode="out-in">
       <PauseMenu
         v-if="playerPausedGame"
         @unpause-game="unpauseGame()"
@@ -46,19 +45,23 @@ function unpauseGame() {
         "
       />
     </Transition>
-    <div class="top-bar">
-      <GameStateBar @pause-game="showPauseScreen()" />
-    </div>
-    <GameOver
-      v-if="GameSessionStore.showGameOver && !IssueQueueStore.interstitialShown"
-    />
-    <div class="play-area">
-      <IssueQueue
+    <Transition appear name="overlay">
+      <div
+        class="top-bar"
         v-if="!GameSessionStore.betweenRounds && !GameSessionStore.showGameOver"
-        :isActive="!GameSessionStore.gameIsPaused"
-      />
-      <DevTools v-if="MetaGameStore.showDevTools" />
-    </div>
+      >
+        <GameStateBar @pause-game="showPauseScreen()" />
+      </div>
+    </Transition>
+    <Transition appear name="overlay">
+      <div
+        class="play-area"
+        v-if="!GameSessionStore.betweenRounds && !GameSessionStore.showGameOver"
+      >
+        <IssueQueue :isActive="!GameSessionStore.gameIsPaused" />
+        <DevTools v-if="MetaGameStore.showDevTools" />
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -69,6 +72,7 @@ function unpauseGame() {
   align-items: stretch;
 
   position: absolute;
+  z-index: 500;
   left: 0;
   right: 0;
   top: 0;
@@ -92,7 +96,6 @@ function unpauseGame() {
     );
   background-position: 0 0, 3px 3px;
   background-size: 6px 6px;
-  user-select: none;
 }
 
 .top-bar {

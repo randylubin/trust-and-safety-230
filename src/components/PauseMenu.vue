@@ -1,21 +1,29 @@
 <script setup>
 import { GameSessionStore } from '../stores/GameSessionStore'
-import { MetaGameStore } from '../stores/MetaGameStore'
-import AchievementsList from './Misc/AchievementsList.vue'
+import AchievementPage from './Misc/AchievementPage.vue'
+import AboutPage from './Misc/AboutPage.vue'
 
 const emits = defineEmits(['unpauseGame'])
 </script>
 
 <template>
   <div class="pause-screen">
-    <div class="pause-text">The Pause Menu</div>
-    <button class="btn-basic" @click="$emit('unpauseGame')">Resume</button>
-    <button class="btn-basic" @click="GameSessionStore.showAbout = true">
-      About
+    <div class="big-label">Paused</div>
+    <button class="btn-basic highlight" @click="$emit('unpauseGame')">
+      Resume
     </button>
-    <AchievementsList
-      v-if="MetaGameStore.achievements.length"
-    ></AchievementsList>
+    <button class="btn-basic" @click="GameSessionStore.showPolicies = true">
+      Content Policies
+    </button>
+    <button class="btn-basic" @click="GameSessionStore.showAchievements = true">
+      Achievements
+    </button>
+    <button
+      class="btn-basic btn-about"
+      @click="GameSessionStore.showAbout = true"
+    >
+      About The Game
+    </button>
   </div>
 </template>
 
@@ -37,6 +45,17 @@ const emits = defineEmits(['unpauseGame'])
   background: var(--modal-bg-color);
 }
 
+.big-label {
+  position: relative;
+  font-family: var(--font-2);
+  font-size: 6rem;
+  line-height: 6rem;
+  height: 6rem;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
 .pause-text {
   font-size: 2.8rem;
   font-weight: 400;
@@ -45,5 +64,9 @@ const emits = defineEmits(['unpauseGame'])
 
 button {
   margin-bottom: 2rem;
+}
+
+.btn-about {
+  margin-top: 6rem;
 }
 </style>

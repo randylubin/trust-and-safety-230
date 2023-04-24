@@ -26,12 +26,13 @@ const roundLabel = computed(() => {
     <div
       class="round-timer"
       :class="{ alert: GameSessionStore.timeRemaining <= 0 }"
+      @click="$emit('pauseGame')"
     >
       <div class="timer-bar"></div>
       <div class="timer-overlay">
         <div class="round-label">{{ roundLabel }}</div>
         <div class="game-controls">
-          <button class="button-pause" @click="$emit('pauseGame')"></button>
+          <button class="button-pause"></button>
         </div>
       </div>
     </div>
@@ -53,6 +54,7 @@ const roundLabel = computed(() => {
 }
 
 .round-timer {
+  cursor: pointer;
   position: relative;
   display: block;
   box-sizing: border-box;

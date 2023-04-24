@@ -100,6 +100,8 @@ export const GameSessionStore = reactive({
   endGameAtEndOfRound: null,
   interRoundProcessingComplete: false,
   showAbout: false,
+  showAchievements: false,
+  showPolicies: false,
   achievementsUnlockedThisRound: [],
   achievementsUnlockedThisGame: [],
   pauseTimer: function () {

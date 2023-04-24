@@ -128,8 +128,9 @@ export const IssueQueueStore = reactive({
         ? issueData.keepUpConsequences
         : issueData.takeDownConsequences
     let isAppeal = issueData.issueType.slice(0, 6) == 'appeal'
-    GameSessionStore.issuesCompletedThisRound += 1 // TODO - do appeals count toward this?
-    GameSessionStore.issuesCompletedThisGame += 1
+    GameSessionStore.issuesCompletedThisRound++ // TODO - do appeals count toward this?
+    GameSessionStore.issuesCompletedThisGame++
+    MetaGameStore.PlayerStatistics.issuesProcessed++
 
     // Manager and Public Response
     let responseObject = {
@@ -200,12 +201,15 @@ export const IssueQueueStore = reactive({
         }
       })
     } else {
+      MetaGameStore.PlayerStatistics.appealsProcessed++
       // if appeal, unwind previous game state change
       if (issueData.issueType == 'appealTakeDown') {
         if (action == 'takeDown') {
+          MetaGameStore.PlayerStatistics.appealsDenied++
           // TODO - maybe something around tracking conviction?
           // do nothing
         } else if (action == 'keepUp') {
+          MetaGameStore.PlayerStatistics.appealsAccepted++
           // TODO - maybe something around tracking change on appeal?
           // revert prior state change
           Object.keys(responseObject['takeDown']).forEach((key) => {
@@ -218,9 +222,11 @@ export const IssueQueueStore = reactive({
         }
       } else if (issueData.issueType == 'appealKeepUp') {
         if (action == 'keepUp') {
+          MetaGameStore.PlayerStatistics.appealsDenied++
           // TODO - maybe something around tracking conviction?
           // do nothing
         } else if (action == 'takeDown') {
+          MetaGameStore.PlayerStatistics.appealsAccepted++
           // TODO - maybe something around tracking change on appeal?
           // revert prior state change
           Object.keys(responseObject['keepUp']).forEach((key) => {
@@ -383,6 +389,19 @@ export const IssueQueueStore = reactive({
     }
   },
   endRound() {
+    MetaGameStore.PlayerStatistics.highestRoundCompleted = Math.max(
+      GameSessionStore.currentRound,
+      MetaGameStore.PlayerStatistics.highestRoundCompleted
+    )
+
+    if (MetaGameStore.PlayerStatistics.highestRoundCompleted >= 7) {
+      GameSessionStore.registerAchievement('thelonghaul')
+    } else if (MetaGameStore.PlayerStatistics.highestRoundCompleted >= 5) {
+      GameSessionStore.registerAchievement('hanginginthere')
+    } else if (MetaGameStore.PlayerStatistics.highestRoundCompleted >= 3) {
+      GameSessionStore.registerAchievement('knowtheropes')
+    }
+
     GameSessionStore.betweenRounds = true
     GameSessionStore.triggerPostRound()
 

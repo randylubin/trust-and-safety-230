@@ -4,6 +4,7 @@ import { ContentRules } from '../../issueData/ContentRules.js'
 
 const Props = defineProps({
   IssueData: Object,
+  isTutorial: Boolean,
 })
 
 const ContentRule = ContentRules[Props.IssueData.reportedFor]
@@ -25,7 +26,7 @@ function showRuleTooltip() {
 }
 
 function hideRuleTooltip() {
-  ruleTooltipActive.value = false
+  setTimeout(() => (ruleTooltipActive.value = false), 1300)
 }
 
 const issueTextSize = ref(2.5)
@@ -95,7 +96,7 @@ onUpdated(shrinkText)
         <div class="issue-text-inner" ref="issueTextInnerElement">
           <div class="card-section section-issue">
             <div class="section-label">
-              <span>Description:</span>
+              <span>{{ isTutorial ? 'Tutorial:' : 'Description:' }}</span>
             </div>
             <div
               class="issue-text"
@@ -367,4 +368,6 @@ onUpdated(shrinkText)
 .rule-tooltip-leave-active {
   transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
+
+
 </style>

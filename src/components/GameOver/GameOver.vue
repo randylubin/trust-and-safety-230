@@ -1,7 +1,6 @@
 <script setup>
 // import { GameSessionStore } from "../../stores/GameSessionStore";
 import { GameSessionStore } from '../../stores/GameSessionStore'
-import AchievementsList from '../Misc/AchievementsList.vue'
 import { onMounted } from 'vue'
 import { event } from 'vue-gtag'
 

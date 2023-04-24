@@ -5,7 +5,9 @@ import { MetaGameStore } from './stores/MetaGameStore'
 
 import MainGame from './components/MainGame.vue'
 import LaunchScreen from './components/LaunchScreen/LaunchScreen.vue'
-import AboutScreen from './components/Misc/AboutPage.vue'
+import AboutPage from './components/Misc/AboutPage.vue'
+import AchievementPage from './components/Misc/AchievementPage.vue'
+import PolicyPage from './components/Misc/PolicyPage.vue'
 import { GameSessionStore } from './stores/GameSessionStore'
 import { IssueQueueStore } from './stores/IssueQueueStore'
 
@@ -82,19 +84,35 @@ function continueSession() {
 
 <template>
   <div id="screen-container">
-    <LaunchScreen
-      v-if="showLaunchScreen"
-      @new-session="newSession()"
-      @continue-session="continueSession()"
-    />
-
-    <AboutScreen v-if="GameSessionStore.showAbout"></AboutScreen>
-
-    <MainGame v-if="!showLaunchScreen" />
+    <Transition appear name="launch" :duration="{ enter: 1400, leave: 400 }">
+      <LaunchScreen
+        v-if="showLaunchScreen"
+        @new-session="newSession()"
+        @continue-session="continueSession()"
+      />
+      <MainGame v-else />
+    </Transition>
+    <Transition name="overlay">
+      <AboutPage v-if="GameSessionStore.showAbout" />
+    </Transition>
+    <Transition name="overlay">
+      <AchievementPage v-if="GameSessionStore.showAchievements" />
+    </Transition>
+    <Transition name="overlay">
+      <PolicyPage v-if="GameSessionStore.showPolicies" />
+    </Transition>
   </div>
 </template>
 
 <style>
+
+* {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+  -webkit-touch-callout: none !important;
+}
+
 :root {
   font-size: 2.5vw;
   --font-1: 'jaf-bernina-sans';
@@ -150,6 +168,10 @@ function continueSession() {
   --button-basic-shadow-color: rgb(86, 145, 165);
   --button-disabled-bg-color: #999;
   --button-disabled-shadow-color: #5e5d5d;
+  --button-highlight-bg-color: var(--en-2m);
+  --button-highlight-shadow-color: rgb(148, 72, 50);
+  --button-alt-bg-color: var(--leaveup-bg-color);
+  --button-alt-shadow-color: var(--leavup-shadow-color);
 
   --examine-popup-incomplete-bg-color: rgb(215, 215, 215);
   --examine-popup-complete-bg-color: rgb(230, 230, 230);
@@ -183,6 +205,25 @@ function continueSession() {
   cursor: pointer;
 }
 
+.btn-basic.highlight {
+  background-color: var(--button-highlight-bg-color);
+  box-shadow: 0 0.4rem var(--button-highlight-shadow-color);
+}
+
+.btn-basic.alt {
+  background-color: var(--button-alt-bg-color);
+  box-shadow: 0 0.4rem var(--button-alt-shadow-color);
+}
+
+.btn-back {
+  margin-left: 0;
+  width: 40%;
+  filter: grayscale(1);
+  font-size: 1.7rem;
+  line-height: 1.7rem;
+  padding: 0.8rem 1.2rem;
+}
+
 .card-container .btn-basic {
   box-shadow: none;
   background-image: none;
@@ -213,7 +254,7 @@ body {
 }
 
 #screen-container {
-  background: white;
+  background: var(--stack-bg-color);
   position: relative;
   width: 100%;
   height: 100%;
@@ -223,15 +264,24 @@ body {
   overflow: hidden;
 }
 
+/* Vue Transitions */
+
+.launch-leave-to > div {
+  opacity: 0;
+}
+
+.launch-leave-active > div {
+  transition: opacity 0.4s linear;
+}
+
 /* Reusable Vue Transitions */
 
 .overlay-enter-from,
 .overlay-leave-to {
   opacity: 0;
-  filter: blur(100%);
 }
 .overlay-enter-active,
 .overlay-leave-active {
-  transition: opacity 0.2s linear, filter 0.2s linear;
+  transition: opacity 0.2s linear;
 }
 </style>
