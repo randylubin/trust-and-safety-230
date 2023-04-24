@@ -173,12 +173,12 @@ button {
 
 .launch-enter-from .game-tagline {
   opacity: 0;
-  width: 0;
+  transform: scaleX(10%);
   color: var(--modal-bg-color);
 }
 
 .launch-enter-active .game-tagline {
-  transition: opacity 0.2s linear, width 0.3s linear, color 0.2s linear;
+  transition: opacity 0.2s linear, transform 0.3s linear, color 0.2s linear;
   transition-delay: 0.5s, 0.5s, 0.8s;
 }
 
