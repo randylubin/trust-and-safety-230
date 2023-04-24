@@ -262,7 +262,7 @@ if (gameOverReason.length && GameSessionStore.currentRound != 0) {
   roundScreenReadyToShow.value = true
 }
 
-GameSessionStore.roundScreenReadyToShow = true
+GameSessionStore.interRoundProcessingComplete = true
 GameSessionStore.saveSessionToLocal()
 </script>
 
