@@ -153,9 +153,11 @@ export const IssueQueueStore = reactive({
         ? issueData.keepUpConsequences
         : issueData.takeDownConsequences
     let isAppeal = issueData.issueType.slice(0, 6) == 'appeal'
-    GameSessionStore.issuesCompletedThisRound++ // TODO - do appeals count toward this?
-    GameSessionStore.issuesCompletedThisGame++
-    MetaGameStore.PlayerStatistics.issuesProcessed++
+    if (!issueData.interstitialOnly) {
+      GameSessionStore.issuesCompletedThisRound++ // TODO - do appeals count toward this?
+      GameSessionStore.issuesCompletedThisGame++
+      MetaGameStore.PlayerStatistics.issuesProcessed++
+    }
 
     // Manager and Public Response
     let responseObject = {
