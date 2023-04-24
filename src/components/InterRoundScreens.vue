@@ -267,7 +267,7 @@ GameSessionStore.saveSessionToLocal()
 </script>
 
 <template>
-  <div class="round-screen" v-if="showNow">
+  <div class="round-screen" v-if="roundScreenReadyToShow">
     <Transition
       name="subscreen"
       :duration="{ enter: 1400, leave: 200 }"
