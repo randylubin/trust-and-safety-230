@@ -10,12 +10,13 @@ export const GameDefaults = {
   slowModeTick: 0.5, // time change per tick for slow mode (regular mode is 1 second per tick)
   extraTimeForLastCard: -5, // seconds after round clock hits 0
   genericDrawLikelihood: 0.33, // odds of drawing a generic card each second
-  genericDrawDuringAIRounds: 0.25,
+  genericDrawDuringHeavyRounds: 0.2, // odds of drawing for start, betaai, and betterai
   // Round setup
   minimumStartingQueueLength: 5, // min number of cards at start of a round
   maxCarryoverLength: 5, // max number of cards at start of a round (arcs might push this over)
   startingGrabBagCardCount: 3,
   timeBetweenArcCards: 3, // seconds between arc cards being added (for grab bags)
+  timeBetweenStartCards: 4,
   timeBetweenBetterAICards: 5, // seconds interval just for BetterAI
 
   // CARD ACTIONS
