@@ -12,6 +12,42 @@ onMounted(() => {
   })
 })
 
+const gameOverDescriptions = {
+  'GOOD-QUALITYPROMO': {
+    fullDescription: 'Promoted for competence, congrats!',
+    socialShare: 'Promoted for competence, congrats!',
+  },
+  'GOOD-SENIORITYPROMO': {
+    fullDescription: 'Promoted for seniority, congrats!',
+    socialShare: 'Promoted for seniority, congrats!',
+  },
+  'BAD-FINALROUNDPERFORMANCE': {
+    fullDescription: 'Fired for poor performance at end of game',
+    socialShare: 'Fired for poor performance at end of game',
+  },
+  'BAD-EARLYPERFORMANCE': {
+    fullDescription: 'Fired for poor performance',
+    socialShare: 'Fired for poor performance',
+  },
+  'BAD-TOOSLOW': {
+    fullDescription: 'Too slow!',
+    socialShare: 'Too slow!',
+  },
+  'BAD-CENSORSHIP': {
+    fullDescription: 'Censorship accusations',
+    socialShare: 'Censorship accusations',
+  },
+  'BAD-SAFETY': {
+    fullDescription: 'Platform safety',
+    socialShare: 'Platform safety',
+  },
+  'BAD-ARC': {
+    fullDescription: 'TK arc reason',
+    socialShare: 'TK arc reason',
+  },
+
+}
+
 let restartGame = function () {
   IssueQueueStore.resetAllData()
   GameSessionStore.resetAllData()
@@ -38,7 +74,7 @@ let returnToHomeScreen = function () {
       v-for="(reason, key) in GameSessionStore.gameOverReason"
       v-bind:key="key"
     >
-      {{ reason }}
+      {{ gameOverDescriptions[GameSessionStore.gameOverType].fullDescription }}
     </div>
     <button @click="restartGame()">New Game</button>
     <button @click="returnToHomeScreen()">Back to Home Screen</button>

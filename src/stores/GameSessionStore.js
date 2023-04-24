@@ -100,6 +100,7 @@ export const GameSessionStore = reactive({
   publicFreeSpeech: GameDefaults.publicStartingState,
   showGameOver: false,
   gameOverReason: '',
+  gameOverType: '',
   endGameAtEndOfRound: null,
   interRoundProcessingComplete: false,
   showAbout: false,
@@ -125,6 +126,7 @@ export const GameSessionStore = reactive({
     this.publicFreeSpeech = GameDefaults.publicStartingState
     this.showGameOver = false
     this.gameOverReason = ''
+    this.gameOverType = ''
     this.endGameAtEndOfRound = null
     this.interRoundProcessingComplete = false
     this.showAbout = false
@@ -190,6 +192,7 @@ export const GameSessionStore = reactive({
       showGameOver: this.showGameOver,
       endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
+      gameOverType: this.gameOverType,
       achievementsUnlockedThisGame: this.achievementsUnlockedThisGame,
       achievementsUnlockedThisRound: this.achievementsUnlockedThisRound,
     })
