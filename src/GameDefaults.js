@@ -16,6 +16,7 @@ export const GameDefaults = {
   maxCarryoverLength: 5, // max number of cards at start of a round (arcs might push this over)
   startingGrabBagCardCount: 3,
   timeBetweenArcCards: 3, // seconds between arc cards being added (for grab bags)
+  timeBetweenBetterAICards: 5, // seconds interval just for BetterAI
 
   // CARD ACTIONS
   // Appeals
