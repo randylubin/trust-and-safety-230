@@ -12,7 +12,6 @@ const gameIsPaused = ref(true)
 
 const timeRemaining = ref(GameDefaults.roundLength)
 const extraTimeForLastCard = GameDefaults.extraTimeForLastCard
-const genericDrawLikelihood = GameDefaults.genericDrawLikelihood
 
 const { pause, resume, isActive } = useIntervalFn(() => {
   let tickDuration = GameSessionStore.slowMode ? GameDefaults.slowModeTick : 1
@@ -48,8 +47,15 @@ const { pause, resume, isActive } = useIntervalFn(() => {
 
       // ADD GENERICS OVER TIME
       // TODO - maybe recalibrate likelihood based on round (e.g. less likely during a big Grab Bag like BETAAI)
+      let drawLikelihood = GameDefaults.genericDrawLikelihood
       if (
-        Math.random() < genericDrawLikelihood &&
+        GameSessionStore.currentRound == GameDefaults.betaAIRound ||
+        GameSessionStore.currentRound >= GameDefaults.betterAIRound
+      ) {
+        drawLikelihood = GameDefaults.genericDrawDuringAIRounds
+      }
+      if (
+        Math.random() < drawLikelihood &&
         GameSessionStore.currentRound != 0 &&
         !followupsAdded
       ) {
