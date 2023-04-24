@@ -11,6 +11,11 @@ const triggerGameOver = ref(false)
 const publicComments = ref('')
 const managerComments = ref('')
 const roundScreenReadyToShow = ref(false)
+const managerApproval = ref(
+  100 -
+    (100 * GameSessionStore.disagreeWithManagerThisRound) /
+      GameSessionStore.issuesCompletedThisRound
+)
 
 Array.prototype.sample = function () {
   return this[Math.floor(Math.random() * this.length)]
@@ -282,6 +287,9 @@ GameSessionStore.saveSessionToLocal()
         <div class="round-statistics" v-if="GameSessionStore.currentRound != 0">
           <div class="issues-completed">
             Decisions Made: {{ GameSessionStore.issuesCompletedThisRound }}
+          </div>
+          <div class="manager-approval">
+            Manager Approval: {{ managerApproval }}%
           </div>
         </div>
         <AchievementShowcase />
