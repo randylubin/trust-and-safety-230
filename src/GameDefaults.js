@@ -29,19 +29,20 @@ export const GameDefaults = {
 
   // GAME STATE
   // Initial state and round updates
-  overallPerformanceStartingState: 5,
-  roundQualityStartingState: 10,
+  overallPerformanceStartingState: 6,
+  roundQualityStartingState: 8,
+  publicStartingState: 8,
   // Post-round feedback thresholds
-  overallPerformancePromote: 10,
-  overallPerformancePraise: 7,
+  overallPerformancePromote: 16,
+  overallPerformancePraise: 14,
   overallPerformanceWarn: 3,
-  roundQualityPraise: 10,
-  roundQualityWarn: 5,
-  cardsPerRoundPraise: 25,
-  cardsPerRoundWarn: 15,
-  cardsPerRoundFire: 2,
-  publicWarnLevel: 3,
-  publicPraiseLevel: 8,
+  roundQualityPraise: 6,
+  roundQualityWarn: 3,
+  cardsPerRoundPraise: 22,
+  cardsPerRoundWarn: 12,
+  cardsPerRoundFire: 2, // TODO - 9?
+  publicWarnLevel: 4,
+  publicPraiseLevel: 12,
 
   // ARC SELECTION
   betaAIRound: 4,
