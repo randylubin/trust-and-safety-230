@@ -1,7 +1,6 @@
 <script setup>
 import { MetaGameStore } from '../../stores/MetaGameStore'
 import { GameSessionStore } from '../../stores/GameSessionStore'
-import AchievementsList from '../Misc/AchievementsList.vue'
 import { ref } from 'vue'
 import { event } from 'vue-gtag'
 import { onMounted } from 'vue'
@@ -27,70 +26,112 @@ function startSession(showTutorial = true) {
 </script>
 
 <template>
-  <div class="launch-screen" v-if="!GameSessionStore.showAbout">
-    <!--<h1>Launch Screen</h1>-->
-    <div v-if="!showTutorialButton">
-      <h1>GAME LOGO</h1>
-      <h2>One line pitch</h2>
-      <button
-        v-if="MetaGameStore.activeSession"
-        class="btn-basic"
-        @click="$emit('continueSession')"
-      >
-        Continue Session
-      </button>
-      <button
-        v-if="MetaGameStore.activeSession"
-        class="btn-basic"
-        @click="toggleTutorialButton()"
-      >
-        Restart Game
-      </button>
-      <button
-        v-if="!MetaGameStore.activeSession"
-        class="btn-basic"
-        @click="toggleTutorialButton()"
-      >
-        Start Game
-      </button>
-      <!--<AchievementsList></AchievementsList>-->
-      <button class="btn-basic" @click="GameSessionStore.showAbout = true">
-        About
-      </button>
-
-      <AchievementsList
-        v-if="MetaGameStore.achievements.length"
-      ></AchievementsList>
-    </div>
-
-    <div v-if="showTutorialButton">
-      <button class="btn-basic" @click="startSession(false)">
-        Skip Tutorial
-      </button>
-      <button class="btn-basic" @click="startSession(true)">
-        Play Tutorial
-      </button>
-    </div>
+  <div class="launch-screen">
+    <Transition name="overlay" mode="out-in">
+      <div v-if="!showTutorialButton">
+        <div class="game-logo">
+          <img src="@/assets/svg/moderator-mayhem.svg" />
+        </div>
+        <div class="game-tagline">The Content Moderation Game</div>
+        <button
+          v-if="MetaGameStore.activeSession"
+          class="btn-basic highlight"
+          @click="$emit('continueSession')"
+        >
+          Continue Game
+        </button>
+        <button
+          v-if="MetaGameStore.activeSession"
+          class="btn-basic"
+          @click="toggleTutorialButton()"
+        >
+          Restart Game
+        </button>
+        <button
+          v-if="!MetaGameStore.activeSession"
+          class="btn-basic highlight"
+          @click="toggleTutorialButton()"
+        >
+          New Game
+        </button>
+        <button
+          class="btn-basic btn-about"
+          @click="GameSessionStore.showAbout = true"
+        >
+          About
+        </button>
+        <div class="engine-logo">
+          <img src="@/assets/logos/logo-engine.png" />
+        </div>
+      </div>
+      <div v-else>
+        <button class="btn-basic highlight" @click="startSession(true)">
+          Play Tutorial
+        </button>
+        <button class="btn-basic" @click="startSession(false)">
+          Skip Tutorial
+        </button>
+        <button class="btn-basic btn-back" @click="showTutorialButton = false">
+          Back
+        </button>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <style scoped>
-.launch-screen > div {
+
+.launch-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 1000;
-
-  box-sizing: border-box;
   padding: 3rem;
+
+  background: var(--modal-bg-color);
+}
+
+.launch-screen > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
+  max-height: 100%;
+  overflow: hidden;
 
-  background: var(--modal-bg-color);
+}
+
+.game-logo {
+  max-height: 13.5rem;
+  margin-bottom: 4rem;
+  flex-shrink: 3;
+}
+
+.game-logo > img {
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.game-tagline {
+  color: var(--card-innershadow-color);
+  font-size: 2.2rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  width: 100%;
+  margin: 0 auto 4rem;
+  line-height: 1;
+  padding: 1rem 0;
+  border-top: 1px solid var(--card-outershadow-color);
+  border-bottom: 1px solid var(--card-outershadow-color);
 }
 
 .launch-text {
@@ -101,5 +142,60 @@ function startSession(showTutorial = true) {
 
 button {
   margin-bottom: 2rem;
+}
+
+.btn-about {
+  
+}
+
+.engine-logo {
+  margin-top: 2rem;
+  height: 6rem;
+}
+.engine-logo > img {
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Vue Transitions */
+
+.launch-enter-from .game-logo {
+  opacity: 0;
+  transform: scale(.1);
+  filter: blur(3rem);
+}
+
+.launch-enter-active .game-logo {
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out, filter 0.7s ease-out;
+}
+
+.launch-enter-from .game-tagline {
+  opacity: 0;
+  transform: scaleX(10%);
+  color: var(--modal-bg-color);
+}
+
+.launch-enter-active .game-tagline {
+  transition: opacity 0.2s linear, transform 0.3s linear, color 0.2s linear;
+  transition-delay: 0.5s, 0.5s, 0.8s;
+}
+
+.launch-enter-from button,
+.launch-enter-from .engine-logo {
+  opacity: 0;
+  transform: translateY(3rem);
+}
+
+.launch-enter-active button,
+.launch-enter-active .engine-logo {
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+.launch-enter-active button {
+  transition-delay: 0.8s, 0.8s;
+}
+.launch-enter-active .engine-logo {
+  transition-delay: 1s, 1s;
 }
 </style>

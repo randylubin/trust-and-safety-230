@@ -11,6 +11,7 @@ import {
 import { useArrayFilter } from '@vueuse/core'
 import interact from 'interactjs'
 import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
+import { GameSessionStore } from '../../stores/GameSessionStore'
 import IssueCard from './IssueCard.vue'
 import { GameDefaults } from '../../GameDefaults'
 
@@ -39,7 +40,7 @@ const Options = readonly({
   stackVisibleLimit: 20, // max number of cards visible in stack
   swipeRotateFactor: 0.05, // how much cards tilt as dragged left or right (degrees per pixel)
   swipeExitRange: 0.5, // how far towards container edge card must be dragged to approve/block
-  swipeLabelRange: 0.4, // how far towards container edge card must be to display action label
+  swipeLabelRange: 0.3, // how far towards container edge card must be to display action label
   swipeExitDistance: '200%', // translate value for destination of card flying off screen
   swipeExitRotate: '45deg', // rotate value for destination of card flying off screen
   examineDelay: GameDefaults.lookCloserExamineDelay, // time on card before look closer is available, in 200ms ticks
@@ -246,7 +247,11 @@ watchEffect(() => {
                 }
           "
         >
-          <IssueCard :IssueData="issue" @flipCard="flipCard" />
+          <IssueCard
+            :IssueData="issue"
+            :isTutorial="GameSessionStore.currentRound == 0 ? true : false"
+            @flipCard="flipCard"
+          />
           <div
             v-if="index === 0 && !isLeaving"
             class="swipe-indicator takedown"
@@ -603,6 +608,40 @@ button:hover {
   transition: opacity 0.2s linear, transform 0.2s linear;
 }
 
+.swipe-indicator::after {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.5rem;
+  width: 8rem;
+  font-family: var(--font-2);
+  text-transform: uppercase;
+  font-size: 2rem;
+  line-height: 1.1;
+  font-weight: 900;
+  filter: stroke(1px black);
+}
+
+.swipe-indicator.takedown::after {
+  color: var(--takedown-bg-color);
+  text-shadow: 0.2rem 0.2rem 0 var(--takedown-shadow-color);
+  content: 'Take It Down';
+  left: 101%;
+  text-align: left;
+}
+
+.swipe-indicator.leaveup::after {
+  color: var(--leaveup-bg-color);
+  text-shadow: 0.2rem 0.2rem 0 var(--leaveup-shadow-color);
+  content: 'Keep It Up';
+  right: 101%;
+  width: 6rem;
+  text-align: right;
+}
 .swipe-indicator.active {
   opacity: 1;
   transform: scale(1);

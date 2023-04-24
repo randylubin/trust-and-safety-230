@@ -1,5 +1,41 @@
+.ach-locked .achievement-icon {
+  background-image: url('ach-locked.svg'); 
+}
+
 .ach-novicemod .achievement-icon {
   background-image: url('ach-novicemod.svg');
+}
+
+.ach-intermediatemod .achievement-icon {
+  background-image: url('ach-intermediatemod.svg');
+}
+
+.ach-expertmod .achievement-icon {
+  background-image: url('ach-expertmod.svg');
+}
+
+.ach-knowtheropes .achievement-icon {
+  background-image: url('ach-knowtheropes.svg');
+}
+
+.ach-hanginginthere .achievement-icon {
+  background-image: url('ach-hanginginthere.svg');
+}
+
+.ach-thelonghaul .achievement-icon {
+  background-image: url('ach-thelonghaul.svg');
+}
+
+.ach-foryourreconsideration .achievement-icon {
+  background-image: url('ach-foryourreconsideration.svg');
+}
+
+.ach-onsecondthought .achievement-icon {
+  background-image: url('ach-onsecondthought.svg');
+}
+
+.ach-requestdenied .achievement-icon {
+  background-image: url('ach-requestdenied.svg');
 }
 
 .ach-robotuprising .achievement-icon {
