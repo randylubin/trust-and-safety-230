@@ -87,6 +87,17 @@ export const IssueQueueStore = reactive({
     // TODO arc acheivement
     console.log(arcName, 'arc over')
   },
+  resetAllData() {
+    this.currentIssueQueue = []
+    this.unprocessedFollowUps = []
+    this.genericIssuesSeen = []
+    this.forcedNextArc = []
+    this.exclusionGroupIDList = []
+    this.arcsInProgress = []
+    this.arcsCompleted = []
+    this.interstitialShown = false
+    this.upcomingArcs = []
+  },
   startNextCard() {
     if (
       (GameSessionStore.timeRemaining > 0 ||

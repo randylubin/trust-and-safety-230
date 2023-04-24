@@ -1,6 +1,7 @@
 <script setup>
-// import { GameSessionStore } from "../../stores/GameSessionStore";
+import { MetaGameStore } from '../../stores/MetaGameStore'
 import { GameSessionStore } from '../../stores/GameSessionStore'
+import { IssueQueueStore } from '../../stores/IssueQueueStore'
 import { onMounted } from 'vue'
 import { event } from 'vue-gtag'
 
@@ -10,6 +11,24 @@ onMounted(() => {
     reason: GameSessionStore.gameOverReason,
   })
 })
+
+let restartGame = function () {
+  IssueQueueStore.resetAllData()
+  GameSessionStore.resetAllData()
+  console.log('starting session')
+  GameSessionStore.showGameOver = false
+  GameSessionStore.showHomescreen = false
+  MetaGameStore.activeSession = true
+  GameSessionStore.startNewSession()
+  // location.reload()
+}
+
+let returnToHomeScreen = function () {
+  IssueQueueStore.resetAllData()
+  GameSessionStore.resetAllData()
+  GameSessionStore.showGameOver = false
+  GameSessionStore.showHomescreen = true
+}
 </script>
 
 <template>
@@ -21,7 +40,8 @@ onMounted(() => {
     >
       {{ reason }}
     </div>
-    <button @click="GameSessionStore.showGameOver = false">New Game</button>
+    <button @click="restartGame()">New Game</button>
+    <button @click="returnToHomeScreen()">Back to Home Screen</button>
   </div>
 </template>
 
