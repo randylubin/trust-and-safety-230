@@ -9,6 +9,10 @@ const triggerGameOver = ref(false)
 const publicComments = ref('')
 const managerComments = ref('')
 
+Array.prototype.sample = function () {
+  return this[Math.floor(Math.random() * this.length)]
+}
+
 onMounted(() => {
   interScreenIndex.value = 0
 })
@@ -81,8 +85,10 @@ if (GameSessionStore.currentRound === 0) {
       "Your decision quality is fine but you're taking too long. You'll need to make faster decisions if you want to keep your job."
     performanceAdjustment -= 2
   } else if (managerSpeedLevel === 'medium') {
-    managerComments.value =
-      "You're making decent decisions at a decent pace; keep up the good work."
+    managerComments.value = [
+      "You're making decent decisions at a decent pace; keep up the good work.",
+      'Nice work - keep it up!',
+    ].sample()
   } else if (managerSpeedLevel === 'high') {
     managerComments.value =
       "You're making decent decisions and your pace is excellent. If only all our workers were as fast as you."
@@ -109,34 +115,37 @@ if (!GameSessionStore.interRoundProcessingComplete) {
   console.log('adjusting performance by', performanceAdjustment)
 }
 
-// TODO OVERALL PERFORMANCE PRAISE OR WARN
+// OVERALL PERFORMANCE PRAISE OR WARN
 // Two message options if score is decreasing (based on why), otherwise talk about still being on thin ice
 if (GameSessionStore.overallPerformance >= overallPerformancePraise) {
   console.log('on track for promotion:', GameSessionStore.overallPerformance)
+  managerComments.value = [
+    "You're on track for promotion. Just keep up the good work!",
+    "We're all impressed with your work - I've made a note in your file.",
+    "You've got management potential - keep it up!",
+  ].sample()
 } else if (GameSessionStore.overallPerformance <= overallPerformanceWarn) {
   if (performanceAdjustment < 0) {
     if (roundQualityLevel == 'low') {
-      managerComments.value =
-        "If you don't improve your decision quality soon, I will have to let you go."
-      console.log(
+      managerComments.value = [
         "If you don't improve your decision quality soon, I will have to let you go.",
-        GameSessionStore.overallPerformance
-      )
+        "You're making way too many mistakes. Shape up or ship out.",
+        "I'm worried that you're not taking your job seriously. These decisions matter.",
+      ].sample()
+      console.log('manager warn quality', GameSessionStore.overallPerformance)
     } else {
-      managerComments.value =
-        'You need to increase your decision speed or I will have to replace you with someone faster.'
-      console.log(
+      managerComments.value = [
         'You need to increase your decision speed or I will have to replace you with someone faster.',
-        GameSessionStore.overallPerformance
-      )
+        "You're way too slow. Pick up the pace or you're outta here.",
+      ].sample()
+      console.log('manager warn slow', GameSessionStore.overallPerformance)
     }
   } else {
-    managerComments.value =
-      'You did okay this round but you are still on thin ice.'
-    console.log(
-      'Not bad, but you are still on thin ice',
-      GameSessionStore.overallPerformance
-    )
+    managerComments.value = [
+      'You did better this round but you are still on thin ice.',
+      "Not bad, but I'm still keeping an eye on your performance.",
+    ].sample()
+    console.log('manager thin ice', GameSessionStore.overallPerformance)
   }
 } else {
   console.log('performance is fine', GameSessionStore.overallPerformance)
@@ -182,8 +191,10 @@ if (GameSessionStore.currentRound === 0) {
     publicComments.value =
       'The public is accusing us of having an unsafe platform. We need to turn that perception around if we want to stay in business.'
   } else if (publicSafetyTier === 'medium') {
-    publicComments.value =
-      "We're doing a decent job of balancing platform safety with free speech concerns, though not everyone is happy."
+    publicComments.value = [
+      "We're doing a decent job of balancing platform safety with free speech concerns, though not everyone is happy.",
+      "It's impossible to please everyone but we're doing a decent job of handling safety and free speech.",
+    ].sample()
   } else if (publicSafetyTier === 'high') {
     publicComments.value =
       "We're doing an excellent job of keeping the site safe, though some users accuse us of overzealous moderation."
