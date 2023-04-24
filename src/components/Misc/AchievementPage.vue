@@ -25,7 +25,14 @@ const lockedAchievements = computed(() => {
   <div class="achievement-page">
     <div class="overflow-wrapper">
       <div class="achievements-frame">
-        <div class="achievements-label"><span>Achievements</span></div>
+        <div class="achievements-label">
+          <span>
+            {{ unlockedAchievements.length }}/{{
+              unlockedAchievements.length + lockedAchievements.length
+            }}
+            Achievements</span
+          >
+        </div>
         <div class="achievements-scrollbox">
           <div
             v-for="achievement in unlockedAchievements"
