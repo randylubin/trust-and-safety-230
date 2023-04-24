@@ -31,6 +31,7 @@ let ArcLookup = {
   ANGRYGOV: { earliestRound: 2 },
   HOA: { earliestRound: 2 },
   WORLDCUP: { earliestRound: 2 },
+  CHALLENGE: { earliestRound: 2 },
   START: { earliestRound: 99 },
   POSTELECT: { earliestRound: 99 },
   BETAAI: { earliestRound: 99 },
