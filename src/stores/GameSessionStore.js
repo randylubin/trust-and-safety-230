@@ -226,6 +226,9 @@ export const GameSessionStore = reactive({
         this.achievementsUnlockedThisRound.push(id)
         this.achievementsUnlockedThisGame.push(id)
         MetaGameStore.achievements.push(id)
+        event('achievement_unlocked', {
+          achievement: id,
+        })
       }
     }
   },
