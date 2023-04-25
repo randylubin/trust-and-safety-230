@@ -62,7 +62,42 @@ export const IssueQueueStore = reactive({
     return issueIDArray
   },
   processEndedArc(arcName) {
-    MetaGameStore.arcsCompleted.push(arcName)
+    if (!MetaGameStore.arcsCompleted.includes(arcName)) {
+      MetaGameStore.arcsCompleted.push(arcName)
+
+      switch (arcName) {
+        case 'ELECTION':
+          GameSessionStore.registerAchievement('hailtothechief')
+          break
+        case 'HEALTHCARE':
+          GameSessionStore.registerAchievement('bigpharma')
+          break
+        case 'NUDITY':
+          GameSessionStore.registerAchievement('modestmeans')
+          break
+        case 'NUDE_ART':
+          GameSessionStore.registerAchievement('modelbehavior')
+          break
+        case 'POSTELEC':
+          GameSessionStore.registerAchievement('transitionteam')
+          break
+        case 'BETAAI':
+          GameSessionStore.registerAchievement('robotuprising')
+          break
+        case 'COPYRIGHT':
+          GameSessionStore.registerAchievement('culturewar')
+          break
+        case 'ETHICSIN':
+          GameSessionStore.registerAchievement('piercegate')
+          break
+        case 'ANGRYGOV':
+          GameSessionStore.registerAchievement('bullypulpit')
+          break
+        case 'WORLDCUP':
+          GameSessionStore.registerAchievement('goal')
+          break
+      }
+    }
 
     MetaGameStore.arcsSeenButNotCompleted.splice(
       MetaGameStore.arcsSeenButNotCompleted.indexOf(arcName),

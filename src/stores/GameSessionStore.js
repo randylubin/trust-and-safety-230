@@ -222,7 +222,6 @@ export const GameSessionStore = reactive({
   },
   registerAchievement(id) {
     if (id) {
-      console.log('Achieved: ' + id)
       if (!MetaGameStore.achievements.includes(id)) {
         this.achievementsUnlockedThisRound.push(id)
         this.achievementsUnlockedThisGame.push(id)

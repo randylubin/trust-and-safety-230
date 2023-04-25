@@ -62,6 +62,42 @@
   background-image: url('ach-laissezfaire.svg');
 }
 
+.ach-hailtothechief .achievement-icon {
+  background-image: url('ach-hailtothechief.svg');
+}
+
+.ach-transitionteam .achievement-icon {
+  background-image: url('ach-transitionteam.svg');
+}
+
+.ach-bigpharma .achievement-icon {
+  background-image: url('ach-bigpharma.svg');
+}
+
+.ach-modestmeans .achievement-icon {
+  background-image: url('ach-modestmeans.svg');
+}
+
+.ach-modelbehavior .achievement-icon {
+  background-image: url('ach-modelbehavior.svg');
+}
+
+.ach-culturewar .achievement-icon {
+  background-image: url('ach-culturewar.svg');
+}
+
+.ach-piercegate .achievement-icon {
+  background-image: url('ach-piercegate.svg');
+}
+
+.ach-bullypulpit .achievement-icon {
+  background-image: url('ach-bullypulpit.svg');
+}
+
+.ach-goal .achievement-icon {
+  background-image: url('ach-goal.svg');
+}
+
 .ach-robotuprising .achievement-icon {
   background-image: url('ach-robotuprising.svg');
 }
