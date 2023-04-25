@@ -624,7 +624,7 @@ export const IssueQueueStore = reactive({
         !MetaGameStore.arcsCompleted.includes(arc)
     )
 
-    // fallback if player has seen all arcs across sessions TODO, look at this on a round by round basis
+    // fallback if player has seen all arcs across sessions, look at this on a round by round basis
     if (!filteredArcOptions.length) {
       filteredArcOptions = Object.keys(ArcLookup).filter(
         (arc) =>
@@ -735,6 +735,9 @@ export const IssueQueueStore = reactive({
 
       // space issues out
       let insertDelay = GameDefaults.timeBetweenArcCards
+      if (GameSessionStore.currentRound <= 2) {
+        insertDelay = GameDefaults.timeBetweenStartCards
+      }
       this.insertIssueInQueue(issue, insertDelay * (i + 1))
     }
 

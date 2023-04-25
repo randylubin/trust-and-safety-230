@@ -49,10 +49,11 @@ const { pause, resume, isActive } = useIntervalFn(() => {
       // TODO - maybe recalibrate likelihood based on round (e.g. less likely during a big Grab Bag like BETAAI)
       let drawLikelihood = GameDefaults.genericDrawLikelihood
       if (
+        GameSessionStore.currentRound == 0 ||
         GameSessionStore.currentRound == GameDefaults.betaAIRound ||
         GameSessionStore.currentRound >= GameDefaults.betterAIRound
       ) {
-        drawLikelihood = GameDefaults.genericDrawDuringAIRounds
+        drawLikelihood = GameDefaults.genericDrawDuringHeavyRounds
       }
       if (
         Math.random() < drawLikelihood &&
