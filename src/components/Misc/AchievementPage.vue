@@ -33,6 +33,9 @@ const lockedAchievements = computed(() => {
             Achievements</span
           >
         </div>
+        <div class="achievements-description">
+          Unlock achievements by playing the game
+        </div>
         <div class="achievements-scrollbox">
           <div
             v-for="achievement in unlockedAchievements"
@@ -68,7 +71,12 @@ const lockedAchievements = computed(() => {
         </div>
       </div>
     </div>
-    <button class="btn-basic" @click="GameSessionStore.showAchievements = false">Close</button>
+    <button
+      class="btn-basic"
+      @click="GameSessionStore.showAchievements = false"
+    >
+      Close
+    </button>
   </div>
 </template>
 
