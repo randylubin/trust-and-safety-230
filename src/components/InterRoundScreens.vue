@@ -12,9 +12,11 @@ const publicComments = ref('')
 const managerComments = ref('')
 const roundScreenReadyToShow = ref(false)
 const managerApproval = ref(
-  100 -
-    (100 * GameSessionStore.disagreeWithManagerThisRound) /
-      GameSessionStore.issuesCompletedThisRound
+  Math.round(
+    100 -
+      (100 * GameSessionStore.disagreeWithManagerThisRound) /
+        GameSessionStore.issuesCompletedThisRound
+  )
 )
 
 Array.prototype.sample = function () {
