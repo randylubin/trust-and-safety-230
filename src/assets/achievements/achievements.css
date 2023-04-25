@@ -38,6 +38,30 @@
   background-image: url('ach-requestdenied.svg');
 }
 
+.ach-ajobwelldone .achievement-icon {
+  background-image: url('ach-ajobwelldone.svg');
+}
+
+.ach-daybyday .achievement-icon {
+  background-image: url('ach-daybyday.svg');
+}
+
+.ach-notsofast .achievement-icon {
+  background-image: url('ach-notsofast.svg');
+}
+
+.ach-lapseinjudgement .achievement-icon {
+  background-image: url('ach-lapseinjudgement.svg');
+}
+
+.ach-dontspeak .achievement-icon {
+  background-image: url('ach-dontspeak.svg');
+}
+
+.ach-laissezfaire .achievement-icon {
+  background-image: url('ach-laissezfaire.svg');
+}
+
 .ach-robotuprising .achievement-icon {
   background-image: url('ach-robotuprising.svg');
 }

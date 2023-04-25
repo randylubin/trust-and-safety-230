@@ -158,6 +158,13 @@ export const IssueQueueStore = reactive({
       if (GameSessionStore.currentRound != 0) {
         GameSessionStore.issuesCompletedThisGame++
         MetaGameStore.PlayerStatistics.issuesProcessed++
+        if (MetaGameStore.PlayerStatistics.issuesProcessed >= 250) {
+          GameSessionStore.registerAchievement('expertmod')
+        } else if (MetaGameStore.PlayerStatistics.issuesProcessed >= 100) {
+          GameSessionStore.registerAchievement('intermediatemod')
+        } else if (MetaGameStore.PlayerStatistics.issuesProcessed >= 25) {
+          GameSessionStore.registerAchievement('novicemod')
+        }
       }
     }
 
@@ -231,14 +238,23 @@ export const IssueQueueStore = reactive({
       })
     } else {
       MetaGameStore.PlayerStatistics.appealsProcessed++
+      if (MetaGameStore.PlayerStatistics.appealsProcessed >= 50) {
+        GameSessionStore.registerAchievement('foryourreconsideration')
+      }
       // if appeal, unwind previous game state change
       if (issueData.issueType == 'appealTakeDown') {
         if (action == 'takeDown') {
           MetaGameStore.PlayerStatistics.appealsDenied++
+          if (MetaGameStore.PlayerStatistics.appealsDenied >= 50) {
+            GameSessionStore.registerAchievement('requestdenied')
+          }
           // TODO - maybe something around tracking conviction?
           // do nothing
         } else if (action == 'keepUp') {
           MetaGameStore.PlayerStatistics.appealsAccepted++
+          if (MetaGameStore.PlayerStatistics.appealsAccepted >= 50) {
+            GameSessionStore.registerAchievement('onsecondthought')
+          }
           // TODO - maybe something around tracking change on appeal?
           // revert prior state change
           Object.keys(responseObject['takeDown']).forEach((key) => {
@@ -252,10 +268,16 @@ export const IssueQueueStore = reactive({
       } else if (issueData.issueType == 'appealKeepUp') {
         if (action == 'keepUp') {
           MetaGameStore.PlayerStatistics.appealsDenied++
+          if (MetaGameStore.PlayerStatistics.appealsDenied >= 50) {
+            GameSessionStore.registerAchievement('requestdenied')
+          }
           // TODO - maybe something around tracking conviction?
           // do nothing
         } else if (action == 'takeDown') {
           MetaGameStore.PlayerStatistics.appealsAccepted++
+          if (MetaGameStore.PlayerStatistics.appealsAccepted >= 50) {
+            GameSessionStore.registerAchievement('onsecondthought')
+          }
           // TODO - maybe something around tracking change on appeal?
           // revert prior state change
           Object.keys(responseObject['keepUp']).forEach((key) => {

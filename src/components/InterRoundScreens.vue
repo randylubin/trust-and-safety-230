@@ -221,31 +221,39 @@ if (
 ) {
   gameOverReason.push('Promoted for competence, congrats!')
   gameOverType = 'GOOD-QUALITYPROMO'
+  GameSessionStore.registerAchievement('ajobwelldone')
 } else if (GameSessionStore.currentRound == GameDefaults.finalRound) {
   if (
     GameSessionStore.overallPerformance > GameDefaults.overallPerformanceWarn
   ) {
     gameOverReason.push('Promoted for seniority, congrats!')
     gameOverType = 'GOOD-SENIORITYPROMO'
+    GameSessionStore.registerAchievement('daybyday')
   } else {
     gameOverReason.push('Fired for poor performance at end of game')
     gameOverType = 'BAD-FINALROUNDPERFORMANCE'
+    GameSessionStore.registerAchievement('lapseinjudgement')
   }
 } else if (GameSessionStore.overallPerformance <= 0) {
   gameOverReason.push('Fired for poor performance')
   gameOverType = 'BAD-EARLYPERFORMANCE'
+  GameSessionStore.registerAchievement('lapseinjudgement')
 } else if (GameSessionStore.roundQuality <= 0) {
   gameOverReason.push('Fired for poor performance')
   gameOverType = 'BAD-ROUNDQUALITY'
+  GameSessionStore.registerAchievement('lapseinjudgement')
 } else if (GameSessionStore.issuesCompletedThisRound <= cardsPerRoundFire) {
   gameOverReason.push('Too slow!')
   gameOverType = 'BAD-TOOSLOW'
+  GameSessionStore.registerAchievement('notsofast')
 } else if (GameSessionStore.publicFreeSpeech == 0) {
   gameOverReason.push('Censorship accusations')
   gameOverType = 'BAD-CENSORSHIP'
+  GameSessionStore.registerAchievement('dontspeak')
 } else if (GameSessionStore.publicSafety == 0) {
   gameOverReason.push('Platform safety')
   gameOverType = 'BAD-SAFETY'
+  GameSessionStore.registerAchievement('laissezfaire')
 } else if (GameSessionStore.endGameAtEndOfRound) {
   // from ARC
   gameOverReason.push(GameSessionStore.endGameAtEndOfRound)
