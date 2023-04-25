@@ -173,7 +173,7 @@ function continueSession() {
   --button-highlight-bg-color: var(--en-2m);
   --button-highlight-shadow-color: rgb(148, 72, 50);
   --button-alt-bg-color: var(--leaveup-bg-color);
-  --button-alt-shadow-color: var(--leavup-shadow-color);
+  --button-alt-shadow-color: var(--leaveup-shadow-color);
 
   --examine-popup-incomplete-bg-color: rgb(215, 215, 215);
   --examine-popup-complete-bg-color: rgb(230, 230, 230);
