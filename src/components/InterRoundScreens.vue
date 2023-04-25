@@ -273,6 +273,13 @@ if (gameOverReason.length && GameSessionStore.currentRound != 0) {
 
 GameSessionStore.interRoundProcessingComplete = true
 GameSessionStore.saveSessionToLocal()
+
+const quitSession = function () {
+  triggerGameOver.value = true
+  GameSessionStore.betweenRounds = false
+  console.log('player quit')
+  GameSessionStore.endGame('player quit', 'BAD-QUIT')
+}
 </script>
 
 <template>
@@ -366,6 +373,9 @@ GameSessionStore.saveSessionToLocal()
             @click="GameSessionStore.startNewRound()"
           >
             Let's Go!
+          </button>
+          <button class="btn-basic btn-back" @click="quitSession()">
+            I quit.
           </button>
           <button class="btn-basic btn-back" @click="interScreenIndex--">
             Back

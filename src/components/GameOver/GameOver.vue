@@ -19,6 +19,9 @@ const speechRating = ref('')
 if (GameSessionStore.gameOverType.startsWith('GOOD')) {
   managerHeader.value = "We're Promoting You"
   gameoverTag.value = 'Promoted'
+} else if (GameSessionStore.gameOverType == 'BAD-QUIT') {
+  managerHeader.value = 'You quit'
+  gameoverTag.value = 'You quit'
 } else {
   managerHeader.value = "You're Fired"
   gameoverTag.value = "You're Fired"
@@ -119,6 +122,10 @@ const GameOverDescriptions = {
   'BAD-SAFETY': {
     fullDescription: 'Platform safety',
     socialShare: 'Platform safety',
+  },
+  'BAD-QUIT': {
+    fullDescription: "I understand, it's a hard job and not for everyone!",
+    socialShare: 'I quit!',
   },
   'BAD-ARC': {
     fullDescription: 'TK arc reason',
