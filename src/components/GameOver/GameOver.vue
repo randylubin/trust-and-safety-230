@@ -6,11 +6,15 @@ import { IssueQueueStore } from '../../stores/IssueQueueStore'
 import { onMounted } from 'vue'
 import { event } from 'vue-gtag'
 import AchievementShowcase from '../Misc/AchievementShowcase.vue'
+import { GameDefaults } from '../../GameDefaults'
 
 const subscreenIndex = ref(-1)
 
 const managerHeader = ref('')
 const gameoverTag = ref('')
+const performanceRating = ref('')
+const safetyRating = ref('')
+const speechRating = ref('')
 
 if (GameSessionStore.gameOverType.startsWith('GOOD')) {
   managerHeader.value = "We're Promoting You"
@@ -19,6 +23,65 @@ if (GameSessionStore.gameOverType.startsWith('GOOD')) {
   managerHeader.value = "You're Fired"
   gameoverTag.value = "You're Fired"
 }
+
+// FINAL SCORE CALCULATIONS
+// calculate initial score
+if (GameSessionStore.currentRound < GameDefaults.finalRound) {
+  // early endings
+  if (GameSessionStore.gameOverType.startsWith('GOOD')) {
+    performanceRating.value = 5
+  } else {
+    performanceRating.value = 1
+  }
+} else {
+  // final round endings
+  if (GameSessionStore.gameOverType.startsWith('GOOD')) {
+    if (
+      GameSessionStore.overallPerformance >=
+      GameDefaults.overallPerformancePromote
+    ) {
+      performanceRating.value = 5
+    } else if (
+      GameSessionStore.overallPerformance >=
+      GameDefaults.overallPerformancePraise
+    ) {
+      performanceRating.value = 4
+    } else {
+      performanceRating.value = 3
+    }
+  } else {
+    // bad final ending
+    if (GameSessionStore.overallPerformance <= 0) {
+      performanceRating.value = 1
+    } else {
+      performanceRating.value = 2
+    }
+  }
+}
+
+// modify score based on public and calc public rating
+let publicModifier = 0
+if (GameSessionStore.publicSafety >= GameDefaults.publicPraiseLevel) {
+  safetyRating.value = 'HIGH'
+  publicModifier = 1
+} else if (GameSessionStore.publicSafety > GameDefaults.publicWarnLevel) {
+  safetyRating.value = 'MEDIUM'
+} else {
+  safetyRating.value = 'LOW'
+  publicModifier = -1
+}
+if (GameSessionStore.publicFreeSpeech >= GameDefaults.publicPraiseLevel) {
+  speechRating.value = 'HIGH'
+  publicModifier = safetyRating.value !== 'LOW' ? 1 : -1
+} else if (GameSessionStore.publicFreeSpeech > GameDefaults.publicWarnLevel) {
+  speechRating.value = 'MEDIUM'
+} else {
+  speechRating.value = 'LOW'
+  publicModifier = -1
+}
+performanceRating.value += publicModifier
+performanceRating.value = Math.min(performanceRating.value, 5)
+performanceRating.value = Math.max(performanceRating.value, 1)
 
 onMounted(() => {
   subscreenIndex.value = 0
@@ -81,18 +144,18 @@ const returnToHomeScreen = function () {
   GameSessionStore.showHomescreen = true
 }
 
-const populateClipboard = function(text) {
+const populateClipboard = function (text) {
   if (navigator.clipboard) {
     return navigator.clipboard.writeText(text) // for modern browsers
   } else {
     return new Promise((resolve, reject) => {
       // legacy for older browsers
-      var textArea = document.createElement("textarea")
+      var textArea = document.createElement('textarea')
       textArea.value = text
 
-      textArea.style.top = "0"
-      textArea.style.left = "0"
-      textArea.style.position = "fixed"
+      textArea.style.top = '0'
+      textArea.style.left = '0'
+      textArea.style.position = 'fixed'
 
       document.body.appendChild(textArea)
       textArea.focus()
@@ -113,7 +176,7 @@ const populateClipboard = function(text) {
 
 const shareCallback = ref(false)
 
-const shareResults = function() {
+const shareResults = function () {
   populateClipboard('Test share text').then(
     () => {
       shareCallback.value = 'success'
@@ -134,7 +197,10 @@ const shareResults = function() {
       :duration="{ enter: 1400, leave: 200 }"
       mode="out-in"
     >
-      <div v-if="subscreenIndex === 0" class="gameover-subscreen screen-manager">
+      <div
+        v-if="subscreenIndex === 0"
+        class="gameover-subscreen screen-manager"
+      >
         <div class="subscreen-header-image manager">
           <img src="@/assets/svg/image-manager.svg" />
         </div>
