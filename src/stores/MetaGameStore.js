@@ -4,8 +4,9 @@ export const MetaGameStore = reactive({
   loaded: false,
   achievements: [],
   activeSession: false,
-  numberOfSessions: 0,
+  numberOfSessionsFinished: 0,
   numberOfWins: 0,
+  numberOfLosses: 0,
   PlayerStatistics: {
     issuesProcessed: 0,
     appealsProcessed: 0,
@@ -27,8 +28,9 @@ export const MetaGameStore = reactive({
     localStorage.MetaGameStore = JSON.stringify({
       achievements: this.achievements,
       activeSession: this.activeSession,
-      numberOfSessions: this.numberOfSessions,
+      numberOfSessionsFinished: this.numberOfSessionsFinished,
       numberOfWins: this.numberOfWins,
+      numberOfLosses: this.numberOfLosses,
       PlayerStatistics: this.PlayerStatistics,
       arcsSeenButNotCompleted: this.arcsSeenButNotCompleted,
       arcsCompleted: this.arcsCompleted,

@@ -87,6 +87,17 @@ export const IssueQueueStore = reactive({
     // TODO arc acheivement
     console.log(arcName, 'arc over')
   },
+  resetAllData() {
+    this.currentIssueQueue = []
+    this.unprocessedFollowUps = []
+    this.genericIssuesSeen = []
+    this.forcedNextArc = []
+    this.exclusionGroupIDList = []
+    this.arcsInProgress = []
+    this.arcsCompleted = []
+    this.interstitialShown = false
+    this.upcomingArcs = []
+  },
   startNextCard() {
     if (
       (GameSessionStore.timeRemaining > 0 ||
@@ -142,9 +153,13 @@ export const IssueQueueStore = reactive({
         ? issueData.keepUpConsequences
         : issueData.takeDownConsequences
     let isAppeal = issueData.issueType.slice(0, 6) == 'appeal'
-    GameSessionStore.issuesCompletedThisRound++ // TODO - do appeals count toward this?
-    GameSessionStore.issuesCompletedThisGame++
-    MetaGameStore.PlayerStatistics.issuesProcessed++
+    if (!issueData.interstitialOnly) {
+      GameSessionStore.issuesCompletedThisRound++ // TODO - do appeals count toward this?
+      if (GameSessionStore.currentRound != 0) {
+        GameSessionStore.issuesCompletedThisGame++
+        MetaGameStore.PlayerStatistics.issuesProcessed++
+      }
+    }
 
     // Manager and Public Response
     let responseObject = {
@@ -530,6 +545,7 @@ export const IssueQueueStore = reactive({
       this.selectArcsForSession()
     }
     let newQueue = []
+    let initialInterstitials = []
     // REMOVE GENERICS FROM OLD QUEUE
     for (let i = 0; i < this.currentIssueQueue.length; i++) {
       let issue = JSON.parse(JSON.stringify(this.currentIssueQueue[i]))
@@ -538,9 +554,10 @@ export const IssueQueueStore = reactive({
       }
     }
 
-    // ADD UNPROCESSED QUEUE ISSUES
+    // sort unprocessed queue issues
     let leftOverArcCards = []
     let leftOverAppeals = []
+    let betterAICards = []
     let carryoverQueue = []
     for (let i = 0; i < this.unprocessedFollowUps.length; i++) {
       if (!this.unprocessedFollowUps[i].processed) {
@@ -549,15 +566,20 @@ export const IssueQueueStore = reactive({
         )
         if (issue.issueType.slice(0, 6) == 'appeal') {
           leftOverAppeals.push(issue)
+        } else if (issue.issueType.startsWith('BETTERAI')) {
+          betterAICards.push(issue)
         } else {
           leftOverArcCards.push(issue)
         }
       }
     }
-    // create new queue under max size
+
+    // check for room for unprocessed appeals and mix them into unprocessed arcs
     carryoverQueue.push(...leftOverArcCards)
     let roomForAppeals =
-      GameDefaults.maxCarryoverLength - leftOverArcCards.length
+      GameDefaults.maxCarryoverLength -
+      leftOverArcCards.length -
+      newQueue.length
     if (roomForAppeals > 0) {
       for (let i = 0; i < roomForAppeals; i++) {
         if (leftOverAppeals.length) {
@@ -572,19 +594,23 @@ export const IssueQueueStore = reactive({
 
     this.unprocessedFollowUps = []
 
-    for (let i = 0; i < carryoverQueue.length; i++) {
-      let issue = carryoverQueue[i]
+    // add unprocessed carryover queue to old current queue
+    newQueue = newQueue.concat(carryoverQueue)
 
-      if (newQueue.length < GameDefaults.maxCarryoverLength) {
-        newQueue.push(issue)
-      } else {
-        // space issues out
-        this.insertIssueInQueue(
-          issue,
-          GameDefaults.timeBetweenArcCards * (i + 1)
-        )
-      }
-    }
+    // for (let i = 0; i < carryoverQueue.length; i++) {
+    //   let issue = carryoverQueue[i]
+
+    //   if (newQueue.length < GameDefaults.maxCarryoverLength) {
+    //     newQueue.push(issue)
+    //   } else {
+    //     // space issues out
+    //     let insertDelay = GameDefaults.timeBetweenArcCards
+    //     if (issue.issueType.startsWith('BETTERAI')) {
+    //       insertDelay = GameDefaults.timeBetweenBetterAICards
+    //     }
+    //     this.insertIssueInQueue(issue, insertDelay * (i + 1))
+    //   }
+    // }
 
     // SELECT ARC
     let filteredArcOptions = Object.keys(ArcLookup).filter(
@@ -641,75 +667,87 @@ export const IssueQueueStore = reactive({
       // Check for initial interstitial for grab bag arcs
       if (initialArcCards.length > 1) {
         let arcIntroInterstitial = initialArcCards.shift()
-        newQueue.unshift(arcIntroInterstitial)
+        initialInterstitials.unshift(arcIntroInterstitial)
       }
 
-      if (initialArcCards.length > GameDefaults.startingGrabBagCardCount) {
-        // Grab random cards
-        let firstCards = []
-        for (let i = 0; i < GameDefaults.startingGrabBagCardCount; i++) {
-          let randomIndex = Math.floor(Math.random() * initialArcCards.length)
-          firstCards.push(...initialArcCards.splice(randomIndex, 1))
-        }
-        console.log(newQueue)
-        newQueue = this.interleaveDecks(newQueue, firstCards)
-        console.log(newQueue)
-
-        // add other cards to queue
-        let cardsRemaining = initialArcCards.length
-        for (let i = 0; i < cardsRemaining; i++) {
-          let randomIndex = Math.floor(Math.random() * initialArcCards.length)
-          let issue = initialArcCards.splice(randomIndex, 1)
-
-          // space issues out
-          this.insertIssueInQueue(
-            issue[0],
-            GameDefaults.timeBetweenArcCards * (i + 1)
-          )
-        }
-      } else {
-        newQueue = this.interleaveDecks(newQueue, initialArcCards)
+      // shuffle cards initial cards for new arc
+      for (var i = initialArcCards.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1))
+        var temp = initialArcCards[i]
+        initialArcCards[i] = initialArcCards[j]
+        initialArcCards[j] = temp
       }
+
+      // interleave old round cards and new arc
+      newQueue = this.interleaveDecks(newQueue, initialArcCards)
     }
 
-    // TEMP: Add random generics to bring up to min queue size, excluding those already seen
-    if (newQueue.length < minimumStartingQueueLength) {
-      let excludeArray = this.genericIssuesSeen.concat(
-        this.getIssueIDsInCurrentQueue(),
-        GenericIssues.getIDsOfBotIssues()
-      )
-      let genericsToAdd = minimumStartingQueueLength - newQueue.length
-      newQueue = this.interleaveDecks(
-        newQueue,
-        GenericIssues.getRandomIssues(genericsToAdd, excludeArray)
-      )
-    }
+    // Add at least two generics and maybe more to bring up to min queue size
+    let excludeArray = this.genericIssuesSeen.concat(
+      this.getIssueIDsInCurrentQueue(),
+      GenericIssues.getIDsOfBotIssues()
+    )
+    let numberOfGenericsToAdd = Math.max(
+      minimumStartingQueueLength - newQueue.length,
+      2
+    )
+    newQueue = this.interleaveDecks(
+      newQueue,
+      GenericIssues.getRandomIssues(numberOfGenericsToAdd, excludeArray)
+    )
 
     // SPECIAL NOTIFICATIONS
     // BETAAI over interstitial
     if (GameSessionStore.currentRound == GameDefaults.betaAIRound + 1) {
-      newQueue.unshift(GenericFollowUps.getIssueByID('F-BETAAI-END'))
+      initialInterstitials.unshift(
+        GenericFollowUps.getIssueByID('F-BETAAI-END')
+      )
     }
-    if (GameSessionStore.currentRound == GameDefaults.betterAIRound) {
-      // newQueue.unshift(GenericFollowUps.getIssueByID('F-BETTERAI-START')) TODO - check if needed
-    }
+    // if (GameSessionStore.currentRound == GameDefaults.betterAIRound) { // TODO - check if needed
+    //   initialInterstitials.unshift(GenericFollowUps.getIssueByID('F-BETTERAI-START'))
+    // }
     // Foreshadow promotion
     if (GameSessionStore.currentRound == GameDefaults.finalRound) {
       if (
         GameSessionStore.overallPerformance >
         GameDefaults.overallPerformanceWarn
       ) {
-        newQueue.unshift(
+        initialInterstitials.unshift(
           GenericFollowUps.getIssueByID('F-PROMOTION-FORESHADOW-GOOD')
         )
       } else {
-        newQueue.unshift(
+        initialInterstitials.unshift(
           GenericFollowUps.getIssueByID('F-PROMOTION-FORESHADOW-BAD')
         )
       }
     }
 
-    this.currentIssueQueue = newQueue
+    let startingQueue = initialInterstitials.concat(
+      newQueue.slice(0, minimumStartingQueueLength)
+    )
+    let laterQueue = newQueue.slice(minimumStartingQueueLength)
+
+    this.currentIssueQueue = startingQueue
+
+    // add later queue to unprocessed queue
+    for (let i = 0; i < laterQueue.length; i++) {
+      let issue = laterQueue[i]
+
+      // space issues out
+      let insertDelay = GameDefaults.timeBetweenArcCards
+      this.insertIssueInQueue(issue, insertDelay * (i + 1))
+    }
+
+    // add betterai to upcoming queue
+    if (betterAICards.length) {
+      for (let i = 0; i < laterQueue.length; i++) {
+        let issue = betterAICards[i]
+
+        // space issues out
+        let insertDelay = GameDefaults.timeBetweenBetterAICards
+        this.insertIssueInQueue(issue, insertDelay * (i + 1))
+      }
+    }
 
     GameSessionStore.betweenRounds = false
     this.startNextCard()

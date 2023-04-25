@@ -70,11 +70,13 @@ function newSession() {
   console.log('starting session')
   MetaGameStore.activeSession = true
   showLaunchScreen.value = false
+  GameSessionStore.showHomescreen = false
   GameSessionStore.startNewSession()
 }
 
 function continueSession() {
   showLaunchScreen.value = false
+  GameSessionStore.showHomescreen = false
 
   if (localStorage.MetaGameStore) MetaGameStore.loadSessionFromLocal()
   if (localStorage.GameSessionStore) GameSessionStore.loadSessionFromLocal()
@@ -86,7 +88,7 @@ function continueSession() {
   <div id="screen-container">
     <Transition appear name="launch" :duration="{ enter: 1400, leave: 400 }">
       <LaunchScreen
-        v-if="showLaunchScreen"
+        v-if="showLaunchScreen || GameSessionStore.showHomescreen"
         @new-session="newSession()"
         @continue-session="continueSession()"
       />

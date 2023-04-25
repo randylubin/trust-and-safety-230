@@ -65,6 +65,7 @@ function startSession(showTutorial = true) {
         </div>
       </div>
       <div v-else>
+        <div class="content-warning">CONTENT WARNING TK</div>
         <button class="btn-basic highlight" @click="startSession(true)">
           Play Tutorial
         </button>

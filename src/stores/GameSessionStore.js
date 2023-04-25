@@ -91,9 +91,6 @@ export const GameSessionStore = reactive({
   issuesCompletedThisGame: 0,
   gameIsPaused: gameIsPaused,
   betweenRounds: false,
-  // moderationSpeed: 5,
-  // moderationQuality: 5,
-  // publicPerception: 5,
   overallPerformance: GameDefaults.overallPerformanceStartingState,
   agreeWithManager: 0,
   disagreeWithManager: 0,
@@ -103,13 +100,39 @@ export const GameSessionStore = reactive({
   publicFreeSpeech: GameDefaults.publicStartingState,
   showGameOver: false,
   gameOverReason: '',
+  gameOverType: '',
   endGameAtEndOfRound: null,
   interRoundProcessingComplete: false,
   showAbout: false,
   showAchievements: false,
   showPolicies: false,
+  showHomescreen: false,
   achievementsUnlockedThisRound: [],
   achievementsUnlockedThisGame: [],
+  resetAllData() {
+    this.currentRound = 0
+    this.initialTimeInRound = GameDefaults.roundLength
+    this.timeRemaining = GameDefaults.roundLength
+    this.issuesCompletedThisRound = 0
+    this.issuesCompletedThisGame = 0
+    this.gameIsPaused = gameIsPaused
+    this.betweenRounds = false
+    this.overallPerformance = GameDefaults.overallPerformanceStartingState
+    this.agreeWithManager = 0
+    this.disagreeWithManager = 0
+    this.disagreeWithManagerThisRound = 0
+    this.roundQuality = GameDefaults.roundQualityStartingState
+    this.publicSafety = GameDefaults.publicStartingState
+    this.publicFreeSpeech = GameDefaults.publicStartingState
+    this.showGameOver = false
+    this.gameOverReason = ''
+    this.gameOverType = ''
+    this.endGameAtEndOfRound = null
+    this.interRoundProcessingComplete = false
+    this.showAbout = false
+    this.achievementsUnlockedThisRound = []
+    this.achievementsUnlockedThisGame = []
+  },
   pauseTimer: function () {
     pause
   },
@@ -159,9 +182,6 @@ export const GameSessionStore = reactive({
       issuesCompletedThisGame: this.issuesCompletedThisGame,
       gameIsPaused: this.gameIsPaused,
       betweenRounds: this.betweenRounds,
-      // moderationSpeed: this.moderationSpeed,
-      // moderationQuality: this.moderationQuality,
-      // agreeWithManager: this.agreeWithManager,
       overallPerformance: this.overallPerformance,
       disagreeWithManager: this.disagreeWithManager,
       disagreeWithManagerThisRound: this.disagreeWithManagerThisRound,
@@ -172,6 +192,7 @@ export const GameSessionStore = reactive({
       showGameOver: this.showGameOver,
       endGameAtEndOfRound: this.endGameAtEndOfRound,
       gameOverReason: this.gameOverReason,
+      gameOverType: this.gameOverType,
       achievementsUnlockedThisGame: this.achievementsUnlockedThisGame,
       achievementsUnlockedThisRound: this.achievementsUnlockedThisRound,
     })
@@ -187,8 +208,13 @@ export const GameSessionStore = reactive({
     this.showGameOver = true
     this.betweenRounds = false
     MetaGameStore.activeSession = false
+    MetaGameStore.numberOfSessionsFinished++
+    if (gameOverType.startsWith('GOOD')) {
+      MetaGameStore.numberOfWins++
+    } else {
+      MetaGameStore.numberOfLosses++
+    }
     this.pauseTimer()
-    // TODO update other MetaGame data
   },
   toggleSlowMode() {
     this.slowMode = !this.slowMode
