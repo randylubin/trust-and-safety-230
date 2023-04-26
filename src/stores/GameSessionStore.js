@@ -158,7 +158,10 @@ export const GameSessionStore = reactive({
     GameSessionStore.currentRound++
     GameSessionStore.interRoundProcessingComplete = false
     event('start_round', { round: GameSessionStore.currentRound })
-    GameSessionStore.timeRemaining = GameSessionStore.initialTimeInRound // TODO
+    GameSessionStore.timeRemaining =
+      GameSessionStore.currentRound > 0
+        ? GameSessionStore.initialTimeInRound
+        : GameSessionStore.initialTimeInRound * 2
 
     // RESET PER-ROUND STATS
     GameSessionStore.issuesCompletedThisRound = 0

@@ -306,7 +306,7 @@ const quitSession = function () {
             Decisions Made: {{ GameSessionStore.issuesCompletedThisRound }}
           </div>
           <div class="manager-approval">
-            Manager Approval: {{ managerApproval }}%
+            Policy Alignment: {{ managerApproval }}%
           </div>
         </div>
         <AchievementShowcase />
