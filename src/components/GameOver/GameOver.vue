@@ -230,11 +230,11 @@ const shareResults = function () {
           Game Over
           <div class="completed-label">{{ gameoverTag }}</div>
         </div>
-        <div class="final-ratings">
+        <!-- <div class="final-ratings">
           <div>Rating: {{ performanceRating }}</div>
           <div>Safety: {{ safetyRating }}</div>
           <div>Speech: {{ safetyRating }}</div>
-        </div>
+        </div> -->
         <div class="subscreen-buttons subscreen-share">
           <button
             class="btn-basic highlight alt"
