@@ -70,44 +70,44 @@ if (GameSessionStore.currentRound === 0) {
 } else if (roundQualityLevel === 'low') {
   if (managerSpeedLevel === 'low') {
     managerComments.value =
-      "You're too slow and you're making poor decisions. Get your act together or you're fired."
+      "You're <strong>too slow</strong> and you're making <strong>poor decisions</strong>. Get your act together or you're fired."
     performanceAdjustment -= 3
   } else if (managerSpeedLevel === 'medium') {
     managerComments.value =
-      "You're moving at a decent pace but you need to improve your decision quality."
+      "You're moving at an <strong>okay pace</strong> but you need to improve your <strong>poor decision quality</strong>."
     performanceAdjustment -= 2
   } else if (managerSpeedLevel === 'high') {
     managerComments.value =
-      "You've got a great throughput but your decision quality is poor. Slow down and make sure your decisions align with our policies."
+      "You've got a <strong>great pace</strong> but <strong>poor decision quality</strong>. Slow down and make sure your decisions align with our policies."
     performanceAdjustment -= 1
   }
 } else if (roundQualityLevel === 'medium') {
   if (managerSpeedLevel === 'low') {
     managerComments.value =
-      "Your decision quality is fine but you're taking too long. You'll need to make faster decisions if you want to keep your job."
+      "You've got <strong>okay decision quality</strong> but you're going <strong>too slow</strong>. You'll need to make faster decisions if you want to keep your job."
     performanceAdjustment -= 2
   } else if (managerSpeedLevel === 'medium') {
     managerComments.value = [
-      "You're making decent decisions at a decent pace; keep up the good work.",
+      "You're making <strong>okay decisions</strong> at an <strong>okay pace</strong>; keep up the good work.",
       'Nice work - keep it up!',
     ].sample()
   } else if (managerSpeedLevel === 'high') {
     managerComments.value =
-      "You're making decent decisions and your pace is excellent. If only all our workers were as fast as you."
+      "You're making <strong>okay decisions</strong> at an <strong>excellent pace</strong>. If only all our workers were as fast as you."
     performanceAdjustment += 1
   }
 } else if (roundQualityLevel === 'high') {
   if (managerSpeedLevel === 'low') {
     managerComments.value =
-      "You're doing an excellent job of making decisions but you're way too slow. Speed up if you want to keep your job."
+      "You're making <strong>excellent decisions</strong> but you're way <strong>too slow</strong>. Speed up if you want to keep your job."
     performanceAdjustment -= 1
   } else if (managerSpeedLevel === 'medium') {
     managerComments.value =
-      "You're doing an excellent job of making decisions, and at a decent pace. Keep up the good work."
+      "You're making <strong>excellent decisions</strong>, and at an <strong>okay pace</strong>. Keep up the good work."
     performanceAdjustment += 1
   } else if (managerSpeedLevel === 'high') {
     managerComments.value =
-      "You're making excellent decisions at a fast pace. Keep it up and we'll get you a raise at the end of the year."
+      "You're making <strong>excellent decisions</strong> at a <strong>fast pace</strong>. Keep it up and we'll get you a raise at the end of the year."
     performanceAdjustment += 2
   }
 }
@@ -132,7 +132,7 @@ if (GameSessionStore.overallPerformance >= overallPerformancePraise) {
       managerComments.value = [
         "If you don't improve your decision quality soon, I will have to let you go.",
         "You're making way too many mistakes. Shape up or ship out.",
-        "I'm worried that you're not taking your job seriously. These decisions matter.",
+        "I'm worried that you're not taking your job seriously. This work matters.",
       ].sample()
       console.log('manager warn quality', GameSessionStore.overallPerformance)
     } else {
@@ -180,18 +180,18 @@ if (GameSessionStore.currentRound === 0) {
 } else if (publicFreeSpeechTier === 'low') {
   if (publicSafetyTier === 'low') {
     publicComments.value =
-      'This is a disaster - half our users are accusing us of censorship and the other half say the platform is unsafe for anyone to use!'
+      'This is a disaster - half our users are accusing us of censorship and the other half say that TrustHive is unsafe for anyone to use!'
   } else if (publicSafetyTier === 'medium') {
     publicComments.value =
-      "Some users accuse us of being overzealous in our take-downs but we're keeping the most harmful content off the platform."
+      "Some users are accusing TrustHive of being overzealous in our take-downs but we're keeping the most harmful content off the platform."
   } else if (publicSafetyTier === 'high') {
     publicComments.value =
-      "We're doing a great job at keeping the site safe for our users but it's coming at a cost: a lot of users are angry about us taking down their content."
+      "We're doing a great job at keeping TrustHive safe for our users but it's coming at a cost: a lot of users are angry about us taking down their content."
   }
 } else if (publicFreeSpeechTier === 'medium') {
   if (publicSafetyTier === 'low') {
     publicComments.value =
-      'The public is accusing us of having an unsafe platform. We need to turn that perception around if we want to stay in business.'
+      'The public is accusing TrustHive of running an unsafe platform. We need to turn that perception around if we want to stay in business.'
   } else if (publicSafetyTier === 'medium') {
     publicComments.value = [
       "We're doing a decent job of balancing platform safety with free speech concerns, though not everyone is happy.",
@@ -199,18 +199,18 @@ if (GameSessionStore.currentRound === 0) {
     ].sample()
   } else if (publicSafetyTier === 'high') {
     publicComments.value =
-      "We're doing an excellent job of keeping the site safe, though some users accuse us of overzealous moderation."
+      "We're doing an excellent job of keeping TrustHive safe, though some users accuse us of overzealous moderation."
   }
 } else if (publicFreeSpeechTier === 'high') {
   if (publicSafetyTier === 'low') {
     publicComments.value =
-      "Some users are lauding our commitment to free speech but there's a lot of unsafe content on our site and other users are fleeing."
+      "Some users are lauding TrustHive's commitment to free speech but there's a lot of unsafe content on our site and other users are fleeing."
   } else if (publicSafetyTier === 'medium') {
     publicComments.value =
-      "We're doing a decent job of maintaining platform safety with the minimum amount of content takedowns."
+      "We're doing a decent job of maintaining TrustHive safety with the minimum amount of content takedowns."
   } else if (publicSafetyTier === 'high') {
     publicComments.value =
-      "We're doing a fantastic job of keeping the platform safe while minimizing content removal; great work!"
+      "We're doing a fantastic job of keeping TrustHive safe while minimizing content removal; great work!"
   }
 }
 

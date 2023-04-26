@@ -9,7 +9,7 @@ export const GameDefaults = {
   roundLength: 120, // default seconds for a round
   slowModeTick: 0.5, // time change per tick for slow mode (regular mode is 1 second per tick)
   extraTimeForLastCard: -5, // seconds after round clock hits 0
-  genericDrawLikelihood: 0.33, // odds of drawing a generic card each second
+  genericDrawLikelihood: 0.27, // odds of drawing a generic card each second
   genericDrawDuringHeavyRounds: 0.2, // odds of drawing for start, betaai, and betterai
   // Round setup
   minimumStartingQueueLength: 5, // min number of cards at start of a round

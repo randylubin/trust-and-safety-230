@@ -32,7 +32,7 @@ function startSession(showTutorial = true) {
         <div class="game-logo">
           <img src="@/assets/svg/moderator-mayhem.svg" />
         </div>
-        <div class="game-tagline">The Content Moderation Game</div>
+        <div class="game-tagline">A Content Moderation Game</div>
         <button
           v-if="MetaGameStore.activeSession"
           class="btn-basic highlight"

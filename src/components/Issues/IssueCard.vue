@@ -101,9 +101,8 @@ onUpdated(shrinkText)
             <div
               class="issue-text"
               :style="{ 'font-size': issueTextSize + 'rem' }"
-            >
-              {{ IssueData.issueText }}
-            </div>
+              v-html="IssueData.issueText"
+            ></div>
           </div>
           <div
             v-if="IssueData.issueIncludesTags"
@@ -368,6 +367,4 @@ onUpdated(shrinkText)
 .rule-tooltip-leave-active {
   transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
-
-
 </style>
