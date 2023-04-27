@@ -377,7 +377,7 @@ export const IssueQueueStore = reactive({
         // feedback post-interstitial
         if (responseObject[action].disagreeWithManager) {
           issueData.postIssueInterstitial = [
-            'Hmm... Not the decision I would have made. -Manager',
+            'Hmm... Not the decision I would have made.',
             "I don't think that aligns with our policies...",
           ].sample()
         } else if (responseObject[action].publicSafety < 0) {
