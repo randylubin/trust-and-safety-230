@@ -73,7 +73,12 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     !IssueQueueStore.interstitialShown &&
     timeRemaining.value > extraTimeForLastCard
   ) {
-    timeRemaining.value -= tickDuration
+    // handle HURRY UP time
+    if (IssueQueueStore.currentIssueQueue.length) {
+      timeRemaining.value -= tickDuration
+    } else {
+      IssueQueueStore.endRound()
+    }
   } else if (
     timeRemaining.value == extraTimeForLastCard &&
     GameSessionStore.currentRound != 0
