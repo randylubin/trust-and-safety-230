@@ -108,8 +108,12 @@ import { GameDefaults } from '../../GameDefaults'
 
 div.game-info {
   margin-top: 4rem;
-  font-size: 1.9rem;
+  font-size: 1.8rem;
   font-weight: 300;
+}
+
+div.game-info a {
+  font-weight: 600;
 }
 
 div.developer-info {
