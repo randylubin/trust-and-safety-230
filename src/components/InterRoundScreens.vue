@@ -306,7 +306,7 @@ const quitSession = function () {
             Decisions Made: {{ GameSessionStore.issuesCompletedThisRound }}
           </div>
           <div class="manager-approval">
-            Manager Approval: {{ managerApproval }}%
+            Policy Alignment: {{ managerApproval }}%
           </div>
         </div>
         <AchievementShowcase />
@@ -374,8 +374,8 @@ const quitSession = function () {
           >
             Let's Go!
           </button>
-          <button class="btn-basic btn-back" @click="quitSession()">
-            I quit.
+          <button class="btn-basic" @click="quitSession()">
+            I quit!
           </button>
           <button class="btn-basic btn-back" @click="interScreenIndex--">
             Back

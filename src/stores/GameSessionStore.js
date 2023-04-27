@@ -1,8 +1,8 @@
 import { reactive } from 'vue'
 import { ref } from 'vue'
+
 import { useIntervalFn } from '@vueuse/core'
 import { GameDefaults } from '../GameDefaults'
-
 import { MetaGameStore } from './MetaGameStore'
 import { IssueQueueStore } from './IssueQueueStore'
 
@@ -158,7 +158,10 @@ export const GameSessionStore = reactive({
     GameSessionStore.currentRound++
     GameSessionStore.interRoundProcessingComplete = false
     event('start_round', { round: GameSessionStore.currentRound })
-    GameSessionStore.timeRemaining = GameSessionStore.initialTimeInRound // TODO
+    GameSessionStore.timeRemaining =
+      GameSessionStore.currentRound > 0
+        ? GameSessionStore.initialTimeInRound
+        : GameSessionStore.initialTimeInRound * 2
 
     // RESET PER-ROUND STATS
     GameSessionStore.issuesCompletedThisRound = 0

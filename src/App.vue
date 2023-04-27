@@ -117,8 +117,8 @@ function continueSession() {
 
 :root {
   font-size: 2.5vw;
-  --font-1: 'jaf-bernina-sans';
-  --font-2: 'azo-sans-web';
+  --font-1: 'jaf-bernina-sans', 'Verdana', 'Trebuchet MS', sans-serif;
+  --font-2: 'azo-sans-web', 'Tahoma', 'Arial', sans-serif;
 }
 
 @media (min-width: 400px) {
@@ -146,6 +146,7 @@ function continueSession() {
   --controls-bg-color: rgb(53, 53, 53);
   --controls-shadow-color: rgb(37, 37, 37);
   --modal-bg-color: rgb(39, 39, 39);
+  --logo-light-color: rgb(204, 228, 234);
 
   --card-bg-color: white;
   --card-text-color: rgb(44, 62, 80);
@@ -219,7 +220,7 @@ function continueSession() {
 
 .btn-back {
   margin-left: 0;
-  width: 40%;
+  width: 40% !important;
   filter: grayscale(1);
   font-size: 1.7rem;
   line-height: 1.7rem;
@@ -229,6 +230,25 @@ function continueSession() {
 .card-container .btn-basic {
   box-shadow: none;
   background-image: none;
+}
+
+.examine-tag {
+  color: var(--examine-shadow-color);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.examine-tag::before {
+  content: url('@/assets/svg/icon-examine-tag.svg');
+  width: 1.2em;
+  margin-right: 0.3em;
+  display: inline-block;
+  vertical-align: middle;
+  transform: translate(2px, 2px);
+}
+
+a {
+  color: var(--en-2l);
 }
 
 body {

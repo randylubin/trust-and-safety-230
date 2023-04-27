@@ -65,7 +65,12 @@ function startSession(showTutorial = true) {
         </div>
       </div>
       <div v-else>
-        <div class="content-warning">CONTENT WARNING TK</div>
+        <div class="content-warning">
+          <strong>Content Warning:</strong><br />
+          This game is designed for players ages 18 and up, and deals with
+          potentially disturbing content. It does not show you such content, but
+          it does make reference to it. Please consider this before playing.
+        </div>
         <button class="btn-basic highlight" @click="startSession(true)">
           Play Tutorial
         </button>
@@ -81,7 +86,6 @@ function startSession(showTutorial = true) {
 </template>
 
 <style scoped>
-
 .launch-screen {
   display: flex;
   flex-direction: column;
@@ -121,7 +125,7 @@ function startSession(showTutorial = true) {
 }
 
 .game-tagline {
-  color: var(--card-innershadow-color);
+  color: var(--logo-light-color);
   font-size: 2.2rem;
   font-weight: 600;
   white-space: nowrap;
@@ -158,6 +162,18 @@ button {
   max-height: 100%;
   max-width: 100%;
   margin: 0 auto;
+}
+
+div.content-warning {
+  font-weight: 300;
+  font-size: 1.7rem;
+  line-height: 1.4;
+  margin-bottom: 2rem;
+}
+
+div.content-warning > strong {
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 /* Vue Transitions */

@@ -184,7 +184,79 @@ const populateClipboard = function (text) {
 const shareCallback = ref(false)
 
 const shareResults = function () {
-  populateClipboard('Test share text').then(
+  const Chars = {
+    Stars: {
+      ON: '\u{2B50}',
+      OFF: '\u{25FE}\u{FE0F}',
+      SPECIAL: '\u{1F31F}',
+    },
+    Safety: {
+      LOW: '\u{2620}\u{FE0F}',
+      MEDIUM: '\u{2696}\u{FE0F}',
+      HIGH: '\u{1F9BA}',
+    },
+    Speech: {
+      LOW: '\u{1F910}',
+      MEDIUM: '\u{2696}\u{FE0F}',
+      HIGH: '\u{1F4E3}',
+    },
+    Achievements: {
+      novicemod: '\u{1F949}',
+      intermediatemod: '\u{1F948}',
+      expertmod: '\u{1F947}',
+      foryourreconsideration: '\u{1F504}',
+      onsecondthought: '\u{1F914}',
+      requestdenied: '\u{270B}',
+      knowtheropes: '3\u{FE0F}\u{20E3}',
+      hanginginthere: '5\u{FE0F}\u{20E3}',
+      thelonghaul: '7\u{FE0F}\u{20E3}',
+      ajobwelldone: '\u{1F31F}',
+      daybyday: '\u{1F5D3}',
+      notsofast: '\u{1F422}',
+      lapseinjudgement: '\u{1F44E}',
+      dontspeak: '\u{1F64A}',
+      laissezfaire: '\u{1F648}',
+      hailtothechief: '\u{1F5F3}',
+      transitionteam: '\u{1F3DB}',
+      bigpharma: '\u{1F48A}',
+      modestmeans: '\u{1F51E}',
+      modelbehavior: '\u{1F5BC}',
+      culturewar: '\u{A9}',
+      piercegate: '\u{1F4F0}',
+      bullypulpit: '\u{1F92C}',
+      goal: '\u{26BD}',
+      robotuprising: '\u{1F916}',
+    },
+  }
+  const linkText = `Play: ${GameDefaults.gameURL}`
+  let text = `I ${
+    GameSessionStore.gameOverType.startsWith('GOOD') ? 'won' : 'lost'
+  } #ModeratorMayhem on Round ${GameSessionStore.currentRound}\n\n`
+  text += GameOverDescriptions[GameSessionStore.gameOverType].socialShare
+  text += '\nRating: '
+  if (performanceRating.value === 5) {
+    text += Chars.Stars.SPECIAL.repeat(5)
+  } else {
+    text += Chars.Stars.ON.repeat(performanceRating.value)
+    text += Chars.Stars.OFF.repeat(5 - performanceRating.value)
+  }
+  text += `\nIssues Handled: ${GameSessionStore.issuesCompletedThisGame}\n\n`
+  text += `Safety: ${Chars.Safety[safetyRating.value]}\n`
+  text += `Speech: ${Chars.Speech[speechRating.value]}\n\n`
+  if (GameSessionStore.achievementsUnlockedThisGame.length > 0) {
+    text += 'Achievements: '
+    for (const ach of GameSessionStore.achievementsUnlockedThisGame) {
+      if (text.length < 270 - linkText.length - 2) {
+        text += Chars.Achievements[ach]
+      } else {
+        break
+      }
+    }
+    text += '\n\n'
+  }
+  text += linkText
+
+  populateClipboard(text).then(
     () => {
       shareCallback.value = 'success'
       setTimeout(() => (shareCallback.value = false), 2000)

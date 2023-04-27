@@ -285,7 +285,7 @@ watchEffect(() => {
       >
         <transition name="examine-contents" mode="out-in">
           <div v-if="examineTime && !examineDone" class="examine-working">
-            Let's give this a closer look...
+            Hold the button to take a closer look at the content
           </div>
           <div v-else-if="examineTime" class="examine-done">
             {{
@@ -411,7 +411,7 @@ watchEffect(() => {
   );
   background-size: 100% 200%;
   background-position: center 100%;
-  border-radius: 3rem;
+  border-radius: 2rem;
 
   filter: drop-shadow(0 0 0.3rem rgba(0, 0, 0, 0.5));
   transform-origin: center bottom;
