@@ -232,6 +232,21 @@ function continueSession() {
   background-image: none;
 }
 
+.examine-tag {
+  color: var(--examine-shadow-color);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.examine-tag::before {
+  content: url('@/assets/svg/icon-examine-tag.svg');
+  width: 1.2em;
+  margin-right: 0.3em;
+  display: inline-block;
+  vertical-align: middle;
+  transform: translate(2px, 2px);
+}
+
 a {
   color: var(--en-2l);
 }
