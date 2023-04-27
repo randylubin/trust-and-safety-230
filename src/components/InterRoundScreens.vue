@@ -29,8 +29,16 @@ onMounted(() => {
 
 const overallPerformancePraise = GameDefaults.overallPerformancePraise
 const overallPerformanceWarn = GameDefaults.overallPerformanceWarn
-const roundQualityPraise = GameDefaults.roundQualityPraise
-const roundQualityWarn = GameDefaults.roundQualityWarn
+// const roundQualityPraise = GameDefaults.roundQualityPraise
+// const roundQualityWarn = GameDefaults.roundQualityWarn
+const roundQualityPraise =
+  1 -
+  (GameDefaults.roundQualityStartingState - GameDefaults.roundQualityPraise) /
+    ((GameDefaults.cardsPerRoundWarn + GameDefaults.cardsPerRoundPraise) / 2)
+const roundQualityWarn =
+  1 -
+  (GameDefaults.roundQualityStartingState - GameDefaults.roundQualityWarn) /
+    ((GameDefaults.cardsPerRoundWarn + GameDefaults.cardsPerRoundPraise) / 2)
 const cardsPerRoundPraise = GameDefaults.cardsPerRoundPraise
 const cardsPerRoundWarn = GameDefaults.cardsPerRoundWarn
 const cardsPerRoundFire = GameDefaults.cardsPerRoundFire
@@ -41,9 +49,13 @@ const publicWarnLevel = GameDefaults.publicWarnLevel
 let roundQualityLevel = 'medium'
 let managerSpeedLevel = 'medium'
 
-let roundQualityNumber =
-  GameDefaults.roundQualityStartingState -
-  GameSessionStore.disagreeWithManagerThisRound // TODO update
+// let roundQualityNumber =
+//   GameDefaults.roundQualityStartingState -
+//   GameSessionStore.disagreeWithManagerThisRound // TODO update
+let roundQualityNumber = managerApproval.value / 100
+console.log('roundQuality:', roundQualityNumber)
+console.log('praisePercent:', roundQualityPraise)
+console.log('warn percent:', roundQualityWarn)
 let managerSpeedNumber = GameSessionStore.issuesCompletedThisRound
 
 if (roundQualityNumber <= roundQualityWarn) {
