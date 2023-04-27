@@ -117,8 +117,8 @@ function continueSession() {
 
 :root {
   font-size: 2.5vw;
-  --font-1: 'jaf-bernina-sans';
-  --font-2: 'azo-sans-web';
+  --font-1: 'jaf-bernina-sans', 'Verdana', 'Trebuchet MS', sans-serif;
+  --font-2: 'azo-sans-web', 'Tahoma', 'Arial', sans-serif;
 }
 
 @media (min-width: 400px) {
