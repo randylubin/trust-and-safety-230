@@ -161,7 +161,7 @@ export const GameSessionStore = reactive({
     GameSessionStore.timeRemaining =
       GameSessionStore.currentRound > 0
         ? GameSessionStore.initialTimeInRound
-        : GameSessionStore.initialTimeInRound * 2
+        : GameSessionStore.initialTimeInRound * 3
 
     // RESET PER-ROUND STATS
     GameSessionStore.issuesCompletedThisRound = 0
