@@ -146,6 +146,7 @@ function continueSession() {
   --controls-bg-color: rgb(53, 53, 53);
   --controls-shadow-color: rgb(37, 37, 37);
   --modal-bg-color: rgb(39, 39, 39);
+  --logo-light-color: rgb(204, 228, 234);
 
   --card-bg-color: white;
   --card-text-color: rgb(44, 62, 80);
@@ -219,7 +220,7 @@ function continueSession() {
 
 .btn-back {
   margin-left: 0;
-  width: 40%;
+  width: 40% !important;
   filter: grayscale(1);
   font-size: 1.7rem;
   line-height: 1.7rem;
@@ -229,6 +230,10 @@ function continueSession() {
 .card-container .btn-basic {
   box-shadow: none;
   background-image: none;
+}
+
+a {
+  color: var(--en-2l);
 }
 
 body {

@@ -20,13 +20,15 @@ if (Props.IssueData.issueType === 'appealTakeDown') {
 }
 
 const ruleTooltipActive = ref(false)
+let ruleTimeout = null
 
 function showRuleTooltip() {
+  clearTimeout(ruleTimeout)
   ruleTooltipActive.value = true
 }
 
 function hideRuleTooltip() {
-  setTimeout(() => (ruleTooltipActive.value = false), 1300)
+  ruleTimeout = setTimeout(() => (ruleTooltipActive.value = false), 1600)
 }
 
 const issueTextSize = ref(2.5)
@@ -329,21 +331,21 @@ onUpdated(shrinkText)
   position: absolute;
   left: 2.6rem;
   right: 2.6rem;
-  top: calc(-65px - 0.8rem);
+  top: calc(-65px - 5rem);
   box-sizing: border-box;
-  height: calc(65px + 4.5rem);
+  height: calc(65px + 8.5rem);
   padding: 1.8rem 2.5rem;
   z-index: 10000;
-  background: var(--examine-popup-complete-bg-color);
+  background: var(--card-bg-color);
   filter: drop-shadow(0 0 0.3rem rgba(0, 0, 0, 0.5));
-  border-radius: 3rem;
+  border-radius: 2rem;
   color: var(--examine-popup-text-color);
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 
-  font-size: 1.8rem;
+  font-size: 1.7rem;
 }
 
 .rule-tip {

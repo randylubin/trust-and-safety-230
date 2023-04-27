@@ -374,8 +374,8 @@ const quitSession = function () {
           >
             Let's Go!
           </button>
-          <button class="btn-basic btn-back" @click="quitSession()">
-            I quit.
+          <button class="btn-basic" @click="quitSession()">
+            I quit!
           </button>
           <button class="btn-basic btn-back" @click="interScreenIndex--">
             Back
