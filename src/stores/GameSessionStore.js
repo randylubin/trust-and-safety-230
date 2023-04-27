@@ -204,6 +204,7 @@ export const GameSessionStore = reactive({
       gameOverType: this.gameOverType,
       achievementsUnlockedThisGame: this.achievementsUnlockedThisGame,
       achievementsUnlockedThisRound: this.achievementsUnlockedThisRound,
+      interRoundProcessingComplete: this.interRoundProcessingComplete,
     })
   },
   triggerPostRound() {
