@@ -23,6 +23,9 @@ const lockedAchievements = computed(() => {
 
 <template>
   <div class="achievement-page">
+    <div class="achievements-intro">
+      Unlock achievements by playing the game.
+    </div>
     <div class="overflow-wrapper">
       <div class="achievements-frame">
         <div class="achievements-label">
@@ -32,9 +35,6 @@ const lockedAchievements = computed(() => {
             }}
             Achievements</span
           >
-        </div>
-        <div class="achievements-description">
-          Unlock achievements by playing the game
         </div>
         <div class="achievements-scrollbox">
           <div
@@ -94,6 +94,12 @@ const lockedAchievements = computed(() => {
   z-index: 1005;
   padding: 0 2.5rem 4rem;
   background: var(--modal-bg-color);
+}
+
+.achievements-intro {
+  font-weight: 300;
+  font-size: 1.8rem;
+  margin-top: 3.25rem;
 }
 
 .achievements-frame {

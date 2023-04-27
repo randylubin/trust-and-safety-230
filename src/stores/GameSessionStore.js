@@ -1,8 +1,8 @@
 import { reactive } from 'vue'
 import { ref } from 'vue'
+
 import { useIntervalFn } from '@vueuse/core'
 import { GameDefaults } from '../GameDefaults'
-
 import { MetaGameStore } from './MetaGameStore'
 import { IssueQueueStore } from './IssueQueueStore'
 
