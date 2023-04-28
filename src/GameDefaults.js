@@ -9,6 +9,7 @@ export const GameDefaults = {
   // ROUNDS
   // Round timing
   roundLength: 90, // default seconds for a round
+  tutorialLength: 270,
   slowModeTick: 0.5, // time change per tick for slow mode (regular mode is 1 second per tick)
   extraTimeForLastCard: -5, // seconds after round clock hits 0
   genericDrawLikelihood: 0.25, // odds of drawing a generic card each second

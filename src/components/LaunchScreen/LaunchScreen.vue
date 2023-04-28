@@ -4,6 +4,7 @@ import { GameSessionStore } from '../../stores/GameSessionStore'
 import { ref } from 'vue'
 import { event } from 'vue-gtag'
 import { onMounted } from 'vue'
+import { GameDefaults } from '../../GameDefaults'
 
 const emit = defineEmits(['newSession', 'continueSession'])
 
@@ -18,6 +19,9 @@ function toggleTutorialButton() {
 }
 
 function startSession(showTutorial = true) {
+  if (showTutorial) {
+    GameSessionStore.timeRemaining = GameDefaults.tutorialLength
+  }
   GameSessionStore.showTutorial = showTutorial
   emit('newSession')
 

@@ -1,12 +1,17 @@
 <script setup>
 import { computed } from 'vue'
 import { GameSessionStore } from '../stores/GameSessionStore'
+import { GameDefaults } from '../GameDefaults'
 defineEmits(['pauseGame', 'unpauseGame'])
 
 const timerBarWidth = computed(() => {
+  let totalRoundTime = GameSessionStore.currentRound
+    ? GameDefaults.roundLength
+    : GameDefaults.tutorialLength
+
   return `${Math.max(
     0,
-    100 * (GameSessionStore.timeRemaining / GameSessionStore.initialTimeInRound)
+    100 * (GameSessionStore.timeRemaining / totalRoundTime)
   )}%`
 })
 
