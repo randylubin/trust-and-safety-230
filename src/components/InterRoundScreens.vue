@@ -386,7 +386,13 @@ const quitSession = function () {
           >
             Let's Go!
           </button>
-          <button class="btn-basic" @click="quitSession()">I quit!</button>
+          <button
+            v-if="GameSessionStore.currentRound > 0"
+            class="btn-basic"
+            @click="quitSession()"
+          >
+            I quit!
+          </button>
           <button class="btn-basic btn-back" @click="interScreenIndex--">
             Back
           </button>
