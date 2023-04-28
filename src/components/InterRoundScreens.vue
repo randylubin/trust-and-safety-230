@@ -78,7 +78,7 @@ if (managerSpeedNumber <= cardsPerRoundWarn) {
 let performanceAdjustment = 0
 if (GameSessionStore.currentRound === 0) {
   managerComments.value =
-    "After each round, you'll get feedback from your manager about the speed and quality of your decisions."
+    "After each round, you'll get feedback from me, your manager, about the speed and quality of your decisions."
 } else if (roundQualityLevel === 'low') {
   if (managerSpeedLevel === 'low') {
     managerComments.value =
@@ -188,7 +188,7 @@ if (GameSessionStore.publicSafety <= publicWarnLevel) {
 
 if (GameSessionStore.currentRound === 0) {
   publicComments.value =
-    "You'll also get information about the broader public perception of the platform."
+    "You'll also get information about the broader public perception of the TrustHive platform."
 } else if (publicFreeSpeechTier === 'low') {
   if (publicSafetyTier === 'low') {
     publicComments.value =
