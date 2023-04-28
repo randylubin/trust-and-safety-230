@@ -31,14 +31,14 @@ const overallPerformancePraise = GameDefaults.overallPerformancePraise
 const overallPerformanceWarn = GameDefaults.overallPerformanceWarn
 // const roundQualityPraise = GameDefaults.roundQualityPraise
 // const roundQualityWarn = GameDefaults.roundQualityWarn
-const roundQualityPraise =
-  1 -
-  (GameDefaults.roundQualityStartingState - GameDefaults.roundQualityPraise) /
-    ((GameDefaults.cardsPerRoundWarn + GameDefaults.cardsPerRoundPraise) / 2)
-const roundQualityWarn =
-  1 -
-  (GameDefaults.roundQualityStartingState - GameDefaults.roundQualityWarn) /
-    ((GameDefaults.cardsPerRoundWarn + GameDefaults.cardsPerRoundPraise) / 2)
+const roundQualityPraise = GameDefaults.roundQualityPraise
+// 1 -
+// (GameDefaults.roundQualityStartingState - GameDefaults.roundQualityPraise) /
+//   ((GameDefaults.cardsPerRoundWarn + GameDefaults.cardsPerRoundPraise) / 2)
+const roundQualityWarn = GameDefaults.roundQualityWarn
+// 1 -
+// (GameDefaults.roundQualityStartingState - GameDefaults.roundQualityWarn) /
+//   ((GameDefaults.cardsPerRoundWarn + GameDefaults.cardsPerRoundPraise) / 2)
 const cardsPerRoundPraise = GameDefaults.cardsPerRoundPraise
 const cardsPerRoundWarn = GameDefaults.cardsPerRoundWarn
 const cardsPerRoundFire = GameDefaults.cardsPerRoundFire
@@ -252,7 +252,7 @@ if (
   gameOverReason.push('Fired for poor performance')
   gameOverType = 'BAD-EARLYPERFORMANCE'
   GameSessionStore.registerAchievement('lapseinjudgement')
-} else if (GameSessionStore.roundQuality <= 0) {
+} else if (managerApproval.value <= GameDefaults.roundQualityFire) {
   gameOverReason.push('Fired for poor performance')
   gameOverType = 'BAD-ROUNDQUALITY'
   GameSessionStore.registerAchievement('lapseinjudgement')
@@ -386,9 +386,7 @@ const quitSession = function () {
           >
             Let's Go!
           </button>
-          <button class="btn-basic" @click="quitSession()">
-            I quit!
-          </button>
+          <button class="btn-basic" @click="quitSession()">I quit!</button>
           <button class="btn-basic btn-back" @click="interScreenIndex--">
             Back
           </button>

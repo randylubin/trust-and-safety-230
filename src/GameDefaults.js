@@ -40,11 +40,12 @@ export const GameDefaults = {
   overallPerformancePromote: 16,
   overallPerformancePraise: 14,
   overallPerformanceWarn: 3,
-  roundQualityPraise: 6,
-  roundQualityWarn: 3,
-  cardsPerRoundPraise: 22,
-  cardsPerRoundWarn: 12,
-  cardsPerRoundFire: 2, // TODO - 9?
+  roundQualityPraise: 0.87,
+  roundQualityWarn: 0.7,
+  roundQualityFire: 0.5,
+  cardsPerRoundPraise: 16,
+  cardsPerRoundWarn: 9,
+  cardsPerRoundFire: 2, // TODO - 6?
   publicWarnLevel: 4,
   publicPraiseLevel: 12,
 
