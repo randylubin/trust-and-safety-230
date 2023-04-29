@@ -754,6 +754,13 @@ export const IssueQueueStore = reactive({
     )
 
     // SPECIAL NOTIFICATIONS
+    // First round judgement message
+    if (GameSessionStore.currentRound == 1) {
+      let startIntroduction = initialInterstitials.shift()
+      initialInterstitials.unshift(GenericFollowUps.getIssueByID('M-JUDGE'))
+      initialInterstitials.unshift(startIntroduction)
+    }
+
     // BETAAI over interstitial
     if (GameSessionStore.currentRound == GameDefaults.betaAIRound + 1) {
       initialInterstitials.unshift(
