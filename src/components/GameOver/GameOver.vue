@@ -341,7 +341,7 @@ const shareResults = function () {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 1005;
 
   box-sizing: border-box;
   padding: 2rem 4rem;
