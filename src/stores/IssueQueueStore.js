@@ -31,6 +31,7 @@ export const IssueQueueStore = reactive({
   arcsCompleted: [],
   interstitialShown: false,
   upcomingArcs: [],
+  interstitialKey: 1,
   loadSessionFromLocal() {
     const saveData = JSON.parse(localStorage.IssueQueueStore)
     for (const [key, value] of Object.entries(saveData)) {
@@ -564,6 +565,7 @@ export const IssueQueueStore = reactive({
     console.log('closing interstitial')
     GameSessionStore.gameIsPaused = false
     this.interstitialShown = false
+    this.interstitialKey++
     if (this.interstitialType !== 'pre') {
       if (this.interstitialType === 'interstitialOnly') {
         this.takeAction('closeInterstitial', this.currentIssueQueue[0])

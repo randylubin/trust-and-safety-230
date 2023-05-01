@@ -72,7 +72,7 @@ const achievementOverflow = ref(
   justify-content: left;
   align-items: center;
   text-align: left;
-  border-bottom: 0.1rem solid var(--card-outershadow-color);
+  border-bottom: 1px solid var(--card-outershadow-color);
   padding: 1rem 0;
 }
 

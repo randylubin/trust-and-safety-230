@@ -322,7 +322,7 @@ const shareResults = function () {
         </div>
         <AchievementShowcase />
         <div class="subscreen-buttons">
-          <button class="btn-basic highlight" @click="restartGame()">
+          <button class="btn-basic highlight shine" @click="restartGame()">
             New Game
           </button>
           <button class="btn-basic" @click="returnToHomeScreen()">
@@ -344,7 +344,7 @@ const shareResults = function () {
   z-index: 1000;
 
   box-sizing: border-box;
-  padding: 4rem;
+  padding: 2rem 4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;

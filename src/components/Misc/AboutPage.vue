@@ -75,13 +75,13 @@ import { GameDefaults } from '../../GameDefaults'
   right: 0;
   bottom: 0;
   z-index: 1001;
-  padding: 3rem;
+  padding: 2rem 3rem;
 
   background: var(--modal-bg-color);
+  overflow: hidden;
 }
 
 .game-logo {
-  max-height: 6rem;
   width: 65%;
   padding-bottom: 2rem;
   border-bottom: 0.2rem solid rgba(255, 255, 255, 0.4);
@@ -91,23 +91,22 @@ import { GameDefaults } from '../../GameDefaults'
 
 .game-logo img {
   display: block;
-  max-height: 100%;
-  max-width: 100%;
+  height: 8vh;
+  min-height: 55px;
+  max-height: 70px;
   margin: 0 auto;
 }
 
-.engine-logo {
-  max-height: 5rem;
-}
 .engine-logo img {
   display: block;
-  max-height: 100%;
-  max-width: 100%;
+  height: 8vh;
+  min-height: 45px;
+  max-height: 60px;
   margin: 0 auto;
 }
 
 div.game-info {
-  margin-top: 4rem;
+  margin-top: 3rem;
   font-size: 1.8rem;
   font-weight: 300;
 }
@@ -118,8 +117,8 @@ div.game-info a {
 
 div.developer-info {
   font-size: 1.4rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   padding: 1.5rem;
   border: 0.2rem solid var(--card-outershadow-color);
   border-radius: 1.5rem;
@@ -131,7 +130,7 @@ div.developer-info p {
 div.logo-pair {
   display: flex;
   align-items: center;
-  width: 90%;
+  width: 80%;
   margin: 1.5rem auto 0;
 }
 

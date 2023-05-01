@@ -31,12 +31,15 @@ function unpauseGame() {
     <GameOver
       v-if="GameSessionStore.showGameOver && !IssueQueueStore.interstitialShown"
     />
-    <Transition appear name="overlay" mode="out-in">
+    <Transition appear name="overlay" mode="in-out">
       <PauseMenu
         v-if="playerPausedGame"
         @unpause-game="unpauseGame()"
       ></PauseMenu>
-      <InterstitialScreen v-else-if="IssueQueueStore.interstitialShown" />
+      <InterstitialScreen
+        v-else-if="IssueQueueStore.interstitialShown"
+        :key="'INT-' + IssueQueueStore.interstitialKey"
+      />
       <InterRoundScreens
         v-else-if="
           GameSessionStore.betweenRounds && !GameSessionStore.showGameOver
@@ -98,8 +101,9 @@ function unpauseGame() {
 
 .top-bar {
   position: relative;
-  height: 10%;
+  height: 9.2vh;
   min-height: 75px;
+  max-height: 80px;
   box-sizing: border-box;
 }
 

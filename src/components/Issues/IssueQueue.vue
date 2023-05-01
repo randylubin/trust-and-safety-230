@@ -7,8 +7,9 @@ import {
   computed,
   watch,
   watchEffect,
+  onMounted
 } from 'vue'
-import { useArrayFilter } from '@vueuse/core'
+import { useArrayFilter, useElementSize } from '@vueuse/core'
 import interact from 'interactjs'
 import { IssueQueueStore } from './../../stores/IssueQueueStore.js'
 import { GameSessionStore } from '../../stores/GameSessionStore'
@@ -26,18 +27,43 @@ const CardQueue = useArrayFilter(
 )
 
 const StackAreaElement = ref(null)
+const StackAreaSize = useElementSize(StackAreaElement)
+const StackTopElement = ref(null)
+const ControlAreaElement = ref(null)
+const ControlAreaSize = useElementSize(
+  ControlAreaElement,
+  { width: 0, height: 0 },
+  { box: 'content-box' }
+)
+const buttonFrameSize = ref(ControlAreaSize.height)
+const StackTopSize = useElementSize(StackTopElement)
+const swipeIndicatorSize = computed(() => StackTopSize.width.value * 0.2 + 'px')
 
-const Options = readonly({
-  stackOffsets: [
-    // Pairs for positioning cards in stack depending on stack size: [ Max Number Of Cards, Pixel Offset For Each Card ]
-    [5, 12],
-    [9, 7],
-    [15, 4],
-    [Infinity, 3],
-  ],
+// Pairs for positioning cards in stack depending on stack size: [ Max Number Of Cards, Pixel Offset For Each Card ]
+const stackOffsetsBig = [
+  [5, 12],
+  [9, 7],
+  [15, 4],
+  [Infinity, 3],
+]
+const stackOffsetsSmall = [
+  [3, 12],
+  [4, 8],
+  [7, 4],
+  [Infinity, 3],
+]
+const stackAreaHeight = computed(() =>
+  StackAreaSize.height.value <= 510 ? '24px' : '65px'
+)
+const Options = reactive({
+  stackOffsets: computed(() =>
+    StackAreaSize.height.value <= 510 ? stackOffsetsSmall : stackOffsetsBig
+  ),
   stackTopZ: 300, // z-index of top card in stack
   stackOffsetZ: 3, // z-index to subtract from each subsequent card
-  stackVisibleLimit: 20, // max number of cards visible in stack
+  stackVisibleLimit: computed(() =>
+    StackAreaSize.height.value <= 510 ? 8 : 20
+  ), // max number of cards visible in stack
   swipeRotateFactor: 0.05, // how much cards tilt as dragged left or right (degrees per pixel)
   swipeExitRange: 0.5, // how far towards container edge card must be dragged to approve/block
   swipeLabelRange: 0.3, // how far towards container edge card must be to display action label
@@ -118,9 +144,29 @@ const swipeCard = function (dir) {
   examineDone.value = false
   if (dir === 'left') {
     isLeaving.value = 'left'
+    document
+      .getElementById('frame-takedown')
+      .animate(
+        [
+          { filter: 'drop-shadow(0 0 0 rgba(255, 112, 112, 0.7))' },
+          { filter: 'drop-shadow(0 0 4rem rgba(255, 112, 112, 0))' },
+          { filter: 'drop-shadow(0 0 0 rgba(255, 112, 112, 0))' },
+        ],
+        { duration: 600, iterations: 1 }
+      )
     IssueQueueStore.takeAction('takeDown', ActiveCard.value)
   } else if (dir === 'right') {
     isLeaving.value = 'right'
+    document
+      .getElementById('frame-leaveup')
+      .animate(
+        [
+          { filter: 'drop-shadow(0 0 0 rgba(187, 236, 106, 0.7))' },
+          { filter: 'drop-shadow(0 0 4rem rgba(187, 236, 106, 0))' },
+          { filter: 'drop-shadow(0 0 0 rgba(187, 236, 106, 0))' },
+        ],
+        { duration: 600, iterations: 1 }
+      )
     IssueQueueStore.takeAction('keepUp', ActiveCard.value)
   }
 }
@@ -136,6 +182,7 @@ const cardTime = ref(
 
 const examineDisabled = computed(
   () =>
+    !ActiveCard.value ||
     isDragging.value ||
     isLeaving.value ||
     CardQueue.length === 0 ||
@@ -221,7 +268,7 @@ watchEffect(() => {
 
 <template>
   <div class="stack-area" ref="StackAreaElement">
-    <div class="stack-top">
+    <div class="stack-top" ref="StackTopElement">
       <transition-group name="cards" @after-leave="isLeaving = false">
         <div
           v-for="(issue, index) in CardQueue"
@@ -272,7 +319,7 @@ watchEffect(() => {
       </transition-group>
     </div>
   </div>
-  <div class="control-area">
+  <div class="control-area" ref="ControlAreaElement">
     <transition name="examine-frame">
       <div
         v-if="(examineTime || examineDone) && !isLeaving"
@@ -297,7 +344,7 @@ watchEffect(() => {
         </transition>
       </div>
     </transition>
-    <div class="button-frame">
+    <div class="button-frame" id="frame-takedown">
       <button
         type="button"
         class="button-takedown"
@@ -318,31 +365,29 @@ watchEffect(() => {
         @click="swipeCard('left')"
       ></button>
     </div>
-    <div class="button-frame small">
-      <transition name="button-pop">
-        <button
-          v-if="ActiveCard"
-          type="button"
-          class="button-examine"
-          :class="{
-            'show-disabled':
-              isDragging ||
-              CardQueue.length === 0 ||
-              !isActive ||
-              cardTime < Options.examineDelay ||
-              (ActiveCard?.issueType.startsWith('appeal') &&
-                !isReviewing &&
-                !examineDone),
-            'show-timelocked': cardTime < Options.examineDelay,
-          }"
-          :disabled="examineDisabled"
-          @pointerdown="startExamine"
-          @pointerup="stopExamine"
-          @pointerout="stopExamine"
-        ></button>
-      </transition>
+    <div class="button-frame small" id="frame-examine">
+      <button
+        type="button"
+        class="button-examine"
+        :class="{
+          'show-disabled':
+            !ActiveCard ||
+            isDragging ||
+            CardQueue.length === 0 ||
+            !isActive ||
+            cardTime < Options.examineDelay ||
+            (ActiveCard?.issueType.startsWith('appeal') &&
+              !isReviewing &&
+              !examineDone),
+          'show-timelocked': cardTime < Options.examineDelay,
+        }"
+        :disabled="examineDisabled"
+        @pointerdown="startExamine"
+        @pointerup="stopExamine"
+        @pointerout="stopExamine"
+      ></button>
     </div>
-    <div class="button-frame">
+    <div class="button-frame" id="frame-leaveup">
       <button
         type="button"
         class="button-leaveup"
@@ -368,20 +413,20 @@ watchEffect(() => {
 
 <style scoped>
 .control-area {
+  --btn-frame-diameter: v-bind('buttonFrameSize + "px"');
+  --btn-frame-small-diameter: v-bind('buttonFrameSize * 0.7 + "px"');
+  --btn-frame-small-top: v-bind('buttonFrameSize * 0.15 + "px"');
+
   display: flex;
   flex-direction: row;
   justify-content: center;
 
   position: relative;
   z-index: 900;
-  height: 15%;
-  min-height: 95px;
+  height: 12vh;
+  min-height: 80px;
+  max-height: 100px;
   padding-bottom: 1.5rem;
-  /*background-image: linear-gradient(
-    to bottom,
-    transparent 40%,
-    var(--controls-bg-color) 40%
-  );*/
 }
 
 .examine-popup {
@@ -474,29 +519,36 @@ watchEffect(() => {
 }
 
 .button-frame {
-  aspect-ratio: 1 / 1;
   box-sizing: border-box;
-  height: 100%;
-  width: auto;
+  height: var(--btn-frame-diameter);
+  width: var(--btn-frame-diameter);
   margin-left: -1%;
   padding: 0.3rem;
   background-color: var(--stack-bg-color);
   border: 1rem solid var(--controls-bg-color);
   border-radius: 100%;
   box-shadow: 0 0.2rem 0 var(--controls-shadow-color);
+  position: relative;
+  z-index: 100;
+}
+
+#frame-examine {
+  z-index: 200;
 }
 
 .button-frame.small {
   position: relative;
-  height: 70%;
-  top: 15%;
+  height: var(--btn-frame-small-diameter);
+  width: var(--btn-frame-small-diameter);
+  min-height: 62px;
+  min-width: 62px;
+  top: min(var(--btn-frame-small-top), 9px);
 }
 
 .button-frame > button {
-  aspect-ratio: 1 / 1;
   box-sizing: border-box;
-  width: 100%;
-  height: 100%;
+  width: calc(var(--btn-frame-diameter) - 2.6rem);
+  height: calc(var(--btn-frame-diameter) - 2.6rem);
   padding: 25%;
   position: relative;
   top: -0.4rem;
@@ -531,6 +583,10 @@ button.button-examine.show-timelocked {
 }
 
 .button-frame.small > button {
+  width: calc(var(--btn-frame-small-diameter) - 2.6rem);
+  height: calc(var(--btn-frame-small-diameter) - 2.6rem);
+  min-height: calc(62px - 2.6rem);
+  min-width: calc(62px - 2.6rem);
   padding: 17%;
 }
 button:hover {
@@ -564,10 +620,11 @@ button:hover {
 }
 
 .stack-top {
+  --swipe-indicator-size: v-bind('swipeIndicatorSize');
   position: absolute;
   left: 8%;
   right: 8%;
-  top: 65px;
+  top: v-bind('stackAreaHeight');
   bottom: 2.5%;
 }
 
@@ -590,11 +647,9 @@ button:hover {
 .swipe-indicator {
   position: absolute;
   top: -2rem;
-
-  aspect-ratio: 1 / 1;
   box-sizing: border-box;
-  width: 20%;
-  height: auto;
+  width: var(--swipe-indicator-size);
+  height: var(--swipe-indicator-size);
   padding: 1.5rem;
   border-radius: 100%;
   background-origin: content-box;

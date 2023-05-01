@@ -31,8 +31,7 @@ function hideRuleTooltip() {
   ruleTimeout = setTimeout(() => (ruleTooltipActive.value = false), 1600)
 }
 
-const issueTextSize = ref(2.5)
-const appealTextSize = ref(2.5)
+const rootTextSize = ref(1)
 const issueTextElement = ref(null)
 const issueTextInnerElement = ref(null)
 const appealTextElement = ref(null)
@@ -49,17 +48,17 @@ const shrinkText = function () {
   if (
     issueTextInnerElement.value?.getBoundingClientRect().height >
       issueTextSpace.value &&
-    issueTextSize.value > 1.5 // <-- necessary to prevent infinite loop
+    rootTextSize.value > 0.6 // <-- necessary to prevent infinite loop
   ) {
-    issueTextSize.value -= 0.1
+    rootTextSize.value -= 0.05
   }
 
   if (
     appealTextInnerElement.value?.getBoundingClientRect().height >
       appealTextSpace.value &&
-    appealTextSize.value > 1.5 // <-- necessary to prevent infinite loop
+    rootTextSize.value > 0.6 // <-- necessary to prevent infinite loop
   ) {
-    appealTextSize.value -= 0.1
+    rootTextSize.value -= 0.05
   }
 }
 onMounted(shrinkText)
@@ -67,7 +66,7 @@ onUpdated(shrinkText)
 </script>
 
 <template>
-  <div class="flip-container">
+  <div class="flip-container" :style="{ 'font-size': rootTextSize + 'rem' }">
     <Transition name="rule-tooltip">
       <div class="rule-info" v-if="ruleTooltipActive">
         <div>{{ ContentRule?.ruleDescription }}</div>
@@ -100,11 +99,7 @@ onUpdated(shrinkText)
             <div class="section-label">
               <span>{{ isTutorial ? 'Tutorial:' : 'Description:' }}</span>
             </div>
-            <div
-              class="issue-text"
-              :style="{ 'font-size': issueTextSize + 'rem' }"
-              v-html="IssueData.issueText"
-            ></div>
+            <div class="issue-text" v-html="IssueData.issueText"></div>
           </div>
           <div
             v-if="IssueData.issueIncludesTags"
@@ -119,10 +114,7 @@ onUpdated(shrinkText)
                 }}
               </span>
             </div>
-            <div
-              class="includes-text"
-              :style="{ 'font-size': issueTextSize + 'rem' }"
-            >
+            <div class="includes-text">
               {{ IssueData.issueIncludesTags }}
             </div>
           </div>
@@ -158,12 +150,7 @@ onUpdated(shrinkText)
             <div class="section-label">
               <span>User Appeal:</span>
             </div>
-            <div
-              class="appeal-text"
-              :style="{ 'font-size': appealTextSize + 'rem' }"
-            >
-              &ldquo;{{ appealText }}&rdquo;
-            </div>
+            <div class="appeal-text">&ldquo;{{ appealText }}&rdquo;</div>
           </div>
         </div>
       </div>
@@ -186,7 +173,7 @@ onUpdated(shrinkText)
   justify-content: space-between;
   background-color: var(--card-bg-color);
   border-radius: 3.6rem;
-  padding: 3rem 2rem 2rem;
+  padding: 2.5rem 2rem 2rem;
   box-sizing: border-box;
   position: absolute;
   left: 0;
@@ -194,6 +181,7 @@ onUpdated(shrinkText)
   top: 0;
   bottom: 0;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   touch-action: none;
   text-align: left;
   color: var(--card-text-color);
@@ -253,18 +241,20 @@ onUpdated(shrinkText)
 }
 
 .section-label {
-  height: 1.8rem;
   margin-bottom: 0.8rem;
 }
 
 .section-label > span {
+  display: inline-block;
   background-color: #333;
   color: white;
   padding: 0.4rem 0.6rem;
   font-size: 1rem;
+  box-sizing: border-box;
   font-weight: 700;
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 1.1;
+  vertical-align: middle;
 }
 
 .section-rule .section-label > span {
@@ -283,6 +273,11 @@ onUpdated(shrinkText)
   overflow: hidden;
 }
 
+.issue-text-sizer:last-child,
+.appeal-text-sizer:last-child {
+  margin-bottom: 0;
+}
+
 .section-button {
   margin: 0;
 }
@@ -293,19 +288,19 @@ onUpdated(shrinkText)
 
 .rule-text {
   font-weight: 300;
-  font-size: 3.5rem;
+  font-size: 3.5em;
 }
 
 .appeal-header-text {
   font-weight: 300;
-  font-size: 2rem;
+  font-size: 2.5em;
 }
 
 .issue-text,
 .includes-text,
 .appeal-text {
   font-weight: 300;
-  font-size: 2.5rem;
+  font-size: 2.5em;
 }
 
 .appeal-text {

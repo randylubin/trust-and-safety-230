@@ -127,6 +127,61 @@ function continueSession() {
   }
 }
 
+/* Small Screen Overrides */
+@media (max-height: 660px) {
+  .top-bar {
+    height: calc(9.2vh - 2rem) !important;
+    min-height: calc(75px - 2rem) !important;
+  }
+  .game-state-bar {
+    padding-top: 0 !important;
+    padding-bottom: 1rem !important;
+  }
+  .round-timer {
+    border-radius: 0 0 2rem 2rem !important;
+    border-top: none !important;
+    transform: translateY(-0.3rem);
+  }
+  .round-timer::before {
+    border-radius: 0 0 1.8rem 1.8rem !important;
+    border-top: none !important;
+  }
+  .timer-bar {
+    border-radius: 0 0 0 1.4rem !important;
+  }
+  .issue-card,
+  .appeal-card {
+    padding: 1.75rem 1.25rem 1.25rem !important;
+    border-width: 1rem !important;
+    border-radius: 2rem !important;
+  }
+  .btn-basic {
+    font-size: 1.65rem !important;
+  }
+
+  .rule-info {
+    top: calc(-24px - 5rem) !important;
+  }
+
+  .gameover-screen .big-label {
+    font-size: 6rem !important;
+    line-height: 5.5rem !important;
+    height: 11rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .gameover-screen .completed-label {
+    top: -7rem !important;
+  }
+  .gameover-screen .round-achievements {
+    margin-bottom: 1.5rem;
+  }
+
+  .gameover-screen .subscreen-buttons.subscreen-share {
+    margin-bottom: 1.5rem !important;
+  }
+}
+
 #app {
   /* Engine Palette: 3 colours in dark/med/light */
 
@@ -194,9 +249,10 @@ function continueSession() {
 }
 
 .btn-basic {
+  --press-height: 0.4rem;
   background-color: var(--button-basic-bg-color);
   background-image: var(--fade-bg-gradient);
-  box-shadow: 0 0.4rem var(--button-basic-shadow-color);
+  box-shadow: 0 var(--press-height) var(--button-basic-shadow-color);
   border: none;
   border-radius: 1rem;
   padding: 1rem 1.5rem;
@@ -204,18 +260,54 @@ function continueSession() {
   text-transform: uppercase;
   font-size: 2rem;
   font-weight: 800;
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.55);
   cursor: pointer;
+}
+
+.btn-basic:active {
+  --press-height: 0.2rem;
+  transform: translateY(0.2rem);
 }
 
 .btn-basic.highlight {
   background-color: var(--button-highlight-bg-color);
-  box-shadow: 0 0.4rem var(--button-highlight-shadow-color);
+  box-shadow: 0 var(--press-height) var(--button-highlight-shadow-color);
 }
 
 .btn-basic.alt {
   background-color: var(--button-alt-bg-color);
-  box-shadow: 0 0.4rem var(--button-alt-shadow-color);
+  box-shadow: 0 var(--press-height) var(--button-alt-shadow-color);
+}
+
+.btn-basic.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes shine {
+  50% {
+    transform: translate(25rem, 0) rotateZ(60deg);
+  }
+  100% {
+    transform: translate(25rem, 0) rotateZ(60deg);
+  }
+}
+
+.btn-basic.shine::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  bottom: -50%;
+  left: -50%;
+  background: linear-gradient(
+    to bottom,
+    rgba(229, 172, 142, 0),
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(229, 172, 142, 0)
+  );
+  transform: translate(-25rem, 0) rotateZ(60deg);
+  animation: shine 2s infinite;
 }
 
 .btn-back {
