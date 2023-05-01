@@ -32,7 +32,10 @@ onUpdated(shrinkText)
     </div>
     <div
       class="interstitial-header"
-      v-if="IssueQueueStore.currentIssueQueue[0]?.issueID.startsWith('TEAM')"
+      v-if="
+        IssueQueueStore.interstitialType === 'interstitialOnly' &&
+        IssueQueueStore.currentIssueQueue[0]?.issueID.startsWith('TEAM')
+      "
     >
       Team Building
     </div>
