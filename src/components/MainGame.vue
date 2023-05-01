@@ -36,12 +36,16 @@ function unpauseGame() {
         v-if="playerPausedGame"
         @unpause-game="unpauseGame()"
       ></PauseMenu>
+    </Transition>
+    <Transition appear name="overlay" mode="in-out">
       <InterstitialScreen
-        v-else-if="IssueQueueStore.interstitialShown"
+        v-if="IssueQueueStore.interstitialShown"
         :key="'INT-' + IssueQueueStore.interstitialKey"
       />
+    </Transition>
+    <Transition appear name="overlay" mode="in-out">
       <InterRoundScreens
-        v-else-if="
+        v-if="
           GameSessionStore.betweenRounds && !GameSessionStore.showGameOver
         "
       />

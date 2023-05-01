@@ -211,6 +211,10 @@ div.content-warning {
   font-size: 1.7rem;
   line-height: 1.4;
   margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  border: 0.2rem solid var(--button-highlight-bg-color);
+  border-radius: 1.5rem;
 }
 
 div.content-warning > strong {

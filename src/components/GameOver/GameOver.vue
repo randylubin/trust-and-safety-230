@@ -111,6 +111,10 @@ const GameOverDescriptions = {
     fullDescription: 'Fired for poor performance',
     socialShare: 'Fired for poor performance',
   },
+  'BAD-ROUNDQUALITY': {
+    fullDescription: 'Fired for poor performance',
+    socialShare: 'Fired for poor performance',
+  },
   'BAD-TOOSLOW': {
     fullDescription: 'Too slow!',
     socialShare: 'Too slow!',
