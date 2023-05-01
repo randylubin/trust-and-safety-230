@@ -116,8 +116,9 @@ function continueSession() {
         </button>
       </div>
       <div class="fullscreen-info" v-else-if="showFullscreenInfo">
-        For the best experience on mobile devices, we recommend adding 
-        Moderator Mayhem to your home screen using your browser menu.
+        For the best experience on mobile devices, we recommend adding Moderator
+        Mayhem to your home screen using your browser menu. This will allow you
+        to launch the game in full screen mode.
         <button class="btn-basic" @click="startSession(rememberTutorialChoice)">
           Continue
         </button>
