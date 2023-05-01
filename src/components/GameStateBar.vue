@@ -45,6 +45,7 @@ const roundLabel = computed(() => {
 </template>
 
 <style scoped>
+
 .game-state-bar {
   position: absolute;
   left: 0;
@@ -139,6 +140,9 @@ const roundLabel = computed(() => {
 }
 
 button.button-pause {
+  display: block;
+  margin: 0;
+  padding: 0;
   background-image: linear-gradient(
     to right,
     var(--timer-overlay-color) 34%,

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUpdated, watch } from 'vue'
 import { GameSessionStore } from '../stores/GameSessionStore'
 import { GameDefaults } from '../GameDefaults'
 import { PossibleAchievementsList } from './Misc/AchievementLogic'
@@ -292,6 +292,29 @@ const quitSession = function () {
   console.log('player quit')
   GameSessionStore.endGame('player quit', 'BAD-QUIT')
 }
+
+const textSize = ref(2.2)
+const cssTextSize = computed(() => textSize.value + 'rem')
+const textElement = ref(null)
+const textInnerElement = ref(null)
+const textSpace = computed(() => {
+  console.log(textElement.value?.clientHeight)
+  return textElement.value?.clientHeight
+})
+
+const shrinkText = function () {
+  /* Be careful around this code. Mistakes could cause infinite loop. */
+  if (
+    textInnerElement.value?.getBoundingClientRect().height > textElement.value?.clientHeight &&
+    textSize.value > 1.4 // <-- necessary to prevent infinite loop
+  ) {
+    textSize.value -= 0.2
+  }
+}
+
+/*onMounted(shrinkText)
+onUpdated(shrinkText)
+watch(interScreenIndex, shrinkText)*/
 </script>
 
 <template>
@@ -323,7 +346,7 @@ const quitSession = function () {
         </div>
         <AchievementShowcase />
         <div class="subscreen-buttons">
-          <button class="btn-basic" @click="interScreenIndex++">
+          <button class="btn-basic shine" @click="interScreenIndex++">
             Continue
           </button>
         </div>
@@ -336,9 +359,16 @@ const quitSession = function () {
           <img src="@/assets/svg/image-manager.svg" />
         </div>
         <div class="subscreen-header">Employee Evaluation</div>
-        <div class="subscreen-text" v-html="managerComments"></div>
+        <div class="subscreen-text" ref="textElement" key="manager-element">
+          <div
+            class="subscreen-text-sizer"
+            v-html="managerComments"
+            ref="textInnerElement"
+            :style="{ 'font-size': cssTextSize }"
+          ></div>
+        </div>
         <div class="subscreen-buttons">
-          <button class="btn-basic" @click="interScreenIndex++">
+          <button class="btn-basic shine" @click="interScreenIndex++">
             {{
               GameSessionStore.currentRound === 0
                 ? 'Got it!'
@@ -358,9 +388,16 @@ const quitSession = function () {
           <img src="@/assets/svg/image-public.svg" />
         </div>
         <div class="subscreen-header">Public Opinion</div>
-        <div class="subscreen-text" v-html="publicComments"></div>
+        <div class="subscreen-text" ref="textElement" key="public-element">
+          <div
+            class="subscreen-text-sizer"
+            v-html="publicComments"
+            ref="textInnerElement"
+            :style="{ 'font-size': cssTextSize }"
+          ></div>
+        </div>
         <div class="subscreen-buttons">
-          <button class="btn-basic" @click="interScreenIndex++">
+          <button class="btn-basic shine" @click="interScreenIndex++">
             {{ GameSessionStore.currentRound === 0 ? 'Got it!' : 'Continue' }}
           </button>
           <button class="btn-basic btn-back" @click="interScreenIndex--">
@@ -381,7 +418,7 @@ const quitSession = function () {
         </div>
         <div class="subscreen-buttons">
           <button
-            class="btn-basic highlight"
+            class="btn-basic highlight shine"
             @click="GameSessionStore.startNewRound()"
           >
             Let's Go!
@@ -418,6 +455,14 @@ const quitSession = function () {
   justify-content: center;
 
   background: var(--modal-bg-color);
+}
+
+.round-subscreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  height: 100%;
 }
 
 .big-round-label {
@@ -460,12 +505,15 @@ const quitSession = function () {
 .subscreen-header-image {
   width: 100%;
   overflow: hidden;
+  flex-shrink: 1;
 }
 
 .subscreen-header-image > img {
   display: block;
   margin: 0 auto;
-  width: 95%;
+  height: 27vh;
+  min-height: 180px;
+  max-height: 260px;
 }
 
 .subscreen-header {
@@ -492,6 +540,8 @@ const quitSession = function () {
 }
 
 .subscreen-text {
+  flex-shrink: 0;
+  overflow: hidden;
   font-weight: 300;
   font-size: 2.2rem;
   margin-bottom: 2.5rem;
@@ -499,18 +549,6 @@ const quitSession = function () {
 
 .big-round-label + .subscreen-text {
   margin-bottom: 3.5rem;
-}
-
-.round-text {
-  font-size: 2.8rem;
-  font-weight: 400;
-  margin-bottom: 2rem;
-}
-
-.feedback-text {
-  font-size: 2rem;
-  font-weight: 400;
-  margin-bottom: 2rem;
 }
 
 /* Vue Transitions */

@@ -227,6 +227,7 @@ export const GameSessionStore = reactive({
     this.pauseTimer()
   },
   toggleSlowMode() {
+    
     this.slowMode = !this.slowMode
   },
   registerAchievement(id) {

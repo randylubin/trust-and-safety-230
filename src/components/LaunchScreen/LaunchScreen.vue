@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import { event } from 'vue-gtag'
 import { onMounted } from 'vue'
 import { GameDefaults } from '../../GameDefaults'
+import AnimatedLogo from './AnimatedLogo.vue'
 
 const emit = defineEmits(['newSession', 'continueSession'])
 
@@ -13,8 +14,17 @@ onMounted(() => {
 })
 
 const showTutorialButton = ref(false)
+const showFullscreenInfo = ref(false)
+const attemptFullscreen = ref(
+  window.innerHeight <= 860 && window.innerWidth <= 500
+)
+
+function enterFullscreen() {
+  document.getElementById('app').requestFullscreen?.()
+}
 
 function toggleTutorialButton() {
+  if (attemptFullscreen.value) enterFullscreen()
   showTutorialButton.value = true
 }
 
@@ -27,20 +37,40 @@ function startSession(showTutorial = true) {
 
   event('start_game_session')
 }
+
+const rememberTutorialChoice = ref(false)
+
+function checkFullscreen(showTutorial = true) {
+  if (document.fullscreenElement || !attemptFullscreen.value) {
+    startSession(showTutorial)
+  } else {
+    rememberTutorialChoice.value = showTutorial
+    showTutorialButton.value = false
+    showFullscreenInfo.value = true
+  }
+}
+
+function continueSession() {
+  if (attemptFullscreen.value) { 
+    enterFullscreen()
+  }
+  emit('continueSession')
+}
 </script>
 
 <template>
   <div class="launch-screen">
     <Transition name="overlay" mode="out-in">
-      <div v-if="!showTutorialButton">
+      <div v-if="!showTutorialButton && !showFullscreenInfo">
         <div class="game-logo">
-          <img src="@/assets/svg/moderator-mayhem.svg" />
+          <!--<img src="@/assets/svg/moderator-mayhem.svg" />-->
+          <AnimatedLogo />
         </div>
         <div class="game-tagline">A Content Moderation Game</div>
         <button
           v-if="MetaGameStore.activeSession"
-          class="btn-basic highlight"
-          @click="$emit('continueSession')"
+          class="btn-basic highlight shine"
+          @click="continueSession"
         >
           Continue Game
         </button>
@@ -53,7 +83,7 @@ function startSession(showTutorial = true) {
         </button>
         <button
           v-if="!MetaGameStore.activeSession"
-          class="btn-basic highlight"
+          class="btn-basic highlight shine"
           @click="toggleTutorialButton()"
         >
           New Game
@@ -68,21 +98,28 @@ function startSession(showTutorial = true) {
           <img src="@/assets/logos/logo-engine.png" />
         </div>
       </div>
-      <div v-else>
+      <div v-else-if="showTutorialButton">
         <div class="content-warning">
           <strong>Content Warning:</strong><br />
           This game is designed for players ages 18 and up, and deals with
           potentially disturbing content. It does not show you such content, but
           it does make reference to it. Please consider this before playing.
         </div>
-        <button class="btn-basic highlight" @click="startSession(true)">
+        <button class="btn-basic highlight" @click="checkFullscreen(true)">
           Play Tutorial
         </button>
-        <button class="btn-basic" @click="startSession(false)">
+        <button class="btn-basic" @click="checkFullscreen(false)">
           Skip Tutorial
         </button>
         <button class="btn-basic btn-back" @click="showTutorialButton = false">
           Back
+        </button>
+      </div>
+      <div class="fullscreen-info" v-else-if="showFullscreenInfo">
+        For the best experience on mobile devices, we recommend adding 
+        Moderator Mayhem to your home screen using your browser menu.
+        <button class="btn-basic" @click="startSession(rememberTutorialChoice)">
+          Continue
         </button>
       </div>
     </Transition>
@@ -112,16 +149,19 @@ function startSession(showTutorial = true) {
   align-items: stretch;
   max-height: 100%;
   overflow: hidden;
-
 }
 
 .game-logo {
-  max-height: 13.5rem;
-  margin-bottom: 4rem;
+  height: 20vh;
+  max-height: 16.5rem;
+  min-height: 10rem;
+  margin-bottom: 1.25rem;
+  margin-left: -3rem;
+  margin-right: -3rem;
   flex-shrink: 3;
 }
 
-.game-logo > img {
+.game-logo > svg {
   display: block;
   max-height: 100%;
   max-width: 100%;
@@ -136,11 +176,12 @@ function startSession(showTutorial = true) {
   text-align: center;
   overflow: hidden;
   width: 100%;
-  margin: 0 auto 4rem;
+  margin: 0 auto 3rem;
   line-height: 1;
   padding: 1rem 0;
   border-top: 1px solid var(--card-outershadow-color);
   border-bottom: 1px solid var(--card-outershadow-color);
+  flex-shrink: 0;
 }
 
 .launch-text {
@@ -150,20 +191,16 @@ function startSession(showTutorial = true) {
 }
 
 button {
-  margin-bottom: 2rem;
-}
-
-.btn-about {
-  
+  margin-bottom: 1.5rem;
 }
 
 .engine-logo {
   margin-top: 2rem;
-  height: 6rem;
+  height: 6.5rem;
 }
 .engine-logo > img {
   display: block;
-  max-height: 100%;
+  height: 6.5rem;
   max-width: 100%;
   margin: 0 auto;
 }
@@ -180,16 +217,27 @@ div.content-warning > strong {
   text-transform: uppercase;
 }
 
+div.fullscreen-info {
+  font-weight: 300;
+  font-size: 2.2rem;
+  line-height: 1.4;
+}
+
+div.fullscreen-info > button {
+  margin-top: 2rem;
+}
+
 /* Vue Transitions */
 
 .launch-enter-from .game-logo {
   opacity: 0;
-  transform: scale(.1);
+  transform: scale(0.1);
   filter: blur(3rem);
 }
 
 .launch-enter-active .game-logo {
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out, filter 0.7s ease-out;
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out,
+    filter 0.7s ease-out;
 }
 
 .launch-enter-from .game-tagline {
