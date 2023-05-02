@@ -73,6 +73,10 @@ const Options = reactive({
   examineTime: GameDefaults.lookCloserExamineTime, // time it takes to Look Closer, in 200ms ticks
 })
 
+const stackLoadingKey = ref('unloaded-stack')
+
+onMounted(() => setTimeout(() => (stackLoadingKey.value = 'loaded-stack'), 100))
+
 const stackOffsetIncrement = computed(() => {
   // get current stack offset increment based on stack size
   for (const tier of Options.stackOffsets) {
@@ -268,7 +272,7 @@ watchEffect(() => {
 
 <template>
   <div class="stack-area" ref="StackAreaElement">
-    <div class="stack-top" ref="StackTopElement">
+    <div class="stack-top" ref="StackTopElement" :key="stackLoadingKey">
       <transition-group name="cards" @after-leave="isLeaving = false">
         <div
           v-for="(issue, index) in CardQueue"
