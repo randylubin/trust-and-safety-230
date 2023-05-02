@@ -741,7 +741,7 @@ button:hover {
 /* Vue Transitions */
 
 .card-container.cards-enter-active {
-  transition: transform 0.35s ease-out, opacity 0.5s ease-out;
+  transition: transform 0.35s ease-out, opacity 0.25s ease-out;
 }
 
 .card-container.cards-leave-active {
