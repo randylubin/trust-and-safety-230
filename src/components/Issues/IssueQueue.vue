@@ -430,7 +430,7 @@ watchEffect(() => {
   height: 12vh;
   min-height: 80px;
   max-height: 100px;
-  padding-bottom: 1.5rem;
+  padding-bottom: max(calc(env(safe-area-inset-bottom) + 0.5rem), 1.5rem);
 }
 
 .examine-popup {
