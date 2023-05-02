@@ -271,7 +271,11 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="stack-area" ref="StackAreaElement">
+  <div
+    class="stack-area"
+    :class="{ backdrop: GameSessionStore.currentRound > 0 }"
+    ref="StackAreaElement"
+  >
     <div class="stack-top" ref="StackTopElement" :key="stackLoadingKey">
       <transition-group name="cards" @after-leave="isLeaving = false">
         <div
@@ -621,6 +625,13 @@ button:hover {
 .stack-area {
   position: relative;
   flex-grow: 1;
+}
+
+.stack-area.backdrop {
+  background-image: url('@/assets/svg/image-hanginthere.svg');
+  background-size: auto 50%;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 .stack-top {
