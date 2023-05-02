@@ -213,7 +213,7 @@ const shareResults = function () {
       requestdenied: '\u{270B}',
       knowtheropes: '3\u{FE0F}\u{20E3}',
       hanginginthere: '5\u{FE0F}\u{20E3}',
-      thelonghaul: '7\u{FE0F}\u{20E3}',
+      thelonghaul: '8\u{FE0F}\u{20E3}',
       ajobwelldone: '\u{1F31F}',
       daybyday: '\u{1F5D3}',
       notsofast: '\u{1F422}',
