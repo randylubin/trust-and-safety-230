@@ -360,7 +360,9 @@ const shareResults = function () {
         <AchievementShowcase />
         <div class="survey-link">
           Did you enjoy Moderator Mayhem?<br />We'd love to hear what you think!<br />
-          <a href="#" target="_blank">Take our feedback survey &raquo;</a>
+          <a :href="GameDefaults.surveyURL" target="_blank">
+            Take our feedback survey &raquo;
+          </a>
         </div>
         <div class="subscreen-buttons">
           <button class="btn-basic highlight shine" @click="restartGame()">
