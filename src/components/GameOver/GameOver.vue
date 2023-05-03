@@ -213,7 +213,7 @@ const shareResults = function () {
       requestdenied: '\u{270B}',
       knowtheropes: '3\u{FE0F}\u{20E3}',
       hanginginthere: '5\u{FE0F}\u{20E3}',
-      thelonghaul: '7\u{FE0F}\u{20E3}',
+      thelonghaul: '8\u{FE0F}\u{20E3}',
       ajobwelldone: '\u{1F31F}',
       daybyday: '\u{1F5D3}',
       notsofast: '\u{1F422}',
@@ -258,7 +258,7 @@ const shareResults = function () {
     }
     text += '\n\n'
   }
-  text += linkText
+  text += linkText 
 
   populateClipboard(text).then(
     () => {
@@ -277,7 +277,7 @@ const shareResults = function () {
   <div class="gameover-screen">
     <Transition
       name="subscreen"
-      :duration="{ enter: 1400, leave: 200 }"
+      :duration="{ enter: 3300, leave: 200 }"
       mode="out-in"
     >
       <div
@@ -300,18 +300,41 @@ const shareResults = function () {
       </div>
       <div
         v-else-if="subscreenIndex === 1"
-        class="round-subscreen screen-manager"
+        class="round-subscreen screen-score"
       >
         <div class="big-label">
           Game Over
           <div class="completed-label">{{ gameoverTag }}</div>
         </div>
-        <!-- <div class="final-ratings">
-          <div>Rating: {{ performanceRating }}</div>
-          <div>Safety: {{ safetyRating }}</div>
-          <div>Speech: {{ safetyRating }}</div>
-        </div> -->
-        <div class="subscreen-buttons subscreen-share">
+        <div class="score-display">
+          <div class="score-stars">
+            <div
+              class="star"
+              :class="{
+                on: performanceRating >= n,
+                off: performanceRating < n,
+              }"
+              :style="{
+                'transition-delay': 0.9 + n * 0.1 + 's',
+              }"
+              v-for="n in 5"
+              :key="'STAR-' + n"
+            >
+              <img
+                src="@/assets/svg/icon-star.svg"
+                :style="{
+                  'transition-delay': 1.8 + n * 0.1 + 's',
+                  'animation-delay': n * 0.2 + 's',
+                }"
+              />
+            </div>
+          </div>
+          <div class="score-label">Performance Score</div>
+        </div>
+        <div
+          class="subscreen-buttons subscreen-share"
+          style="transition-delay: 2.9s"
+        >
           <button
             class="btn-basic highlight alt"
             :class="{
@@ -321,16 +344,35 @@ const shareResults = function () {
             id="share-button"
             @click="shareResults"
           >
-            Share Results
+            Share Your Score
           </button>
         </div>
+        <div class="subscreen-buttons" style="transition-delay: 3s">
+          <button class="btn-basic shine" @click="subscreenIndex++">
+            Continue
+          </button>
+        </div>
+      </div>
+      <div
+        v-else-if="subscreenIndex === 2"
+        class="round-subscreen screen-details"
+      >
         <AchievementShowcase />
+        <div class="survey-link">
+          Did you enjoy Moderator Mayhem?<br />We'd love to hear what you think!<br />
+          <a :href="GameDefaults.surveyURL" target="_blank">
+            Take our feedback survey &raquo;
+          </a>
+        </div>
         <div class="subscreen-buttons">
           <button class="btn-basic highlight shine" @click="restartGame()">
             New Game
           </button>
           <button class="btn-basic" @click="returnToHomeScreen()">
-            Back to Menu
+            Main Menu
+          </button>
+          <button class="btn-basic btn-back" @click="subscreenIndex--">
+            Back
           </button>
         </div>
       </div>
@@ -345,7 +387,7 @@ const shareResults = function () {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 1005;
 
   box-sizing: border-box;
   padding: 2rem 4rem;
@@ -386,7 +428,7 @@ button#share-button {
 }
 
 button#share-button::after {
-  content: 'Results copied to clipboard!';
+  content: 'Score copied to clipboard!';
   position: absolute;
   left: 5%;
   right: 5%;
@@ -419,6 +461,11 @@ button#share-button.failure::after {
 
 .subscreen-buttons {
   margin-bottom: 3rem;
+  text-align: left;
+}
+
+div.screen-score .subscreen-share {
+  margin-bottom: 0;
 }
 
 .subscreen-buttons:last-child {
@@ -486,6 +533,62 @@ button#share-button.failure::after {
   margin-bottom: 2rem;
 }
 
+.survey-link {
+  font-weight: 300;
+  font-size: 1.8rem;
+  line-height: 1.5;
+  margin-bottom: 3rem;
+}
+
+.survey-link a {
+  font-weight: 600;
+}
+
+.score-display {
+  margin-bottom: 3.5rem;
+}
+.score-stars {
+  width: 90%;
+  margin: 0 auto 1rem;
+  display: flex;
+  justify-content: space-between;
+  column-gap: 1.5rem;
+}
+
+.score-stars .star {
+  flex-grow: 1;
+  background-image: url('@/assets/svg/icon-star-off.svg');
+}
+
+@keyframes star-pulse {
+  0% {
+    transform: scale(1) rotate(0);
+  }
+  20% {
+    transform: scale(1.2);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.star img {
+  width: 100%;
+  visibility: hidden;
+}
+
+.star.on img {
+  visibility: visible;
+  animation: star-pulse 1s ease-in-out infinite;
+}
+
+.score-label {
+  font-family: var(--font-2);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  color: var(--card-innershadow-color);
+}
+
 /* Vue Transitions */
 
 .subscreen-leave-to {
@@ -506,7 +609,9 @@ button#share-button.failure::after {
 .subscreen-enter-from .subscreen-share,
 .subscreen-enter-from .round-achievements,
 .subscreen-enter-from .subscreen-buttons,
-.subscreen-enter-from .subscreen-text {
+.subscreen-enter-from .subscreen-text,
+.subscreen-enter-from .score-label,
+.subscreen-enter-from .survey-link {
   opacity: 0;
   transform: translateY(3rem);
 }
@@ -516,20 +621,53 @@ button#share-button.failure::after {
 .subscreen-enter-active .round-achievements,
 .subscreen-enter-active .subscreen-text,
 .subscreen-enter-active .subscreen-buttons,
-.subscreen-enter-active .subscreen-header {
+.subscreen-enter-active .subscreen-header,
+.subscreen-enter-active .score-label,
+.subscreen-enter-active .survey-link {
   transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.subscreen-enter-from .score-stars .star {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.subscreen-enter-active .score-stars .star {
+  transition: opacity 0.2s linear, transform 0.2s linear;
+}
+
+.subscreen-enter-from .star.on img {
+  opacity: 0;
+  transform: scale(2.5) rotate(360deg);
+}
+
+.subscreen-enter-active .star.on img {
+  transition: opacity 0.2s linear, transform 0.4s ease-out;
+  animation: none !important;
+}
+
+.subscreen-enter-from.star.on img {
+  animation: none !important;
 }
 
 .subscreen-enter-active .big-label {
   transition-delay: 0.3s, 0.3s;
 }
 
+.subscreen-enter-active .score-label {
+  transition-duration: 0.5s;
+  transition-delay: 1.9s;
+}
+
 .subscreen-enter-active .subscreen-share {
-  transition-delay: 0.9s, 0.9s;
+  transition-delay: 1.9s, 1.9s;
 }
 
 .subscreen-enter-active .round-achievements {
-  transition-delay: 1s, 1s;
+  transition-delay: 0.4s, 0.4s;
+}
+.subscreen-enter-active .survey-link {
+  transition-delay: 0.6s, 0.6s;
 }
 
 .subscreen-enter-from .completed-label {
@@ -562,4 +700,5 @@ button#share-button.failure::after {
 .subscreen-enter-active .subscreen-buttons {
   transition-delay: 1.1s, 1.1s;
 }
+
 </style>

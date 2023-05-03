@@ -487,7 +487,7 @@ export const IssueQueueStore = reactive({
       MetaGameStore.PlayerStatistics.highestRoundCompleted
     )
 
-    if (MetaGameStore.PlayerStatistics.highestRoundCompleted >= 7) {
+    if (MetaGameStore.PlayerStatistics.highestRoundCompleted >= 8) {
       GameSessionStore.registerAchievement('thelonghaul')
     } else if (MetaGameStore.PlayerStatistics.highestRoundCompleted >= 5) {
       GameSessionStore.registerAchievement('hanginginthere')

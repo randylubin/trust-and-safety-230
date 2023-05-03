@@ -73,6 +73,10 @@ const Options = reactive({
   examineTime: GameDefaults.lookCloserExamineTime, // time it takes to Look Closer, in 200ms ticks
 })
 
+const stackLoadingKey = ref('unloaded-stack')
+
+onMounted(() => setTimeout(() => (stackLoadingKey.value = 'loaded-stack'), 100))
+
 const stackOffsetIncrement = computed(() => {
   // get current stack offset increment based on stack size
   for (const tier of Options.stackOffsets) {
@@ -267,8 +271,12 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="stack-area" ref="StackAreaElement">
-    <div class="stack-top" ref="StackTopElement">
+  <div
+    class="stack-area"
+    :class="{ backdrop: GameSessionStore.currentRound > 0 }"
+    ref="StackAreaElement"
+  >
+    <div class="stack-top" ref="StackTopElement" :key="stackLoadingKey">
       <transition-group name="cards" @after-leave="isLeaving = false">
         <div
           v-for="(issue, index) in CardQueue"
@@ -426,7 +434,7 @@ watchEffect(() => {
   height: 12vh;
   min-height: 80px;
   max-height: 100px;
-  padding-bottom: 1.5rem;
+  padding-bottom: max(calc(env(safe-area-inset-bottom) + 0.5rem), 1.5rem);
 }
 
 .examine-popup {
@@ -619,6 +627,13 @@ button:hover {
   flex-grow: 1;
 }
 
+.stack-area.backdrop {
+  background-image: url('@/assets/svg/image-hanginthere.svg');
+  background-size: auto 50%;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
 .stack-top {
   --swipe-indicator-size: v-bind('swipeIndicatorSize');
   position: absolute;
@@ -726,7 +741,7 @@ button:hover {
 /* Vue Transitions */
 
 .card-container.cards-enter-active {
-  transition: transform 0.35s ease-out, opacity 0.5s ease-out;
+  transition: transform 0.35s ease-out, opacity 0.25s ease-out;
 }
 
 .card-container.cards-leave-active {

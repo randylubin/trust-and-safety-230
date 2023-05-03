@@ -53,6 +53,7 @@ const roundLabel = computed(() => {
   right: 0;
   bottom: 0;
   padding: 1.5rem;
+  padding-top: max(calc(env(safe-area-inset-top) + 0.5rem), 1.5rem);
   display: flex;
   flex-direction: row;
   justify-content: center;
