@@ -4,10 +4,24 @@ import { GameSessionStore } from '../../stores/GameSessionStore'
 import { MetaGameStore } from '../../stores/MetaGameStore'
 import { PossibleAchievementsList } from './AchievementLogic'
 
+const newUnlockedAchievements = computed(() => {
+  const list = []
+  for (const [id, ach] of Object.entries(PossibleAchievementsList)) {
+    if (GameSessionStore.achievementsUnlockedThisGame.includes(id)) {
+      list.push(ach)
+    }
+  }
+  return list
+})
+
 const unlockedAchievements = computed(() => {
   const list = []
   for (const [id, ach] of Object.entries(PossibleAchievementsList)) {
-    if (MetaGameStore.achievements.includes(id)) list.push(ach)
+    if (
+      MetaGameStore.achievements.includes(id) &&
+      !GameSessionStore.achievementsUnlockedThisGame.includes(id)
+    )
+      list.push(ach)
   }
   return list
 })
@@ -30,13 +44,34 @@ const lockedAchievements = computed(() => {
       <div class="achievements-frame">
         <div class="achievements-label">
           <span>
-            {{ unlockedAchievements.length }}/{{
-              unlockedAchievements.length + lockedAchievements.length
+            {{
+              newUnlockedAchievements.length + unlockedAchievements.length
+            }}/{{
+              newUnlockedAchievements.length +
+              unlockedAchievements.length +
+              lockedAchievements.length
             }}
             Achievements</span
           >
         </div>
         <div class="achievements-scrollbox">
+          <div
+            v-for="achievement in newUnlockedAchievements"
+            class="achievement-card new"
+            :class="'ach-' + achievement.id"
+            :key="achievement.id"
+          >
+            <div class="achievement-icon"></div>
+            <div class="achievement-info">
+              <div class="achievement-name">
+                <span>NEW</span>
+                {{ PossibleAchievementsList[achievement.id].title }}
+              </div>
+              <div class="achievement-text">
+                {{ PossibleAchievementsList[achievement.id].description }}
+              </div>
+            </div>
+          </div>
           <div
             v-for="achievement in unlockedAchievements"
             class="achievement-card"
@@ -169,6 +204,17 @@ const lockedAchievements = computed(() => {
   font-weight: 700;
   color: var(--card-innershadow-color);
   margin-bottom: 0.3rem;
+}
+
+.achievement-name span {
+  background: var(--en-3l);
+  color: rgba(0, 0, 0, 0.75);
+  border-radius: 0.3rem;
+  font-family: var(--font-2);
+  font-weight: 900;
+  font-size: 1rem;
+  padding: 0.2rem 0.3rem 0.1rem;
+  margin-right: 0.4rem;
 }
 
 .achievement-text {
