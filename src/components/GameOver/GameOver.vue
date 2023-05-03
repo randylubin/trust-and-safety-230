@@ -344,7 +344,7 @@ const shareResults = function () {
             id="share-button"
             @click="shareResults"
           >
-            Share Your Score
+            Share Results
           </button>
         </div>
         <div class="subscreen-buttons" style="transition-delay: 3s">
@@ -359,9 +359,9 @@ const shareResults = function () {
       >
         <AchievementShowcase />
         <div class="survey-link">
-          Did you enjoy Moderator Mayhem?<br />We'd love to hear what you think!<br />
+          We'd love your feedback about playing Moderator Mayhem!<br />
           <a :href="GameDefaults.surveyURL" target="_blank">
-            Take our feedback survey &raquo;
+            Take our survey &raquo;
           </a>
         </div>
         <div class="subscreen-buttons">
@@ -428,7 +428,7 @@ button#share-button {
 }
 
 button#share-button::after {
-  content: 'Score copied to clipboard!';
+  content: 'Score and stats copied to clipboard!';
   position: absolute;
   left: 5%;
   right: 5%;
@@ -538,6 +538,9 @@ div.screen-score .subscreen-share {
   font-size: 1.8rem;
   line-height: 1.5;
   margin-bottom: 3rem;
+  padding: 1.5rem;
+  border: 0.2rem solid var(--button-highlight-bg-color);
+  border-radius: 1.5rem;
 }
 
 .survey-link a {

@@ -2,7 +2,7 @@ export const GameDefaults = {
   // META
   gameURL: 'TK FILL IN GAME URL',
   infoURL: 'TK FILL IN ENGINE BLOG POST URL',
-  surveyURL: 'TK FILL IN SURVEY URL',
+  surveyURL: 'https://forms.gle/RCTJdh4Lw1RhYAqv8',
   useLocalIssueData: false,
   enableSavingIssuesLocally: true,
   finalRound: 8,
