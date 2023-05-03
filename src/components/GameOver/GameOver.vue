@@ -369,7 +369,7 @@ const shareResults = function () {
             New Game
           </button>
           <button class="btn-basic" @click="returnToHomeScreen()">
-            Back to Menu
+            Main Menu
           </button>
           <button class="btn-basic btn-back" @click="subscreenIndex--">
             Back
