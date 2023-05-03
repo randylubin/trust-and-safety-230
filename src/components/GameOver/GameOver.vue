@@ -244,7 +244,7 @@ const shareResults = function () {
     text += Chars.Stars.ON.repeat(performanceRating.value)
     text += Chars.Stars.OFF.repeat(5 - performanceRating.value)
   }
-  text += `\nIssues Handled: ${GameSessionStore.issuesCompletedThisGame}\n\n`
+  text += `\nTotal reviews: ${GameSessionStore.issuesCompletedThisGame}\n\n`
   text += `Safety: ${Chars.Safety[safetyRating.value]}\n`
   text += `Speech: ${Chars.Speech[speechRating.value]}\n\n`
   if (GameSessionStore.achievementsUnlockedThisGame.length > 0) {
@@ -306,6 +306,7 @@ const shareResults = function () {
           Game Over
           <div class="completed-label">{{ gameoverTag }}</div>
         </div>
+        <!-- <div class="score-label">{{ GameOverDescriptions[GameSessionStore.gameOverType].socialShare }}</div> -->
         <div class="score-display">
           <div class="score-stars">
             <div
@@ -329,7 +330,10 @@ const shareResults = function () {
               />
             </div>
           </div>
-          <div class="score-label">Performance Score</div>
+          <!-- <div class="score-label">Performance Score</div> -->
+          <div class="score-label">Total reviews: {{ GameSessionStore.issuesCompletedThisGame }} </div>
+          <div class="score-label">Safety: {{ safetyRating }}</div>
+          <div class="score-label">Speech: {{ speechRating }}</div>
         </div>
         <div
           class="subscreen-buttons subscreen-share"
@@ -549,6 +553,9 @@ div.screen-score .subscreen-share {
 
 .score-display {
   margin-bottom: 3.5rem;
+  padding: 1.5rem;
+  border: 0.2rem solid var(--button-alt-bg-color);
+  border-radius: 1.5rem;
 }
 .score-stars {
   width: 90%;
@@ -586,10 +593,12 @@ div.screen-score .subscreen-share {
 }
 
 .score-label {
-  font-family: var(--font-2);
-  font-size: 1.5rem;
+  font-family: var(--font-1);
   text-transform: uppercase;
-  color: var(--card-innershadow-color);
+  margin: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* Vue Transitions */
