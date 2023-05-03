@@ -2,9 +2,7 @@
 import { ref, computed, onMounted, onUpdated, watch } from 'vue'
 import { GameSessionStore } from '../stores/GameSessionStore'
 import { GameDefaults } from '../GameDefaults'
-import { PossibleAchievementsList } from './Misc/AchievementLogic'
 import AchievementShowcase from './Misc/AchievementShowcase.vue'
-import AchievementPage from './Misc/AchievementPage.vue'
 
 const interScreenIndex = ref(-1)
 const triggerGameOver = ref(false)
