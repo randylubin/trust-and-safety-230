@@ -554,8 +554,8 @@ div.screen-score .subscreen-share {
 .score-display {
   margin-bottom: 3.5rem;
   padding: 1.5rem;
-  border: 0.2rem solid var(--button-alt-bg-color);
-  border-radius: 1.5rem;
+  /* border: 0.2rem solid var(--button-alt-bg-color); */
+  /* border-radius: 1.5rem; */
 }
 .score-stars {
   width: 90%;
