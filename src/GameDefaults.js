@@ -1,6 +1,6 @@
 export const GameDefaults = {
   // META
-  gameURL: 'TK FILL IN GAME URL',
+  gameURL: 'https://moderatormayhem.engine.is/',
   infoURL: 'TK FILL IN ENGINE BLOG POST URL',
   surveyURL: 'https://forms.gle/RCTJdh4Lw1RhYAqv8',
   useLocalIssueData: false,
