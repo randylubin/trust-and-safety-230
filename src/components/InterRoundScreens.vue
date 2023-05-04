@@ -258,11 +258,11 @@ if (
   gameOverReason.push('Too slow!')
   gameOverType = 'BAD-TOOSLOW'
   GameSessionStore.registerAchievement('notsofast')
-} else if (GameSessionStore.publicFreeSpeech == 0) {
+} else if (GameSessionStore.publicFreeSpeech <= 0) {
   gameOverReason.push('Censorship accusations')
   gameOverType = 'BAD-CENSORSHIP'
   GameSessionStore.registerAchievement('dontspeak')
-} else if (GameSessionStore.publicSafety == 0) {
+} else if (GameSessionStore.publicSafety <= 0) {
   gameOverReason.push('Platform safety')
   gameOverType = 'BAD-SAFETY'
   GameSessionStore.registerAchievement('laissezfaire')
