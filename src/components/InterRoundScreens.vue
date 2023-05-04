@@ -47,13 +47,10 @@ const publicWarnLevel = GameDefaults.publicWarnLevel
 let roundQualityLevel = 'medium'
 let managerSpeedLevel = 'medium'
 
-// let roundQualityNumber =
-//   GameDefaults.roundQualityStartingState -
-//   GameSessionStore.disagreeWithManagerThisRound // TODO update
 let roundQualityNumber = managerApproval.value / 100
-console.log('roundQuality:', roundQualityNumber)
-console.log('praisePercent:', roundQualityPraise)
-console.log('warn percent:', roundQualityWarn)
+// console.log('roundQuality:', roundQualityNumber)
+// console.log('praisePercent:', roundQualityPraise)
+// console.log('warn percent:', roundQualityWarn)
 let managerSpeedNumber = GameSessionStore.issuesCompletedThisRound
 
 if (roundQualityNumber <= roundQualityWarn) {
@@ -124,13 +121,13 @@ if (GameSessionStore.currentRound === 0) {
 
 if (!GameSessionStore.interRoundProcessingComplete) {
   GameSessionStore.overallPerformance += performanceAdjustment
-  console.log('adjusting performance by', performanceAdjustment)
+  // console.log('adjusting performance by', performanceAdjustment)
 }
 
 // OVERALL PERFORMANCE PRAISE OR WARN
 // Two message options if score is decreasing (based on why), otherwise talk about still being on thin ice
 if (GameSessionStore.overallPerformance >= overallPerformancePraise) {
-  console.log('on track for promotion:', GameSessionStore.overallPerformance)
+  // console.log('on track for promotion:', GameSessionStore.overallPerformance)
   managerComments.value = [
     "You're on track for promotion. Just keep up the good work!",
     "We're all impressed with your work - I've made a note in your file.",
@@ -144,23 +141,23 @@ if (GameSessionStore.overallPerformance >= overallPerformancePraise) {
         "You're making way too many mistakes. Shape up or ship out.",
         "I'm worried that you're not taking your job seriously. This work matters.",
       ].sample()
-      console.log('manager warn quality', GameSessionStore.overallPerformance)
+      // console.log('manager warn quality', GameSessionStore.overallPerformance)
     } else {
       managerComments.value = [
         'You need to increase your decision speed or I will have to replace you with someone faster.',
         "You're way too slow. Pick up the pace or you're outta here.",
       ].sample()
-      console.log('manager warn slow', GameSessionStore.overallPerformance)
+      // console.log('manager warn slow', GameSessionStore.overallPerformance)
     }
   } else {
     managerComments.value = [
       'You did better this round but you are still on thin ice.',
       "Not bad, but I'm still keeping an eye on your performance.",
     ].sample()
-    console.log('manager thin ice', GameSessionStore.overallPerformance)
+    // console.log('manager thin ice', GameSessionStore.overallPerformance)
   }
 } else {
-  console.log('performance is fine', GameSessionStore.overallPerformance)
+  // console.log('performance is fine', GameSessionStore.overallPerformance)
 }
 
 // Public Check-in
@@ -225,7 +222,6 @@ if (GameSessionStore.currentRound === 0) {
 }
 
 // CHECK FOR GAME OVER
-// TODO FIX LOGIC AND CONTENT
 let gameOverReason = []
 let gameOverType = 'BAD'
 if (
@@ -250,7 +246,7 @@ if (
   gameOverReason.push('Fired for poor performance')
   gameOverType = 'BAD-EARLYPERFORMANCE'
   GameSessionStore.registerAchievement('lapseinjudgement')
-} else if (managerApproval.value <= GameDefaults.roundQualityFire) {
+} else if (roundQualityNumber <= GameDefaults.roundQualityFire) {
   gameOverReason.push('Fired for poor performance')
   gameOverType = 'BAD-ROUNDQUALITY'
   GameSessionStore.registerAchievement('lapseinjudgement')
@@ -275,7 +271,7 @@ if (
 if (gameOverReason.length && GameSessionStore.currentRound != 0) {
   triggerGameOver.value = true
   GameSessionStore.betweenRounds = false
-  console.log(gameOverReason)
+  // console.log(gameOverReason)
   GameSessionStore.endGame(gameOverReason, gameOverType)
 } else {
   roundScreenReadyToShow.value = true
@@ -287,7 +283,7 @@ GameSessionStore.saveSessionToLocal()
 const quitSession = function () {
   triggerGameOver.value = true
   GameSessionStore.betweenRounds = false
-  console.log('player quit')
+  // console.log('player quit')
   GameSessionStore.endGame('player quit', 'BAD-QUIT')
 }
 
@@ -296,7 +292,7 @@ const cssTextSize = computed(() => textSize.value + 'rem')
 const textElement = ref(null)
 const textInnerElement = ref(null)
 const textSpace = computed(() => {
-  console.log(textElement.value?.clientHeight)
+  // console.log(textElement.value?.clientHeight)
   return textElement.value?.clientHeight
 })
 

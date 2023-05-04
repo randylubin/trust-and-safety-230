@@ -46,7 +46,6 @@ const { pause, resume, isActive } = useIntervalFn(() => {
       }
 
       // ADD GENERICS OVER TIME
-      // TODO - maybe recalibrate likelihood based on round (e.g. less likely during a big Grab Bag like BETAAI)
       let drawLikelihood = GameDefaults.genericDrawLikelihood
       if (
         GameSessionStore.currentRound == 0 ||
@@ -83,7 +82,6 @@ const { pause, resume, isActive } = useIntervalFn(() => {
     timeRemaining.value == extraTimeForLastCard &&
     GameSessionStore.currentRound != 0
   ) {
-    // TODO - handle last card if no action taken
     IssueQueueStore.endRound()
   }
 }, 1000)

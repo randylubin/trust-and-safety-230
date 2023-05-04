@@ -85,7 +85,7 @@ if (!GameDefaults.useLocalIssueData) {
           } else {
             newIssue['keepUpConsequences'] = {
               followUpID: keepUpConsequences,
-              followUpTimeDelay: 2, // TODO tie to variable
+              followUpTimeDelay: 2,
             }
           }
         }

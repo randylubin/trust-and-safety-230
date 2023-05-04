@@ -112,16 +112,13 @@ export const IssueQueueStore = reactive({
       1
     )
 
-    // TODO specific arc logic (e.g. ending of election 1 triggers election 2)
+    // specific arc logic (e.g. ending of election 1 triggers election 2)
     if (arcName === 'ELECTION') {
       this.upcomingArcs.push({
         round: GameSessionStore.currentRound + 1,
         arcName: 'POSTELECT',
       })
     }
-
-    // TODO arc acheivement
-    console.log(arcName, 'arc over')
   },
   resetAllData() {
     this.currentIssueQueue = []
@@ -190,7 +187,7 @@ export const IssueQueueStore = reactive({
         : issueData.takeDownConsequences
     let isAppeal = issueData.issueType.slice(0, 6) == 'appeal'
     if (!issueData.interstitialOnly) {
-      GameSessionStore.issuesCompletedThisRound++ // TODO - do appeals count toward this?
+      GameSessionStore.issuesCompletedThisRound++
       if (GameSessionStore.currentRound != 0) {
         GameSessionStore.issuesCompletedThisGame++
         MetaGameStore.PlayerStatistics.issuesProcessed++
@@ -284,14 +281,11 @@ export const IssueQueueStore = reactive({
           if (MetaGameStore.PlayerStatistics.appealsDenied >= 50) {
             GameSessionStore.registerAchievement('requestdenied')
           }
-          // TODO - maybe something around tracking conviction?
-          // do nothing
         } else if (action == 'keepUp') {
           MetaGameStore.PlayerStatistics.appealsAccepted++
           if (MetaGameStore.PlayerStatistics.appealsAccepted >= 50) {
             GameSessionStore.registerAchievement('onsecondthought')
           }
-          // TODO - maybe something around tracking change on appeal?
           // revert prior state change
           Object.keys(responseObject['takeDown']).forEach((key) => {
             GameSessionStore[key] -= responseObject['takeDown'][key]
@@ -307,14 +301,11 @@ export const IssueQueueStore = reactive({
           if (MetaGameStore.PlayerStatistics.appealsDenied >= 50) {
             GameSessionStore.registerAchievement('requestdenied')
           }
-          // TODO - maybe something around tracking conviction?
-          // do nothing
         } else if (action == 'takeDown') {
           MetaGameStore.PlayerStatistics.appealsAccepted++
           if (MetaGameStore.PlayerStatistics.appealsAccepted >= 50) {
             GameSessionStore.registerAchievement('onsecondthought')
           }
-          // TODO - maybe something around tracking change on appeal?
           // revert prior state change
           Object.keys(responseObject['keepUp']).forEach((key) => {
             GameSessionStore[key] -= responseObject['keepUp'][key]
@@ -400,7 +391,6 @@ export const IssueQueueStore = reactive({
         ? issueData.issueID.slice(0, issueData.issueID.indexOf('-'))
         : null
 
-    // TODO maybe refactor to happen immediately
     if (actionConsequences?.forcedNextArc) {
       this.forcedNextArc.push(actionConsequences?.forcedNextArc)
     }
@@ -562,7 +552,7 @@ export const IssueQueueStore = reactive({
     return result
   },
   closeInterstitial() {
-    console.log('closing interstitial')
+    // console.log('closing interstitial')
     GameSessionStore.gameIsPaused = false
     this.interstitialShown = false
     this.interstitialKey++
@@ -694,7 +684,7 @@ export const IssueQueueStore = reactive({
       )
     }
 
-    console.log('filtered arcs: ', filteredArcOptions)
+    // console.log('filtered arcs: ', filteredArcOptions)
 
     if (this.upcomingArcs.length) {
       this.upcomingArcs.forEach((arc) => {
@@ -719,7 +709,7 @@ export const IssueQueueStore = reactive({
 
       this.arcsInProgress.push(selectedArcName)
       MetaGameStore.arcsSeenButNotCompleted.push(selectedArcName)
-      console.log('in progress', this.arcsInProgress)
+      // console.log('in progress', this.arcsInProgress)
 
       let initialArcCards = ArcIssues.getIssuesByID(selectedArc.initialIssues)
 
@@ -769,9 +759,7 @@ export const IssueQueueStore = reactive({
         GenericFollowUps.getIssueByID('F-BETAAI-END')
       )
     }
-    // if (GameSessionStore.currentRound == GameDefaults.betterAIRound) { // TODO - check if needed
-    //   initialInterstitials.unshift(GenericFollowUps.getIssueByID('F-BETTERAI-START'))
-    // }
+
     // Foreshadow promotion
     if (GameSessionStore.currentRound == GameDefaults.finalRound) {
       if (
@@ -832,7 +820,7 @@ export const IssueQueueStore = reactive({
     if (numberOfIssues == 1) {
       let newIssue = GenericIssues.getRandomIssue(excludeArray)
       if (excludeArray.includes(newIssue.issueID)) {
-        console.log('DUPE ADDED', newIssue.issueID)
+        console.log('DUPLICATE ADDED', newIssue.issueID)
       }
       this.currentIssueQueue.push(newIssue)
     } else {
