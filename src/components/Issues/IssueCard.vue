@@ -28,7 +28,7 @@ function showRuleTooltip() {
 }
 
 function hideRuleTooltip() {
-  ruleTimeout = setTimeout(() => (ruleTooltipActive.value = false), 1600)
+  ruleTimeout = setTimeout(() => (ruleTooltipActive.value = false), 2000)
 }
 
 const rootTextSize = ref(1)

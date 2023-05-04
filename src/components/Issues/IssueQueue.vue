@@ -340,7 +340,7 @@ watchEffect(() => {
       >
         <transition name="examine-contents" mode="out-in">
           <div v-if="examineTime && !examineDone" class="examine-working">
-            Hold the button to take a closer look at the content
+            Keep holding the button to take a closer look at the content
           </div>
           <div v-else-if="examineTime" class="examine-done">
             {{

@@ -43,7 +43,7 @@ export const GameDefaults = {
   overallPerformancePraise: 14,
   overallPerformanceWarn: 3,
   roundQualityPraise: 0.87,
-  roundQualityWarn: 0.7,
+  roundQualityWarn: 0.73,
   roundQualityFire: 0.5,
   cardsPerRoundPraise: 16,
   cardsPerRoundWarn: 9,
