@@ -335,7 +335,7 @@ watch(interScreenIndex, shrinkText)*/
             Decisions Made: {{ GameSessionStore.issuesCompletedThisRound }}
           </div>
           <div class="manager-approval">
-            Policy Alignment: {{ managerApproval }}%
+            Policy Accuracy: {{ managerApproval }}%
           </div>
         </div>
         <AchievementShowcase />
