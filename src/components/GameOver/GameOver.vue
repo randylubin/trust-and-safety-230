@@ -140,7 +140,7 @@ const GameOverDescriptions = {
 const restartGame = function () {
   IssueQueueStore.resetAllData()
   GameSessionStore.resetAllData()
-  console.log('starting session')
+  // console.log('starting session')
   GameSessionStore.showGameOver = false
   GameSessionStore.showHomescreen = false
   MetaGameStore.activeSession = true
