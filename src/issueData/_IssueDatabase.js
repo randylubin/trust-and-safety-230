@@ -108,7 +108,7 @@ export default class IssueDatabase {
     return issueArray
   }
   addExclusionIDsByExclusionGroup(exclusionGroup) {
-    console.log('adding exclusion group', exclusionGroup)
+    // console.log('adding exclusion group', exclusionGroup)
     this.#ExcludedGroupIDs = this.#ExcludedGroupIDs.concat(
       this.#ExclusionGroupLookup[exclusionGroup]
     )

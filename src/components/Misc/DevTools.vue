@@ -30,7 +30,7 @@ const saveIssueDataToFile = function () {
       ContentRules: ContentRules,
       PossibleAchievementsList: PossibleAchievementsList,
     })
-  console.log('downloading', objectString)
+  // console.log('downloading', objectString)
 
   // Create a Blob object from the JSON data
   const blob = new Blob([objectString], { type: 'text/javascript' })
