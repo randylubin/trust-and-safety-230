@@ -6,11 +6,14 @@ import { GameDefaults } from '../../GameDefaults'
 <template>
   <div class="about-page">
     <div class="game-logo">
-      <img src="@/assets/svg/moderator-mayhem.svg" />
+      <img
+        src="@/assets/svg/moderator-mayhem.svg"
+        alt="the moderator mayhem game logo"
+      />
     </div>
     <div class="engine-logo">
       <a href="https://engine.is" target="_blank">
-        <img src="@/assets/logos/logo-engine.png" />
+        <img src="@/assets/logos/logo-engine.png" alt="the engine logo" />
       </a>
     </div>
     <div class="game-info">
@@ -40,7 +43,7 @@ import { GameDefaults } from '../../GameDefaults'
         >, and <strong>Leigh Beadon</strong>
       </p>
       <div class="logo-pair">
-        <div class="copia"> 
+        <div class="copia">
           <a
             href="https://copia.is/gaming/"
             title="Copia Gaming"
@@ -61,7 +64,7 @@ import { GameDefaults } from '../../GameDefaults'
     <button class="btn-basic" @click="GameSessionStore.showAbout = false">
       Close
     </button>
-</div>
+  </div>
 </template>
 
 <style scoped>

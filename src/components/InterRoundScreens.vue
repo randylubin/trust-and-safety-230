@@ -299,7 +299,8 @@ const textSpace = computed(() => {
 const shrinkText = function () {
   /* Be careful around this code. Mistakes could cause infinite loop. */
   if (
-    textInnerElement.value?.getBoundingClientRect().height > textElement.value?.clientHeight &&
+    textInnerElement.value?.getBoundingClientRect().height >
+      textElement.value?.clientHeight &&
     textSize.value > 1.4 // <-- necessary to prevent infinite loop
   ) {
     textSize.value -= 0.2
@@ -350,7 +351,10 @@ watch(interScreenIndex, shrinkText)*/
         class="round-subscreen screen-manager"
       >
         <div class="subscreen-header-image manager">
-          <img src="@/assets/svg/image-manager.svg" />
+          <img
+            src="@/assets/svg/image-manager.svg"
+            alt="an image of your manager"
+          />
         </div>
         <div class="subscreen-header">Employee Evaluation</div>
         <div class="subscreen-text" ref="textElement" key="manager-element">
@@ -379,7 +383,10 @@ watch(interScreenIndex, shrinkText)*/
         class="round-subscreen screen-public"
       >
         <div class="subscreen-header-image public">
-          <img src="@/assets/svg/image-public.svg" />
+          <img
+            src="@/assets/svg/image-public.svg"
+            alt="an image of three people representing the public"
+          />
         </div>
         <div class="subscreen-header">Public Opinion</div>
         <div class="subscreen-text" ref="textElement" key="public-element">

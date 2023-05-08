@@ -28,7 +28,10 @@ onUpdated(shrinkText)
 <template>
   <div class="interstitial-screen">
     <div class="interstitial-header-image manager">
-      <img src="@/assets/svg/image-manager.svg" />
+      <img
+        src="@/assets/svg/image-manager.svg"
+        alt="an image of your manager"
+      />
     </div>
     <div
       class="interstitial-header"

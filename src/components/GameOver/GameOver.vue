@@ -258,7 +258,7 @@ const shareResults = function () {
     }
     text += '\n\n'
   }
-  text += linkText 
+  text += linkText
 
   populateClipboard(text).then(
     () => {
@@ -285,7 +285,10 @@ const shareResults = function () {
         class="gameover-subscreen screen-manager"
       >
         <div class="subscreen-header-image manager">
-          <img src="@/assets/svg/image-manager.svg" />
+          <img
+            src="@/assets/svg/image-manager.svg"
+            alt="an image of your manager"
+          />
         </div>
         <div class="subscreen-header">{{ managerHeader }}</div>
         <div
@@ -323,6 +326,7 @@ const shareResults = function () {
             >
               <img
                 src="@/assets/svg/icon-star.svg"
+                alt="a gold star"
                 :style="{
                   'transition-delay': 1.8 + n * 0.1 + 's',
                   'animation-delay': n * 0.2 + 's',
@@ -331,7 +335,9 @@ const shareResults = function () {
             </div>
           </div>
           <!-- <div class="score-label">Performance Score</div> -->
-          <div class="score-label">Total reviews: {{ GameSessionStore.issuesCompletedThisGame }} </div>
+          <div class="score-label">
+            Total reviews: {{ GameSessionStore.issuesCompletedThisGame }}
+          </div>
           <div class="score-label">Safety: {{ safetyRating }}</div>
           <div class="score-label">Speech: {{ speechRating }}</div>
         </div>
@@ -712,5 +718,4 @@ div.screen-score .subscreen-share {
 .subscreen-enter-active .subscreen-buttons {
   transition-delay: 1.1s, 1.1s;
 }
-
 </style>

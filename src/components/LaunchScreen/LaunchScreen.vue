@@ -51,7 +51,7 @@ function checkFullscreen(showTutorial = true) {
 }
 
 function continueSession() {
-  if (attemptFullscreen.value) { 
+  if (attemptFullscreen.value) {
     enterFullscreen()
   }
   emit('continueSession')
@@ -95,7 +95,7 @@ function continueSession() {
           About
         </button>
         <div class="engine-logo">
-          <img src="@/assets/logos/logo-engine.png" />
+          <img src="@/assets/logos/logo-engine.png" alt="the engine logo" />
         </div>
       </div>
       <div v-else-if="showTutorialButton">

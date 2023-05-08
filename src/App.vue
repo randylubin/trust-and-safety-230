@@ -67,7 +67,6 @@ watch(
 )
 
 function newSession() {
-  console.log('starting session')
   MetaGameStore.activeSession = true
   showLaunchScreen.value = false
   GameSessionStore.showHomescreen = false
