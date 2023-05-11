@@ -47,7 +47,7 @@ export const GameDefaults = {
   roundQualityFire: 0.5,
   cardsPerRoundPraise: 16,
   cardsPerRoundWarn: 9,
-  cardsPerRoundFire: 2, // TODO - 6?
+  cardsPerRoundFire: 6,
   publicWarnLevel: 4,
   publicPraiseLevel: 12,
 
