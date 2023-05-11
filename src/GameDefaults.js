@@ -1,7 +1,7 @@
 export const GameDefaults = {
   // META
   gameURL: 'https://moderatormayhem.engine.is/',
-  infoURL: 'TK FILL IN ENGINE BLOG POST URL',
+  infoURL: 'https://www.engine.is/news/category/moderator-mayhem',
   surveyURL: 'https://forms.gle/RCTJdh4Lw1RhYAqv8',
   useLocalIssueData: false,
   enableSavingIssuesLocally: true,
