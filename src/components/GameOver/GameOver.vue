@@ -96,44 +96,49 @@ onMounted(() => {
 
 const GameOverDescriptions = {
   'GOOD-QUALITYPROMO': {
-    fullDescription: 'Promoted for competence, congrats!',
-    socialShare: 'Promoted for competence, congrats!',
+    fullDescription:
+      'We’re starting an elite program to train the next generation of moderators. You are one of our finest mods and we’d like you to become an instructor. Congratulations and welcome to TOP MOD!',
+    socialShare: ' Selected to instruct at the elite TOP MOD program!',
   },
   'GOOD-SENIORITYPROMO': {
-    fullDescription: 'Promoted for seniority, congrats!',
-    socialShare: 'Promoted for seniority, congrats!',
+    fullDescription:
+      'Congrats on hanging in there – you’re now one of our most senior moderators. I’m promoting you to manager, where you’ll oversee a team of moderators and deal with even trickier moderation decisions. Good luck!',
+    socialShare: 'Promoted to moderator manager!',
   },
   'BAD-FINALROUNDPERFORMANCE': {
-    fullDescription: 'Fired for poor performance at end of game',
-    socialShare: 'Fired for poor performance at end of game',
+    fullDescription:
+      'We’ve decided to outsource most of our moderation decisions and there’s just no place for you at TrustHive. Thank you for time and good luck out there…',
+    socialShare: 'My job was outsourced…',
   },
   'BAD-EARLYPERFORMANCE': {
-    fullDescription: 'Fired for poor performance',
-    socialShare: 'Fired for poor performance',
+    fullDescription:
+      'Your bad moderation puts TrustHive at risk. Sorry, but you’ll need to find a new job.',
+    socialShare: 'Fired for poor judgment.',
   },
   'BAD-ROUNDQUALITY': {
-    fullDescription: 'Fired for poor performance',
-    socialShare: 'Fired for poor performance',
+    fullDescription:
+      'Your bad moderation puts TrustHive at risk. Sorry, but you’ll need to find a new job.',
+    socialShare: 'Fired for poor judgment',
   },
+
   'BAD-TOOSLOW': {
-    fullDescription: 'Too slow!',
-    socialShare: 'Too slow!',
+    fullDescription:
+      'Sorry, you’re just too slow. We need our moderators to work quickly and you’re not cutting it. Good luck finding a new job.',
+    socialShare: 'Fired for being too slow!',
   },
   'BAD-CENSORSHIP': {
-    fullDescription: 'Censorship accusations',
-    socialShare: 'Censorship accusations',
+    fullDescription:
+      'TrustHive is getting too many accusations of “censorship” and our CEO has decided to fire most of the moderation team. Good luck finding new work.',
+    socialShare: 'Fired due to heavy handed “censorship”',
   },
   'BAD-SAFETY': {
-    fullDescription: 'Platform safety',
-    socialShare: 'Platform safety',
+    fullDescription:
+      'Users have fled our site due to poor platform safety. The CEO has decided to fire the moderation team and rebuild it from scratch. Let me know if you hear of any manager openings!',
+    socialShare: 'Fired due to poor platform safety.',
   },
   'BAD-QUIT': {
     fullDescription: "I understand, it's a hard job and not for everyone!",
     socialShare: 'I quit!',
-  },
-  'BAD-ARC': {
-    fullDescription: 'TK arc reason',
-    socialShare: 'TK arc reason',
   },
 }
 
