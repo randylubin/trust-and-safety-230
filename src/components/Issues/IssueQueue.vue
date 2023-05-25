@@ -355,6 +355,7 @@ watchEffect(() => {
     <div class="button-frame" id="frame-takedown">
       <button
         type="button"
+        aria-label="Take Down"
         class="button-takedown"
         :class="{
           'show-disabled':
@@ -376,6 +377,7 @@ watchEffect(() => {
     <div class="button-frame small" id="frame-examine">
       <button
         type="button"
+        aria-label="Look Closer"
         class="button-examine"
         :class="{
           'show-disabled':
@@ -398,6 +400,7 @@ watchEffect(() => {
     <div class="button-frame" id="frame-leaveup">
       <button
         type="button"
+        aria-label="Leave Up"
         class="button-leaveup"
         :class="{
           'show-disabled':

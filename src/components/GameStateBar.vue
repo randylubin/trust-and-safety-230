@@ -37,7 +37,7 @@ const roundLabel = computed(() => {
       <div class="timer-overlay">
         <div class="round-label">{{ roundLabel }}</div>
         <div class="game-controls">
-          <button class="button-pause"></button>
+          <button aria-label="Pause" class="button-pause"></button>
         </div>
       </div>
     </div>
